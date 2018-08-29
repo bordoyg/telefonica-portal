@@ -7,6 +7,7 @@ class Controlador {
 	const ACTIVITY_PARAM = 'activity';
 	const LOCATION_TECHNICAN_PARAM='locationTechnican';
 	const LOCATION_CUSTOMER_PARAM='locationCustomer';
+	const LOCATION_TECHNICAN="technicanLocation";
 	const SCHUEDULE_DATE_PARAM='timeSlot';
 	const STATUS_LOCALIZABLE='onTheWay';
 	const STATUS_PENDING="pending";
@@ -26,7 +27,9 @@ class Controlador {
         }
         
         //Obtenemos la posicion del tecnico
-         $locationData=$this->service->request('/rest/ofscCore/v1/whereIsMyTech', 'GET', 'activityId=' . $activity->activityId);
+         $locationData=$this->service->request('/rest/ofscCore/v1/whereIsMyTech', 'GET', 'activityId=' . $activity->activityId . '&includeAvatarImageData=true');
+         $_REQUEST[Controlador::LOCATION_TECHNICAN]=$locationData;
+         
          if($locationData->status==Controlador::STATUS_LOCALIZABLE){
              if(isset($locationData->coordinates) && isset($locationData->coordinates->latitude) && isset($locationData->coordinates->longitude)){
                  $lat=$locationData->coordinates->latitude;
@@ -38,6 +41,7 @@ class Controlador {
          }else{
              $this->addMessageError("No se puedo establecer la ubicacion del t&eacute;cnico, intenta mas tarde");
          }
+         
     }
     function findAvailability() {
         $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];

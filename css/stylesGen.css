@@ -115,6 +115,23 @@ a, input[type=submit]{
     position: absolute;
 }
 
+#cont_agend .display_no_photo{
+    background-image: url(../images/no_photo.gif);
+	background-repeat: no-repeat;
+    background-size: 120px 120px;
+}
+
+#display_no_photo{
+    content: "";
+    background: url(../images/no_photo.gif) center center no-repeat;
+    background-size: cover;
+    opacity: 0.2;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+}
 
 #cont_agend .box_cont{
     background: #ffffff;

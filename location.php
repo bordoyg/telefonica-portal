@@ -27,9 +27,20 @@
 		<div class="container">
             <h3 class="text_center">Donde esta mi t&eacute;cnico?</h3>
             <?php include Controlador::MESSAGES_URL; ?>
+			<h4>Nombre del t&eacute;nico: <?php echo $_REQUEST[Controlador::LOCATION_TECHNICAN]->resourceDetails->name; ?></h4>
+            
+            <?php 
+            if(isset($_REQUEST[Controlador::LOCATION_TECHNICAN]->resourceDetails->avatar->imageData)){
+                $mediaType=$_REQUEST[Controlador::LOCATION_TECHNICAN]->resourceDetails->avatar->mediaType;
+                $imageData=$_REQUEST[Controlador::LOCATION_TECHNICAN]->resourceDetails->avatar->imageData;
+                echo '<img src="data: ' . $mediaType . ';base64,' . $imageData . '" />';
+            }else{
+                echo '<img class="display_no_photo" height="120" width="120" ></img>';
+            }
+            
+            ?>
             
             <div id="map"></div>
-            
             <script>
                 // Initialize and add the map
                 function initMap() {
