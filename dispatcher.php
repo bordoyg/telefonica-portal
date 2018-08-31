@@ -14,6 +14,9 @@ class Dispatcher {
     const CONFIRM_LABEL = 'confirmar';
     const CONFIRM_CONFIRM_LABEL = 'confirmarConfirm';
     const SCHEDULE_DATE_CONFIRM_LABEL = 'confirmarSchedule';
+    const SCHEDULE_MORE_DATES = 'masFechasSchedule';
+    const SCHEDULE_NO_MORE_DATES = 'noMasFechasSchedule';
+    const SCHEDULE_ANY_DATES = 'ningunaFechaSchedule';
     const CANCEL_LABEL = 'cancelar';
     const CANCEL_CONFIRM_LABEL = 'cancelConfirm';
     const SCHEDULE_DATE_LABEL = 'reagendar';
@@ -60,6 +63,12 @@ class Dispatcher {
                 return $this->controlador->excecuteConfirmConfirm();
             }
             if (strcmp(Dispatcher::SCHEDULE_DATE_LABEL, $action) === 0){
+                return $this->controlador->excecuteScheduleCalendar();
+            }
+            if (strcmp(Dispatcher::SCHEDULE_MORE_DATES, $action) === 0){
+                return $this->controlador->excecuteScheduleCalendar();
+            }
+            if (strcmp(Dispatcher::SCHEDULE_ANY_DATES, $action) === 0){
                 return $this->controlador->excecuteScheduleCalendar();
             }
             if (strcmp(Dispatcher::SCHEDULE_DATE_CONFIRM_LABEL, $action) === 0){

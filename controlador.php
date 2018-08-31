@@ -43,7 +43,7 @@ class Controlador {
          }
          
     }
-    function findAvailability() {
+    function findAvailability($days) {
         $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
         $activity=$this->findActivityData($activityID);
         
@@ -52,7 +52,7 @@ class Controlador {
         $date = date("Y-m-d");
         $queryString=$queryString . $date;
         
-        for($i=0; $i<38; $i++){
+        for($i=0; $i<$days; $i++){
             $newDate = strtotime($date."+ 1 days");
             $date = date("Y-m-d",$newDate);
             
@@ -96,8 +96,8 @@ class Controlador {
             if(count($timeSlots)>0){
                $date=new stdClass();
                $d=new DateTime();
-               $d->createFromFormat("Y-m-d", $activityBookingOptions->dates[$i]->date);
-               $date->date=d;
+               
+               $date->date=$d->createFromFormat("Y-m-d", $activityBookingOptions->dates[$i]->date);
                $date->timeSlots=$timeSlots;
                array_push($dates, $date);
             }
@@ -116,17 +116,16 @@ class Controlador {
             return null;
         }
     }
-    function createCalendar(){
+    function createCalendar($days){
         $calendar=array();
         $firstDay=new DateTime();
         $firstDay->setDate(date("Y"), date("m"), 1);
         $dayWeekFirstDay=$firstDay->format("w");
         $firstDayCalendar=$firstDay->sub(new DateInterval("P" . $dayWeekFirstDay . "D"));
         
-        $availability=$this->findAvailability();
+        $availability=$this->findAvailability($days);
         
-        
-        for($i=0;$i<6;$i++){
+        for($i=0;$i<7;$i++){
             $calendar[$i]=array();
             for($j=0;$j<7;$j++){
                 $dayOfMonth=new DateTime();
@@ -136,7 +135,10 @@ class Controlador {
                 
                 
                 for($k=0; $k<count($availability); $k++){
-                    if($availability[$k]->date == $dateItem->$dayOfMonth){
+                    $availabilityDate=$availability[$k]->date->format("Ymd");
+                    $dayOfCalendar=$dateItem->dayOfMonth->format("Ymd");
+                    
+                    if(strcmp($availabilityDate,$dayOfCalendar)==0){
                         $dateItem->timeSlots=$availability[$k]->timeSlots;
                     }
                 }
@@ -145,8 +147,6 @@ class Controlador {
                 $firstDayCalendar->add(new DateInterval("P1D"));
             }
         }
-        
-        
         
         return $calendar;
     }
@@ -221,7 +221,7 @@ class Controlador {
         return $activityDate > $currentDate;
     }
     function showCancel(){
-        //return true;
+        return true;
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
         $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date, new DateTimeZone($activity->timeZone));

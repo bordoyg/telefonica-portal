@@ -47,7 +47,7 @@ if(isset($activity)){
 <!-- 		</div> -->
 		<div class="container">
 			<h3 class="text_center">Datos personales</h3>
-			<form action="/app/telefonica/index" method="post" class="form_cliente">
+			<form action="" method="post" class="form_cliente">
 				<div class="clear-box col_grey">
 					<h2 class="top_form">Cliente</h2>
 					<div class="col-xs-12 col-sm-6">
