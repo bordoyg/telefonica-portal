@@ -33,7 +33,7 @@ a:hover, a:active {
     background: #5BC500;
     color: #fff;
     margin: 1em auto;
-    padding: 0.7em 1.5em;
+    /*padding: 0.7em 1.5em;*/
     font-size: 1.6em;
     line-height: 1.1;
     text-align: center;
@@ -206,4 +206,7 @@ a:hover, a:active {
 }
 #cont_agend .btn_general.col_red {
     background: #FB5B5C;
+}
+#cont_agend .btn_general.col_blue {
+    background: #00A9E0;
 }

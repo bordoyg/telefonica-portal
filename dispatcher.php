@@ -10,6 +10,7 @@ class Dispatcher {
     const SCHEDULE_ANY_DATE_URL = 'scheduleAnyDate.php';
     const LOCATION_URL = 'location.php';
     const CUSTOMER_DATA_URL = 'customerData.php';
+    const MENU_URL = 'menu.php';
     const ERROR_URL = 'error.php';
     
     const CONFIRM_LABEL = 'confirmar';
@@ -35,18 +36,18 @@ class Dispatcher {
             $this->controlador = $GLOBALS['Controlador'];
         } catch (Exception $e) {
             $this->controlador->addMessageError('Hubo un error inesperado al inicializar la aplicacion: ' . $e->getMessage());
-            return Dispatcher::CUSTOMER_DATA_URL;
+            return Dispatcher::MENU_URL;
         }
     }
     function resolveAction() {
         $action = isset($_REQUEST[Dispatcher::OPTION_PARAM]) ? $_REQUEST[Dispatcher::OPTION_PARAM] : null ;
-        
         try {
             $activityID=isset($_GET[Controlador::ACTIVITY_PARAM]) ? $_GET[Controlador::ACTIVITY_PARAM] : null ;
             if (!isset($activityID)){
                 $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
             }
             if (!isset($activityID)){
+                $this->controlador->addMessageError('La orden no existe');
                 return Dispatcher::ERROR_URL;
             }else{
                 $activity=$this->getControlador()->findActivityData($activityID);
@@ -55,12 +56,13 @@ class Dispatcher {
                 }else{
                     //Expiramos la cookie
                     setcookie(Controlador::ACTIVITY_PARAM, $activityID,time()-3600);
+                    $this->controlador->addMessageError('La orden no existe');
                     return Dispatcher::ERROR_URL;
                 }
             }
             
                    
-            if (strcmp(Dispatcher::CONFIRM_CONFIRM_LABEL, $action) === 0){
+            if (strcmp(Dispatcher::CONFIRM_LABEL, $action) === 0){
                 return $this->controlador->excecuteConfirmConfirm();
             }
             if (strcmp(Dispatcher::SCHEDULE_DATE_LABEL, $action) === 0){
@@ -70,22 +72,22 @@ class Dispatcher {
                 return $this->controlador->excecuteScheduleCalendar();
             }
             if (strcmp(Dispatcher::SCHEDULE_ANY_DATES, $action) === 0){
-                return Dispatcher::SCHEDULE_ANY_DATE_URL;
+                return Dispatcher::MENU_URL;
             }
             if (strcmp(Dispatcher::SCHEDULE_DATE_CONFIRM_LABEL, $action) === 0){
                 return $this->controlador->excecuteScheduleConfirm();
             }
-            if (strcmp(Dispatcher::CANCEL_CONFIRM_LABEL, $action) === 0){
+            if (strcmp(Dispatcher::CANCEL_LABEL, $action) === 0){
                 return $this->controlador->excecuteCancelConfirm();
             }
             if (strcmp(Dispatcher::LOCATION_LABEL, $action) === 0){
                 return $this->controlador->excecuteLocation();
             }else{
-                return Dispatcher::CUSTOMER_DATA_URL;
+                return Dispatcher::MENU_URL;
             }
         } catch (Exception $e) {
             $this->controlador->addMessageError('Hubo un error inesperado: ' . $e->getMessage());
-            return Dispatcher::CUSTOMER_DATA_URL;
+            return Dispatcher::ERROR_URL;
         }
     }
 

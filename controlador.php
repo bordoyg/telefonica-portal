@@ -11,6 +11,8 @@ class Controlador {
 	const SCHUEDULE_DATE_PARAM='timeSlot';
 	const STATUS_LOCALIZABLE=array('onTheWay', 'started');
 	const STATUS_PENDING="pending";
+	
+	const ERROR_GENERIC_MSJ="Debido a un problema t&eacute;cnico no podemos procesar tu solicitud en este momento. Por favor intenta lo nuevamente m&aacute;s tardeTu cita no puede ser confirmada o modificada debido a que no se encuentra vigente en este momento. Si tienes alguna inquietud puedes comunicarte a la l&iacute;nea 01 80009 969090.";
     private $service=NULL;
  
     function __construct() {
@@ -66,7 +68,6 @@ class Controlador {
         $queryString=$queryString . '&XA_QUADRANT=' . $activity->XA_QUADRANT;
         $queryString=$queryString . '&XA_NUMBER_DECODERS=1';//No viene en la actividad, funciona con algun nro natural
         $queryString=$queryString . '&determineAreaByWorkZone=true';
-        
         
         $activityBookingOptions=$this->service->request('/rest/ofscCapacity/v1/activityBookingOptions', 'GET', $queryString);
         $timeSlotsMap=array();
@@ -168,12 +169,9 @@ class Controlador {
             
             return Dispatcher::CANCEL_CONFIRM_URL;
         } catch (Exception $e) {
-            if($e->getCode()=="409"){
-                $this->addMessageError('No se pudo cancelar la cita contactese con atenci&oacute;n al cliente');
-            }else{
-                $this->addMessageError('Hubo un error al cancelar la cita: ' . $e->getMessage());
-            }
-            return Dispatcher::CUSTOMER_DATA_URL;
+            $this->logDebug('Hubo un error al cancelar la cita: ' . $e->getMessage());
+            $this->addMessageError(Controlador::ERROR_GENERIC_MSJ);
+            return Dispatcher::ERROR_URL;
         }
     }
     function excecuteScheduleCalendar(){
@@ -200,8 +198,9 @@ class Controlador {
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
             return Dispatcher::SCHEDULE_DATE_CONFIRM_URL;
         }catch(Exception $e){
-            $this->addMessageError('Hubo un error al reagendar la cita: ' . $e->getMessage());
-            return Dispatcher::SCHEDULE_DATE_URL;
+            $this->logDebug('Hubo un error al reagendar la cita: ' . $e->getMessage());
+            $this->addMessageError(Controlador::ERROR_GENERIC_MSJ);
+            return Dispatcher::ERROR_URL;
         }        
     }
 
@@ -216,8 +215,9 @@ class Controlador {
             
             return Dispatcher::CONFIRM_CONFIRM_URL;
         }catch(Exception $e){
-            $this->addMessageError('Hubo un error al confirmar la cita: ' . $e->getMessage());
-            return Dispatcher::CUSTOMER_DATA_URL;
+            $this->logDebug('Hubo un error al reagendar la cita: ' . $e->getMessage());
+            $this->addMessageError(Controlador::ERROR_GENERIC_MSJ);
+            return Dispatcher::ERROR_URL;
         }
 
     }
@@ -253,10 +253,13 @@ class Controlador {
         $activity=$this->findActivityData($activityID);
         $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date, new DateTimeZone($activity->timeZone));
         $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'), new DateTimeZone($activity->timeZone));
-        return $activity->status == Controlador::STATUS_LOCALIZABLE && $activityDate == $currentDate;
+        return in_array($locationData->status, Controlador::STATUS_LOCALIZABLE) && $activityDate == $currentDate;
     }
     function addMessageError($msj){
         $_REQUEST[Controlador::MESSAGE_PARAM]=$msj;
+    }
+    function logDebug($msj){
+        echo '<div key="log" style="display:none;">' . $msj . '</div>';
     }
     function getActivityIdFromContext(){
         $activityID=isset($_GET[Controlador::ACTIVITY_PARAM]) ? $_GET[Controlador::ACTIVITY_PARAM] : null ;

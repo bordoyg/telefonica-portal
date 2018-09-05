@@ -74,7 +74,7 @@
                 var timer = new Timer();
                 timer.start();
                 timer.addEventListener('secondsUpdated', function (e) {
-                    $('#basicUsage').html('$uacute;ltima posici&oacute;n ' + timer.getTimeValues().toString() + 's');
+                    $('#basicUsage').html('&uacute;ltima posici&oacute;n ' + timer.getTimeValues().toString() + 's');
                 });
     		</script>
 		</div>
