@@ -9,7 +9,7 @@ class Controlador {
 	const LOCATION_CUSTOMER_PARAM='locationCustomer';
 	const LOCATION_TECHNICAN="technicanLocation";
 	const SCHUEDULE_DATE_PARAM='timeSlot';
-	const STATUS_LOCALIZABLE='onTheWay';
+	const STATUS_LOCALIZABLE=array('onTheWay', 'started');
 	const STATUS_PENDING="pending";
     private $service=NULL;
  
@@ -30,7 +30,7 @@ class Controlador {
          $locationData=$this->service->request('/rest/ofscCore/v1/whereIsMyTech', 'GET', 'activityId=' . $activity->activityId . '&includeAvatarImageData=true');
          $_REQUEST[Controlador::LOCATION_TECHNICAN]=$locationData;
          
-         if($locationData->status==Controlador::STATUS_LOCALIZABLE){
+         if(in_array($locationData->status, Controlador::STATUS_LOCALIZABLE)){
              if(isset($locationData->coordinates) && isset($locationData->coordinates->latitude) && isset($locationData->coordinates->longitude)){
                  $lat=$locationData->coordinates->latitude;
                  $lng=$locationData->coordinates->longitude;
@@ -155,7 +155,16 @@ class Controlador {
         try {
             $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
             $activity=$this->findActivityData($activityID);
-            $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId . '/custom-actions/cancel', 'POST');
+          
+            $params=array("setDate"=>array("date"=>NULL));
+            $params=json_encode($params);
+            //Se actualiza el dia = null
+            $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId . '/custom-actions/move', 'POST', $params);
+
+            $params=array("timeSlot"=>NULL, "XA_CONFIRMACITA"=>"CANCELADA");
+            $params=json_encode($params);
+            //Se actualiza el timeslot y el estado XA_CONFIRMACITA
+            $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
             
             return Dispatcher::CANCEL_CONFIRM_URL;
         } catch (Exception $e) {
@@ -185,9 +194,9 @@ class Controlador {
 
             
             $scheduleTimeslot=substr($rawTimeslot, strrpos($rawTimeslot, '|') + 1);
-            $params=array("timeSlot"=>$scheduleTimeslot);
+            $params=array("timeSlot"=>$scheduleTimeslot, "XA_CONFIRMACITA"=>"MODIFICADA");
             $params=json_encode($params);
-            //Se actualiza el timeslot
+            //Se actualiza el timeslot y el estado XA_CONFIRMACITA
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
             return Dispatcher::SCHEDULE_DATE_CONFIRM_URL;
         }catch(Exception $e){
@@ -198,7 +207,13 @@ class Controlador {
 
     function excecuteConfirmConfirm(){
         try{
-            //$this->service->request('/rest/ofscCore/v1/activities/ rest method to confirm activity', 'POST');
+            $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+            $activity=$this->findActivityData($activityID);
+            $params=array("XA_CONFIRMACITA"=>"CONFIRMADA");
+            $params=json_encode($params);
+            //Se actualiza el estado XA_CONFIRMACITA
+            $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
+            
             return Dispatcher::CONFIRM_CONFIRM_URL;
         }catch(Exception $e){
             $this->addMessageError('Hubo un error al confirmar la cita: ' . $e->getMessage());

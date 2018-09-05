@@ -7,6 +7,7 @@ class Dispatcher {
     const CANCEL_CONFIRM_URL = 'cancelConfirm.php';
     const SCHEDULE_DATE_URL = 'scheduleDate.php';
     const SCHEDULE_DATE_CONFIRM_URL = 'scheduleDateConfirm.php';
+    const SCHEDULE_ANY_DATE_URL = 'scheduleAnyDate.php';
     const LOCATION_URL = 'location.php';
     const CUSTOMER_DATA_URL = 'customerData.php';
     const ERROR_URL = 'error.php';
@@ -69,7 +70,7 @@ class Dispatcher {
                 return $this->controlador->excecuteScheduleCalendar();
             }
             if (strcmp(Dispatcher::SCHEDULE_ANY_DATES, $action) === 0){
-                return $this->controlador->excecuteScheduleCalendar();
+                return Dispatcher::SCHEDULE_ANY_DATE_URL;
             }
             if (strcmp(Dispatcher::SCHEDULE_DATE_CONFIRM_LABEL, $action) === 0){
                 return $this->controlador->excecuteScheduleConfirm();

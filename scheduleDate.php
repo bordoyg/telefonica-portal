@@ -99,7 +99,7 @@
 					                
 					                echo ' <div class="date_checkbox">';
 					                echo '     <label><input type="radio" name="' . Controlador::SCHUEDULE_DATE_PARAM . '"';
-					                echo '         value="' . $calendar[$i][$j]->dayOfMonth->format('Y-m-d') .'|'. $calendar[$i][$j]->timeSlots[$k]->name . '"';
+					                echo '         value="' . $calendar[$i][$j]->dayOfMonth->format('Y-m-d') .'|'. $calendar[$i][$j]->timeSlots[$k]->label . '"';
 					                echo '         onclick="timeslotSelected(this);"><span';
 					                echo '         class="checkmark"></span>';
 					                echo '     <p>' . $timeFrom . ' - ' . $timeTo . '</p></label>';
@@ -202,8 +202,8 @@
                 
 				<div class="row">
 				<?php 
- 					  $noMoreDates=$_REQUEST[Dispatcher::SCHEDULE_NO_MORE_DATES];
- 					  $noMoreDatesBool=strcmp($noMoreDates, "true")==0;
+				      $noMoreDates=$_REQUEST[Dispatcher::OPTION_PARAM ];
+ 					  $noMoreDatesBool=strcmp($noMoreDates, Dispatcher::SCHEDULE_MORE_DATES)==0;
  				 ?>
 					<div class="col-xs-12 <?php echo $noMoreDatesBool? '':'col-sm-6'; ?> ">
 						<button type="submit" id="confirm" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_CONFIRM_LABEL ?>"

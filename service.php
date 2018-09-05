@@ -53,7 +53,7 @@ class Service {
         $content = json_decode($return);
         
         if($httpcode!="200" && $httpcode!="204"){
-            throw new Exception("El servicio retorno un error: " . (isset($content->detail)? $content->detail : $httpcode), $httpcode);
+            throw new Exception("El servicio " . $method . " " . $path . " retorno un error: " . (isset($content->detail)? $content->detail : $httpcode), $httpcode . " respuesta: " . $return . " parametros: " . $params);
         }
 
         return $content;

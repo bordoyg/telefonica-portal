@@ -10,7 +10,7 @@ if(isset($activity)){
     
     $streetAddress=isset($activity->streetAddress)?$activity->streetAddress:'';
 
-    $status=isset($activity->status)?$activity->status:'';
+    $status=isset($activity->XA_CONFIRMACITA)?$activity->XA_CONFIRMACITA:'PENDIENTE';
     
     $stateProvince=isset($activity->stateProvince)?$activity->stateProvince:'';
     
