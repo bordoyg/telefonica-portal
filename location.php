@@ -27,8 +27,11 @@
 		<div class="container">
             <h3 class="text_center">Donde esta mi t&eacute;cnico?</h3>
             <?php include Controlador::MESSAGES_URL; ?>
+            <div>
+            <div style="float:left;">
 			<h4>Nombre del t&eacute;nico: <?php echo $_REQUEST[Controlador::LOCATION_TECHNICAN]->resourceDetails->name; ?></h4>
-            
+			</div>
+            <div style="float:right;">
             <?php 
             if(isset($_REQUEST[Controlador::LOCATION_TECHNICAN]->resourceDetails->avatar->imageData)){
                 $mediaType=$_REQUEST[Controlador::LOCATION_TECHNICAN]->resourceDetails->avatar->mediaType;
@@ -39,7 +42,12 @@
             }
             
             ?>
+            </div>
+            </div>
+            <div style="height:10px; clear: both;"></div>
             
+			
+
             <div id="map"></div>
             <script>
                 // Initialize and add the map
@@ -58,6 +66,17 @@
             <script async defer
             	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDTCrs1Dqz_aMDCQx4UWjD87f9_0xq6nQc&callback=initMap">
             </script>
+            
+            <div style="height:10px; clear: both;"></div>
+            <script src="/euf/assets/others/telefonica/js/easytimer.min.js"></script>
+            <div style="float:right;" id="basicUsage"></div>
+            <script>
+                var timer = new Timer();
+                timer.start();
+                timer.addEventListener('secondsUpdated', function (e) {
+                    $('#basicUsage').html('$uacute;ltima posici&oacute;n ' + timer.getTimeValues().toString() + 's');
+                });
+    		</script>
 		</div>
 	</div>
 	<script
