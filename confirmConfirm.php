@@ -41,6 +41,11 @@
 <!-- 				</h2> -->
 <!-- 				<a href="../mmIv1SISasIvF6sS/" class="button btn_general" style="width: inherit;" onclick="onSubmitButton(this);">Proceder</a>
 <!-- 			</div> -->
+			<form action="" method="post">
+    			<div>
+    				<button type="submit" class="button btn btn-lg btn-primary" >Volver</button>
+    			</div>
+    		</form>
 		</div>
 	</div>
 </body>

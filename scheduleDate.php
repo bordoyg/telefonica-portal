@@ -38,45 +38,65 @@
 							</thead>
 							<tbody>
 								<?php 
-								$Controlador = $GLOBALS['Controlador'];
-								$action=$_REQUEST[Dispatcher::OPTION_PARAM];
-								if (strcmp(Dispatcher::SCHEDULE_MORE_DATES, $action) === 0){
-								    $calendar=$Controlador->createCalendar(15);
-								    $cantSemanas=6;
-								    echo '<input type="hidden" name="' . Dispatcher::SCHEDULE_NO_MORE_DATES . '" value"true"/>';
-								}else{
-								    $calendar=$Controlador->createCalendar(7);
+								try{
+								    $Controlador = $GLOBALS['Controlador'];
+								    $action=$_REQUEST[Dispatcher::OPTION_PARAM];
+								    $cantDias=7;
 								    $cantSemanas=5;
-								}
-								
-								$currentStrDate=date('Y-m-d');
-								for($i=0;$i<$cantSemanas + 1;$i++){
-								    if($i==$cantSemanas){
-								        echo '<tr style="display:none;">';
-								    }else{
-								        echo '<tr>';
+								    if (strcmp(Dispatcher::SCHEDULE_MORE_DATES, $action) === 0){
+								        $cantDias=15;
+								        echo '<input type="hidden" name="' . Dispatcher::SCHEDULE_NO_MORE_DATES . '" value"true"/>';
 								    }
 								    
-								    for($j=0;$j<7;$j++){
-								        $cssDisponible="";
-								        $jsScript ="";
-								        if(isset($calendar[$i][$j]->timeSlots)){
-								            $cssDisponible=" calendar-disponible ";
-								            $jsScript='onclick="dateSelected(event);"';
-								        }else{
-								            if(strcmp($calendar[$i][$j]->dayOfMonth->format("Y-m-d"),$currentStrDate)>0){
-								                $cssDisponible=" calendar-no-disponible ";
-								            }
-								        }
-								        $cssToday="";
-								        if($calendar[$i][$j]->dayOfMonth->format("Y-m-d")==$currentStrDate){
-								            $cssToday=" today";
-								        }
-								        echo '<td><a href="javascript:;" class="day' . $cssDisponible . $cssToday . '" ' . $jsScript . ' data-day="' . $calendar[$i][$j]->dayOfMonth->format('Ymd') . '">' . $calendar[$i][$j]->dayOfMonth->format('d') . '</a></td>';
+								    $endConsultedDay=new DateTime("now");
+								    $endConsultedDay=$endConsultedDay->sub(new DateInterval("P1D"));
+								    $endConsultedDay=$endConsultedDay->add(new DateInterval("P" . $cantDias . "D"));
+								    $month = date('m');
+								    $year = date('Y');
+								    $day = date("d", mktime(0,0,0, $month+1, 0, $year));
+								    $lastDayOfMonth=new DateTime("now");
+								    $lastDayOfMonth->setDate($year, $month, $day);
+								    if($endConsultedDay->format("Y-m-d") > $lastDayOfMonth->format("Y-m-d")){
+								        $cantSemanas=6;
 								    }
-								    echo '</tr>';
+								    
+								    $calendar=$Controlador->createCalendar($cantDias);
+								    $currentStrDate=date('Y-m-d');
+								    for($i=0;$i<$cantSemanas + 1;$i++){
+								        if($i==$cantSemanas){
+								            echo '<tr style="display:none;">';
+								        }else{
+								            echo '<tr>';
+								        }
+								        
+								        for($j=0;$j<7;$j++){
+								            $cssDisponible="";
+								            $jsScript ="";
+								            if($calendar[$i][$j]->dayOfMonth->format("Y-m-d")>=$currentStrDate
+								                && $calendar[$i][$j]->dayOfMonth->format("Y-m-d")<=$endConsultedDay->format("Y-m-d")){
+								                    
+								                    if(isset($calendar[$i][$j]->timeSlots)){
+								                        $cssDisponible=" calendar-disponible ";
+								                        $jsScript='onclick="dateSelected(event);"';
+								                    }else{
+								                        if(strcmp($calendar[$i][$j]->dayOfMonth->format("Y-m-d"), $currentStrDate)>0){
+								                            $cssDisponible=" calendar-no-disponible ";
+								                        }
+								                    }
+								            }
+								            $cssToday="";
+								            if($calendar[$i][$j]->dayOfMonth->format("Y-m-d")==$currentStrDate){
+								                $cssToday=" today";
+								            }
+								            echo '<td><a href="javascript:;" class="day' . $cssDisponible . $cssToday . '" ' . $jsScript . ' data-day="' . $calendar[$i][$j]->dayOfMonth->format('Ymd') . '">' . $calendar[$i][$j]->dayOfMonth->format('d') . '</a></td>';
+								        }
+								        echo '</tr>';
+								    }
+								    
+								} catch (Exception $e) {
+								    $Controlador->logDebug('Hubo un error inesperado: ' . $e->getMessage());
 								}
-								
+																
 								?>
 							</tbody>
 						</table>

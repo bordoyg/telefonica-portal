@@ -77,6 +77,12 @@
                     $('#basicUsage').html('&uacute;ltima posici&oacute;n ' + timer.getTimeValues().toString() + 's');
                 });
     		</script>
+    		<form action="" method="post">
+    			<div>
+    				<button type="submit" class="button btn btn-lg btn-primary" >Volver</button>
+    			</div>
+    		
+    		</form>
 		</div>
 	</div>
 	<script

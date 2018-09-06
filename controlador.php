@@ -54,7 +54,7 @@ class Controlador {
         $date = date("Y-m-d");
         $queryString=$queryString . $date;
         
-        for($i=0; $i<$days; $i++){
+        for($i=0; $i<$days - 1; $i++){
             $newDate = strtotime($date."+ 1 days");
             $date = date("Y-m-d",$newDate);
             
@@ -69,6 +69,7 @@ class Controlador {
         $queryString=$queryString . '&XA_NUMBER_DECODERS=1';//No viene en la actividad, funciona con algun nro natural
         $queryString=$queryString . '&determineAreaByWorkZone=true';
         
+        $this->logDebug($queryString);
         $activityBookingOptions=$this->service->request('/rest/ofscCapacity/v1/activityBookingOptions', 'GET', $queryString);
         $timeSlotsMap=array();
         if(isset($activityBookingOptions->timeSlotsDictionary)){
@@ -126,7 +127,7 @@ class Controlador {
         
         $availability=$this->findAvailability($days);
         
-        for($i=0;$i<7;$i++){
+        for($i=0;$i<8;$i++){
             $calendar[$i]=array();
             for($j=0;$j<7;$j++){
                 $dayOfMonth=new DateTime();
@@ -253,13 +254,13 @@ class Controlador {
         $activity=$this->findActivityData($activityID);
         $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date, new DateTimeZone($activity->timeZone));
         $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'), new DateTimeZone($activity->timeZone));
-        return in_array($locationData->status, Controlador::STATUS_LOCALIZABLE) && $activityDate == $currentDate;
+        return in_array($activity->status, Controlador::STATUS_LOCALIZABLE) && $activityDate == $currentDate;
     }
     function addMessageError($msj){
         $_REQUEST[Controlador::MESSAGE_PARAM]=$msj;
     }
     function logDebug($msj){
-        echo '<div key="log" style="display:none;">' . $msj . '</div>';
+        echo '<div key="logDebug" time="' . time() . '" style="display:none;">' . $msj . '</div>';
     }
     function getActivityIdFromContext(){
         $activityID=isset($_GET[Controlador::ACTIVITY_PARAM]) ? $_GET[Controlador::ACTIVITY_PARAM] : null ;
