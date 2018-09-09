@@ -26,7 +26,7 @@
 <!-- 		</div> -->
 		<div class="container">
             <h3 class="text_center">Donde esta mi t&eacute;cnico?</h3>
-            <?php include Controlador::MESSAGES_URL; ?>
+            
             <div>
             <div style="float:left;">
 			<h4>Nombre del t&eacute;nico: <?php echo $_REQUEST[Controlador::LOCATION_TECHNICAN]->resourceDetails->name; ?></h4>

@@ -11,8 +11,7 @@ class Service {
     private $encodeCredential=NULL;
     
     function __construct() {
-        $config=parse_ini_file (APPPATH. '/models/custom/telefonica/conf/config.ini', true);
-        $parameters=$config['ofsc'];
+        $parameters=$GLOBALS['config'];
         $this->userOFSC=$parameters['user'];
         $this->passOFSC=$parameters['pass'];
         $this->instanceID=$parameters['instanceID'];

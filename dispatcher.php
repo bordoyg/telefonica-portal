@@ -12,13 +12,13 @@ class Dispatcher {
     const CUSTOMER_DATA_URL = 'customerData.php';
     const MENU_URL = 'menu.php';
     const ERROR_URL = 'error.php';
+    const MESSAGES_URL = 'messages.php';
     
     const CONFIRM_LABEL = 'confirmar';
     const CONFIRM_CONFIRM_LABEL = 'confirmarConfirm';
     const SCHEDULE_DATE_CONFIRM_LABEL = 'confirmarSchedule';
     const SCHEDULE_MORE_DATES = 'masFechasSchedule';
     const SCHEDULE_NO_MORE_DATES = 'noMasFechasSchedule';
-    const SCHEDULE_ANY_DATES = 'ningunaFechaSchedule';
     const CANCEL_LABEL = 'cancelar';
     const CANCEL_CONFIRM_LABEL = 'cancelConfirm';
     const SCHEDULE_DATE_LABEL = 'reagendar';
@@ -30,12 +30,15 @@ class Dispatcher {
     
     function __construct() {
         try{
+            $config=parse_ini_file (APPPATH. '/models/custom/telefonica/conf/config.ini', false);
+            $GLOBALS['config']=$config;
             if(!isset( $GLOBALS['Controlador'])){
                 $GLOBALS['Controlador']=new Controlador();
             }
             $this->controlador = $GLOBALS['Controlador'];
         } catch (Exception $e) {
-            $this->controlador->addMessageError('Hubo un error inesperado al inicializar la aplicacion: ' . $e->getMessage());
+            $this->controlador->addMessageError('Hubo un error inesperado al inicializar la aplicacion');
+            $this->controlador->logDebug('Hubo un error inesperado al inicializar la aplicacion', $e);
             return Dispatcher::MENU_URL;
         }
     }
@@ -47,8 +50,8 @@ class Dispatcher {
                 $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
             }
             if (!isset($activityID)){
-                $this->controlador->addMessageError('La orden no existe');
-                return Dispatcher::ERROR_URL;
+                $this->controlador->addMessageError(Controlador::ERROR_ORDEN_INEXISTENTE);
+                return Dispatcher::MESSAGES_URL;
             }else{
                 $activity=$this->getControlador()->findActivityData($activityID);
                 if (isset($activity)){
@@ -56,8 +59,8 @@ class Dispatcher {
                 }else{
                     //Expiramos la cookie
                     setcookie(Controlador::ACTIVITY_PARAM, $activityID,time()-3600);
-                    $this->controlador->addMessageError('La orden no existe');
-                    return Dispatcher::ERROR_URL;
+                    $this->controlador->addMessageError(Controlador::ERROR_ORDEN_INEXISTENTE);
+                    return Dispatcher::MESSAGES_URL;
                 }
             }
             
@@ -71,9 +74,6 @@ class Dispatcher {
             if (strcmp(Dispatcher::SCHEDULE_MORE_DATES, $action) === 0){
                 return $this->controlador->excecuteScheduleCalendar();
             }
-            if (strcmp(Dispatcher::SCHEDULE_ANY_DATES, $action) === 0){
-                return Dispatcher::MENU_URL;
-            }
             if (strcmp(Dispatcher::SCHEDULE_DATE_CONFIRM_LABEL, $action) === 0){
                 return $this->controlador->excecuteScheduleConfirm();
             }
@@ -83,11 +83,12 @@ class Dispatcher {
             if (strcmp(Dispatcher::LOCATION_LABEL, $action) === 0){
                 return $this->controlador->excecuteLocation();
             }else{
-                return Dispatcher::MENU_URL;
+                return $this->controlador->excecuteMenu();
             }
         } catch (Exception $e) {
             $this->controlador->addMessageError('Hubo un error inesperado: ' . $e->getMessage());
-            return Dispatcher::ERROR_URL;
+            $this->controlador->logDebug('Hubo un error inesperado', $e);
+            return Dispatcher::MESSAGES_URL;
         }
     }
 

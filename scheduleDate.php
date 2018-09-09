@@ -17,7 +17,6 @@
 			</ul>
 		</div>
 		<h2 class="text_center">Elije la fecha y jornada de tu cita.</h2>
-		<?php include Controlador::MESSAGES_URL; ?>
 
 		<div class="container">
 			<form action="" method="post">
@@ -41,10 +40,10 @@
 								try{
 								    $Controlador = $GLOBALS['Controlador'];
 								    $action=$_REQUEST[Dispatcher::OPTION_PARAM];
-								    $cantDias=7;
+								    $cantDias=$GLOBALS['config']['days-first-query-capacity'];
 								    $cantSemanas=5;
 								    if (strcmp(Dispatcher::SCHEDULE_MORE_DATES, $action) === 0){
-								        $cantDias=15;
+								        $cantDias=$GLOBALS['config']['days-second-query-capacity'];
 								        echo '<input type="hidden" name="' . Dispatcher::SCHEDULE_NO_MORE_DATES . '" value"true"/>';
 								    }
 								    
@@ -94,7 +93,7 @@
 								    }
 								    
 								} catch (Exception $e) {
-								    $Controlador->logDebug('Hubo un error inesperado: ' . $e->getMessage());
+								    $Controlador->logDebug('Hubo un error inesperado', $e);
 								}
 																
 								?>
@@ -232,7 +231,7 @@
  					<div class="col-xs-12 <?php echo $noMoreDatesBool? '':'col-sm-6'; ?> ">
  						<?php 
  						if($noMoreDatesBool){
- 						    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::SCHEDULE_ANY_DATES . '" ';
+ 						    echo '<button type="submit" ';
  						    echo 'class="button btn_general col_red" onclick="onSubmitButton(this);">Ninguna fecha y jornada disponible funciona para mi</button>';
  						}else{
  						    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::SCHEDULE_MORE_DATES . '"';

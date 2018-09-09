@@ -93,7 +93,7 @@ if(isset($activity)){
 							type="text" value="<?php  echo $status?>">
 					</div>
 				</div>
-				<?php include Controlador::MESSAGES_URL; ?>
+				<?php include Controlador::MESSAGES_MODAL_URL; ?>
 				<!-- modales -->
                 <?php include 'cancelModal.php'?>
                 <?php include 'confirmModal.php'?>
