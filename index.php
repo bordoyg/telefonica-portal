@@ -1,15 +1,6 @@
 <?php
-include('dispatcher.php');
-
-if(!isset($GLOBALS['dispatcher'])){
-    $GLOBALS['dispatcher']=new Dispatcher();
-}
-$dispatcher = $GLOBALS['dispatcher'];
-
-
-
-$htmlFile=$dispatcher->resolveAction();
-isset($htmlFile) ? include $htmlFile :'';
+include 'dispatcher.php';
+include 'basicInit.php';
 ?>
 <?php 
     // Customer Portal no permite usar variables de session custom para esta version del producto, por eso se usan cookies

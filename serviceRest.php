@@ -1,6 +1,6 @@
 <?php
 
-class Service {
+class ServiceRest {
     private $userOFSC= 'test.oracle';
     private $passOFSC='ora.2018';
     private $instanceID='telefonica-co2.test';

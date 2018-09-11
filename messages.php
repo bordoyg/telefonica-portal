@@ -20,9 +20,12 @@
 				<?php 
 				if(strcmp(Controlador::ERROR_ORDEN_INEXISTENTE, $_REQUEST[Controlador::MESSAGE_PARAM])!=0
 				    && strcmp(Controlador::ERROR_ORDEN_NO_VIGENTE, $_REQUEST[Controlador::MESSAGE_PARAM])!=0){
-				    echo '<div>';
-				    echo '  <button type="submit" class="button btn btn-lg btn-primary" >Volver</button>';
-				    echo '</div>';
+				    
+			        if(!isset($_REQUEST[Dispatcher::NO_VOLVER])){
+			            echo '<form action="" method="post">';
+			            echo '    <div><button type="submit" class="button btn btn-lg btn-primary" >Volver</button></div>';
+			            echo '</form>';
+			        }
 				}
 				?>
 			</div>

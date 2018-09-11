@@ -1,5 +1,5 @@
 <?php
-include('controlador.php');
+include 'controlador.php';
 
 class Dispatcher {
     const INDEX_URL='index.php';
@@ -25,6 +25,8 @@ class Dispatcher {
     const LOCATION_LABEL = 'map';
     
     const OPTION_PARAM = 'opcion';
+    
+    const NO_VOLVER = 'novolver';
 
     private $controlador=NULL;
     

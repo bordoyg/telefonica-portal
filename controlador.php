@@ -1,5 +1,6 @@
 <?php
-include('service.php');
+include 'serviceRest.php';
+include 'serviceSoap.php';
 
 class Controlador {
     const MESSAGE_PARAM = 'errorMessage';
@@ -21,12 +22,18 @@ class Controlador {
 	const MSJ_ORDEN_CANCELADA="De acuerdo a tu elecci&oacute;n tu cita ha sido cancelada. Podr&aacute;s reprogramarla posteriormente comunic&aacute;ndote a la l&iacute;nea de atenci&oacute;n gratuita 01 80009 969090";
 	
     private $service=NULL;
- 
+    private $serviceSoap=NULL;
+    
     function __construct() {
-        if(!isset($GLOBALS['service'])){
-            $GLOBALS['service']=new Service();
+        if(!isset($GLOBALS['serviceRest'])){
+            $GLOBALS['serviceRest']=new ServiceRest();
         }
-        $this->service = $GLOBALS['service'];
+        $this->service = $GLOBALS['serviceRest'];
+        
+        if(!isset($GLOBALS['serviceSoap'])){
+            $GLOBALS['serviceSoap']=new ServiceSoap();
+        }
+        $this->serviceSoap = $GLOBALS['serviceSoap'];
     }
 
     function findTechnicanLocation($activity){
@@ -254,6 +261,9 @@ class Controlador {
         return Dispatcher::LOCATION_URL;
     }
     function excecuteMenu(){
+        return Dispatcher::MENU_URL;
+    }
+    function isValidActivity(){
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
         
@@ -270,17 +280,7 @@ class Controlador {
         
         $this->logDebug("interval en minutos: " . $intervalInMinutes);
         
-        if(strcmp($activity->status, STATUS_PENDING)==0 
-            && strcmp($activity->XA_ROUTE, "1")
-            && $intervalInMinutes>=20){
-                
-                return Dispatcher::MENU_URL;
-        }else{
-            $this->addMessageError(Controlador::ERROR_ORDEN_NO_VIGENTE);
-            return Dispatcher::MESSAGES_URL;
-        }
-        
-        
+        return strcmp($activity->status, STATUS_PENDING)==0 && strcmp($activity->XA_ROUTE, "1") && $intervalInMinutes>=20;
     }
     function showConfirm(){
         return true;
