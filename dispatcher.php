@@ -14,7 +14,6 @@ class Dispatcher {
     const ERROR_URL = 'error.php';
     const MESSAGES_URL = 'messages.php';
     
-    const CONFIRM_LABEL = 'confirmar';
     const CONFIRMAR_LABEL = 'confirmar';
     const CONFIRM_CONFIRM_LABEL = 'confirmarConfirm';
     const SCHEDULE_DATE_CONFIRM_LABEL = 'confirmarSchedule';
