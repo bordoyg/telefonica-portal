@@ -1,10 +1,8 @@
 <?php
-
-include 'dispatcher.php';
-$_REQUEST[Dispatcher::OPTION_PARAM]=Dispatcher::LOCATION_LABEL;
+require_once(APPPATH . 'widgets/custom/library/dispatcher.php');
+$_REQUEST[Dispatcher::OPTION_PARAM]=Dispatcher::UBICACION_LABEL;
 $_REQUEST[Dispatcher::NO_VOLVER]="";
-include 'basicInit.php';
-
+require_once(APPPATH . 'widgets/custom/library/telefonica/basicInit.php');
 ?>
 <head>
 </head>

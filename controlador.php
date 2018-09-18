@@ -1,6 +1,6 @@
 <?php
-include 'serviceRest.php';
-include 'serviceSoap.php';
+require_once(APPPATH . 'widgets/custom/library/serviceRest.php');
+require_once(APPPATH . 'widgets/custom/library/serviceSoap.php');
 
 class Controlador {
     const MESSAGE_PARAM = 'errorMessage';
@@ -333,3 +333,8 @@ class Controlador {
         return $activityID;
     }
 }
+?>
+<head>
+</head>
+<body>
+</body>

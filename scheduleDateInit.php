@@ -1,9 +1,9 @@
 <?php
 
-include 'dispatcher.php';
+require_once(APPPATH . 'widgets/custom/library/telefonica/dispatcher.php');
 $_REQUEST[Dispatcher::OPTION_PARAM]=Dispatcher::SCHEDULE_DATE_LABEL;
 $_REQUEST[Dispatcher::NO_VOLVER]="";
-include 'basicInit.php';
+require_once(APPPATH . 'widgets/custom/library/basicInit.php');
 
 ?>
 <head>

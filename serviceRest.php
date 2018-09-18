@@ -71,3 +71,8 @@ class ServiceRest {
         return $decrypted;
     }
 }
+?>
+<head>
+</head>
+<body>
+</body>

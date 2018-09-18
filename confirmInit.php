@@ -1,9 +1,9 @@
 <?php
 
-include 'dispatcher.php';
-$_REQUEST[Dispatcher::OPTION_PARAM]=Dispatcher::CONFIRM_LABEL;
+require_once(APPPATH . 'widgets/custom/library/dispatcher.php');
+$_REQUEST[Dispatcher::OPTION_PARAM]=Dispatcher::CONFIRMAR_LABEL;
 $_REQUEST[Dispatcher::NO_VOLVER]="";
-include 'basicInit.php';
+require_once(APPPATH . 'widgets/custom/library/basicInit.php');
 
 ?>
 <head>

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
-<?php include 'header.php'?>
+<head></head>
+<?php require_once(APPPATH . 'widgets/custom/library/header.php'); ?>
 <body>
     <style>
        /* Set the size of the div element that contains the map */

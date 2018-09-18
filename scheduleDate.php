@@ -1,7 +1,8 @@
 
 <!DOCTYPE html>
 <html>
-<?php include 'header.php'?>
+<head></head>
+<?php require_once(APPPATH . 'widgets/custom/library/header.php'); ?>
 <body>
 	<div id="cont_agend">
 		<div class="banner_top text_center">

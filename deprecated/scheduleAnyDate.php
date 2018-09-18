@@ -27,7 +27,7 @@
                 <?php include 'cancelModal.php'?>
     			<div class="row">
     					<div class="col-xs-12 ">
-    						<button type="button" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::CANCEL_LABEL ?>"
+    						<button type="button" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::CANCELAR_LABEL ?>"
     							class="button btn_general" onclick="showCancelModal();" >Cancelar cita</button>
     					</div>
     			</div>

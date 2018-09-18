@@ -10,8 +10,10 @@ if($dispatcher->getControlador()->isValidActivity()){
     $dispatcher->getControlador()->addMessageError(Controlador::ERROR_ORDEN_NO_VIGENTE);
     $htmlFile= Dispatcher::MESSAGES_URL;
 }
-
-isset($htmlFile) ? include $htmlFile :'';
-
+isset($htmlFile) ? require_once(APPPATH .  '/widgets/custom/library/'. $htmlFile) :'';
 ?>
-
+<head>
+</head>
+<body>
+basicInit
+</body>

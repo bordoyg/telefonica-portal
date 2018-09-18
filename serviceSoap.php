@@ -67,3 +67,8 @@ class ServiceSoap {
         return $decrypted;
     }
 }
+?>
+<head>
+</head>
+<body>
+</body>

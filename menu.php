@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
-<?php include 'header.php'?>
+<head></head>
+<?php require_once(APPPATH . 'widgets/custom/library/header.php'); ?>
 <body>
 	<div id="cont_agend">
 		<div class="banner_top text_center">
@@ -24,7 +25,7 @@
 					    echo 'Tu cita de instalaci&oacute;n est&aacute; programada para el ' . $dateStart->format('jS F Y') . ', en la jornada ' . $activity->timeSlot . '(' . $dateStart->format('g:i A') . ' - ' . $dateEnd->format('g:i A') . ') Conf&iacute;rmanos tu disponibilidad para atender la visita del t&eacute;cnico.';
 					    
 					    echo '<div>';
-					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CONFIRM_LABEL . '"';
+					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CONFIRMAR_LABEL . '"';
 					    echo 'class="button btn btn-lg btn-primary" >Confirmar</button>';
 					    echo '</div>';
 					}
@@ -61,7 +62,7 @@
 					    echo 'Puedes cancelar tu cita s&iacute; as&iacute; lo deseas. Podr&aacute;s reprogramarla posteriormente comunic&aacute;ndote a la l&iacute;nea de atenci&oacute;n gratuita 01 80009 969090';
 					    
 					    echo '<div>';
-					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CANCEL_LABEL . '"';
+					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CANCELAR_LABEL . '"';
 					    echo 'class="button btn btn-lg btn-primary" >Cancelar</button>';
 					    echo '</div>';
 					}
@@ -79,7 +80,7 @@
 					    echo 'Puedes consultar la ubicaci&oacute;n del t&eacute;cnico aca';
 					    
 					    echo '<div>';
-					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::LOCATION_LABEL . '"';
+					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::UBICACION_LABEL . '"';
 					    echo 'class="button btn btn-lg btn-primary" >Ver t&eacute;cnico</button>';
 					    echo '</div>';
 					}

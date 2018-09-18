@@ -18,3 +18,6 @@
 <script src="/euf/assets/others/telefonica/js/bootstrap.min.js"></script>
 <script src="/euf/assets/others/telefonica/js/ie10-viewport-bug-workaround.js"></script>
 </head>
+
+<body>
+</body>

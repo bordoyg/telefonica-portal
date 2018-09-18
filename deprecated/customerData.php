@@ -103,13 +103,13 @@ if(isset($activity)){
 					$Controlador = $GLOBALS['dispatcher']->getControlador();
 					if($Controlador->showConfirm()){
 					    echo '<div class="col-xs-12 col-sm-6">';
-					    echo '<button type="button" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CONFIRM_LABEL . '"';
+					    echo '<button type="button" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CONFIRMAR_LABEL . '"';
 					    echo 'class="button btn btn-lg btn-primary" onclick="showConfirmModal();">Confirmar</button>';
 					    echo '</div>';
 					}
 					if($Controlador->showCancel()){
 					    echo '<div class="col-xs-12 col-sm-6">';
-					    echo '<button type="button" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CANCEL_LABEL . '"';
+					    echo '<button type="button" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CANCELAR_LABEL . '"';
 					    echo 'class="button btn btn-lg btn-primary" onclick="showCancelModal();">Cancelar</button>';
 					    echo '</div>';
 					}
@@ -121,7 +121,7 @@ if(isset($activity)){
 					}
 					if($Controlador->showTechnicanLocation()){
 					    echo '<div class="col-xs-12 col-sm-6">';
-					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::LOCATION_LABEL . '"';
+					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::UBICACION_LABEL . '"';
 					    echo 'class="button btn btn-lg btn-primary" onclick="onSubmitButton(this);">Donde esta mi t&eacute;cnico</button>';
 					    echo '</div>';
 					}

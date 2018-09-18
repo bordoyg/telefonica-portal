@@ -1,5 +1,5 @@
 <?php
-include 'controlador.php';
+require_once(APPPATH . 'widgets/custom/library/controlador.php');
 
 class Dispatcher {
     const INDEX_URL='index.php';
@@ -15,14 +15,15 @@ class Dispatcher {
     const MESSAGES_URL = 'messages.php';
     
     const CONFIRM_LABEL = 'confirmar';
+    const CONFIRMAR_LABEL = 'confirmar';
     const CONFIRM_CONFIRM_LABEL = 'confirmarConfirm';
     const SCHEDULE_DATE_CONFIRM_LABEL = 'confirmarSchedule';
     const SCHEDULE_MORE_DATES = 'masFechasSchedule';
     const SCHEDULE_NO_MORE_DATES = 'noMasFechasSchedule';
-    const CANCEL_LABEL = 'cancelar';
+    const CANCELAR_LABEL = 'cancelar';
     const CANCEL_CONFIRM_LABEL = 'cancelConfirm';
     const SCHEDULE_DATE_LABEL = 'reagendar';
-    const LOCATION_LABEL = 'map';
+    const UBICACION_LABEL = 'map';
     
     const OPTION_PARAM = 'opcion';
     
@@ -67,7 +68,7 @@ class Dispatcher {
             }
             
                    
-            if (strcmp(Dispatcher::CONFIRM_LABEL, $action) === 0){
+            if (strcmp(Dispatcher::CONFIRMAR_LABEL, $action) === 0){
                 return $this->controlador->excecuteConfirmConfirm();
             }
             if (strcmp(Dispatcher::SCHEDULE_DATE_LABEL, $action) === 0){
@@ -79,10 +80,10 @@ class Dispatcher {
             if (strcmp(Dispatcher::SCHEDULE_DATE_CONFIRM_LABEL, $action) === 0){
                 return $this->controlador->excecuteScheduleConfirm();
             }
-            if (strcmp(Dispatcher::CANCEL_LABEL, $action) === 0){
+            if (strcmp(Dispatcher::CANCELAR_LABEL, $action) === 0){
                 return $this->controlador->excecuteCancelConfirm();
             }
-            if (strcmp(Dispatcher::LOCATION_LABEL, $action) === 0){
+            if (strcmp(Dispatcher::UBICACION_LABEL, $action) === 0){
                 return $this->controlador->excecuteLocation();
             }else{
                 return $this->controlador->excecuteMenu();
