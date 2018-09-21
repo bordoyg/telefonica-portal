@@ -103,7 +103,7 @@ if(isset($activity)){
 					$Controlador = $GLOBALS['dispatcher']->getControlador();
 					if($Controlador->showConfirm()){
 					    echo '<div class="col-xs-12 col-sm-6">';
-					    echo '<button type="button" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CONFIRMAR_LABEL . '"';
+					    echo '<button type="button" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CONFIRM_LABEL . '"';
 					    echo 'class="button btn btn-lg btn-primary" onclick="showConfirmModal();">Confirmar</button>';
 					    echo '</div>';
 					}

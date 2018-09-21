@@ -264,6 +264,8 @@ class Controlador {
         return Dispatcher::MENU_URL;
     }
     function isValidActivity(){
+        $this->logDebug("INICIO");
+        
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
         
@@ -315,7 +317,7 @@ class Controlador {
     }
 
     function logDebug($msj, Exception $e=null){
-        if(strcmp($GLOBALS['config']['logDebug'],"true")!=0){
+        if(strcmp($GLOBALS['config']['logDebug'],"1")!=0){
             return;
         }
         if($e!=null){
