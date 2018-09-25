@@ -59,6 +59,46 @@ class Controlador {
          }
          
     }
+    function findAvailabilitySOAP($days) {
+        $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+        $activity=$this->findActivityData($activityID);
+        
+        //Genero los dias para solicitar disponibilidad
+        $date = date("Y-m-d");
+        $params=array();
+        for($i=0; $i<$days - 1; $i++){
+            $newDate = strtotime($date."+ 1 days");
+            $date = date("Y-m-d",$newDate);
+
+            array_push($params, array('date'=>$date));
+        }
+        
+        array_push($params, array('calculate_duration'=>true));
+        array_push($params, array('calculate_travel_time'=>true));
+        array_push($params, array('calculate_work_skill'=>true));
+        array_push($params, array('return_time_slot_info'=>true));
+        array_push($params, array('determine_location_by_work_zone'=>true));
+        array_push($params, array('dont_aggregate_results'=>true));
+        array_push($params, array('min_time_to_end_of_time_slot'=>0));
+        array_push($params, array('activity_field'=>array('name'=>'XA_WORK_ZONE_KEY', 'value'=>$activity->XA_WORK_ZONE_KEY)));
+        array_push($params, array('activity_field'=>array('name'=>'XA_QUADRANT', 'value'=>$activity->XA_QUADRANT)));
+        array_push($params, array('activity_field'=>array('name'=>'XA_ACCESS_TECHNOLOGY', 'value'=>$activity->XA_ACCESS_TECHNOLOGY)));
+        array_push($params, array('activity_field'=>array('name'=>'worktype_label', 'value'=>$activity->activityType)));
+        array_push($params, array('activity_field'=>array('name'=>'XA_WORK_TYPE', 'value'=>$activity->XA_WORK_TYPE)));
+        array_push($params, array('activity_field'=>array('name'=>'XA_NUMBER_DECODERS', 'value'=>0)));
+        array_push($params, array('activity_field'=>array('name'=>'XA_CUSTOMER_SEGMENT', 'value'=>$activity->XA_CUSTOMER_SEGMENT)));
+        array_push($params, array('activity_field'=>array('name'=>'XA_ESTRATO', 'value'=>$activity->XA_ESTRATO)));
+        array_push($params, array('activity_field'=>array('name'=>'XA_VELOCIDAD', 'value'=>$activity->XA_VELOCIDAD)));
+        array_push($params, array('activity_field'=>array('name'=>'XA_NOT_ACCOMPLISHED', 'value'=>0)));
+        
+        $response=$this->serviceSoap->request("/soap/capacity/", "urn:toa:capacity", "get_capacity", $params);
+
+        echo '<BR>VAL:' . $response['SOAP-ENV:ENVELOPE']['SOAP-ENV:BODY']['URN:GET_CAPACITY_RESPONSE']['ACTIVITY_DURATION'];
+        echo '<BR>VAL:' . $response['SOAP-ENV:ENVELOPE']['SOAP-ENV:BODY']['URN:GET_CAPACITY_RESPONSE']['ACTIVITY_TRAVEL_TIME'];
+        return $response;
+        
+        
+    }
     function findAvailability($days) {
         $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
         $activity=$this->findActivityData($activityID);
@@ -140,36 +180,43 @@ class Controlador {
         }
     }
     function createCalendar($days){
-        $calendar=array();
-        $firstDay=new DateTime();
-        $firstDay->setDate(date("Y"), date("m"), 1);
-        $dayWeekFirstDay=$firstDay->format("w");
-        $firstDayCalendar=$firstDay->sub(new DateInterval("P" . $dayWeekFirstDay . "D"));
-        
-        $availability=$this->findAvailability($days);
-        
-        for($i=0;$i<8;$i++){
-            $calendar[$i]=array();
-            for($j=0;$j<7;$j++){
-                $dayOfMonth=new DateTime();
-                $dayOfMonth->setTimestamp($firstDayCalendar->getTimestamp());
-                $dateItem=new stdClass();
-                $dateItem->dayOfMonth=$dayOfMonth;
-                
-                
-                for($k=0; $k<count($availability); $k++){
-                    $availabilityDate=$availability[$k]->date->format("Ymd");
-                    $dayOfCalendar=$dateItem->dayOfMonth->format("Ymd");
+        try{
+            $calendar=array();
+            $firstDay=new DateTime();
+            $firstDay->setDate(date("Y"), date("m"), 1);
+            $dayWeekFirstDay=$firstDay->format("w");
+            $firstDayCalendar=$firstDay->sub(new DateInterval("P" . $dayWeekFirstDay . "D"));
+            
+            $availability=$this->findAvailabilitySOAP($days);
+            /*
+            for($i=0;$i<8;$i++){
+                $calendar[$i]=array();
+                for($j=0;$j<7;$j++){
+                    $dayOfMonth=new DateTime();
+                    $dayOfMonth->setTimestamp($firstDayCalendar->getTimestamp());
+                    $dateItem=new stdClass();
+                    $dateItem->dayOfMonth=$dayOfMonth;
                     
-                    if(strcmp($availabilityDate,$dayOfCalendar)==0){
-                        $dateItem->timeSlots=$availability[$k]->timeSlots;
+                    
+                    for($k=0; $k<count($availability); $k++){
+                        $availabilityDate=$availability[$k]->date->format("Ymd");
+                        $dayOfCalendar=$dateItem->dayOfMonth->format("Ymd");
+                        
+                        if(strcmp($availabilityDate,$dayOfCalendar)==0){
+                            $dateItem->timeSlots=$availability[$k]->timeSlots;
+                        }
                     }
+                    $calendar[$i][$j]=$dateItem;
+                    
+                    $firstDayCalendar->add(new DateInterval("P1D"));
                 }
-                $calendar[$i][$j]=$dateItem;
-                
-                $firstDayCalendar->add(new DateInterval("P1D"));
-            }
+            }*/
+        }catch(Exception $e){
+            $this->logDebug('Hubo un error al cancelar la cita', $e);
+            $this->addMessageError(Controlador::ERROR_GENERIC_MSJ);
+            return Dispatcher::MESSAGES_URL;
         }
+        
         
         return $calendar;
     }
@@ -264,8 +311,7 @@ class Controlador {
         return Dispatcher::MENU_URL;
     }
     function isValidActivity(){
-        $this->logDebug("INICIO");
-        
+        return true;
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
         
@@ -282,7 +328,7 @@ class Controlador {
         
         $this->logDebug("interval en minutos: " . $intervalInMinutes);
         
-        return strcmp($activity->status, STATUS_PENDING)==0 && strcmp($activity->XA_ROUTE, "1") && $intervalInMinutes>=20;
+        return strcmp($activity->status, Controlador::STATUS_PENDING)==0 && strcmp($activity->XA_ROUTE, "1") && $intervalInMinutes>=20;
     }
     function showConfirm(){
         return true;
@@ -333,6 +379,18 @@ class Controlador {
             $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
         }
         return $activityID;
+    }
+    function desencriptar_AES($encrypted_data_hex, $key)
+    {
+        $td = mcrypt_module_open(MCRYPT_RIJNDAEL_128, '', MCRYPT_MODE_CBC, '');
+        $iv_size_hex = mcrypt_enc_get_iv_size($td)*2;
+        $iv = pack("H*", substr($encrypted_data_hex, 0, $iv_size_hex));
+        $encrypted_data_bin = pack("H*", substr($encrypted_data_hex, $iv_size_hex));
+        mcrypt_generic_init($td, $key, $iv);
+        $decrypted = mdecrypt_generic($td, $encrypted_data_bin);
+        mcrypt_generic_deinit($td);
+        mcrypt_module_close($td);
+        return $decrypted;
     }
 }
 ?>

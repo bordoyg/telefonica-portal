@@ -8,7 +8,6 @@ class ServiceSoap {
     private $protocol='https';
     private $port='443';
     private $process=NULL;
-    private $authString=NULL;
     
     function __construct() {
         $parameters=$GLOBALS['config'];
@@ -19,13 +18,11 @@ class ServiceSoap {
         $this->protocol=$parameters['protocol'];
         $this->port=$parameters['port'];   
     }
+
     
-    function request($path, $params='' ){
+    function request($path, $soapNamespace, $soapMethod, $params='' ){
         $url = $this->protocol . '://'. $this->host . ':' . $this->port . $path . "?wsdl";
-        
-        $currentDate=new DateTime('now');
-        $currentDate=$currentDate->format(DateTime::ATOM);
-        $this->authString=md5($currentDate . md5($this->passOFSC));
+        $xmlRequest=$this->generarXMLSoapRequest($soapNamespace, $soapMethod, $params);
         
         $this->process = curl_init();
         curl_setopt($this->process, CURLOPT_HEADER, false);
@@ -38,33 +35,127 @@ class ServiceSoap {
         curl_setopt($this->process, CURLOPT_URL, $url);
         curl_setopt($this->process, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($this->process, CURLOPT_HTTPGET, FALSE);
-        curl_setopt($this->process, CURLOPT_POSTFIELDS, $params);
-        
+        curl_setopt($this->process, CURLOPT_POSTFIELDS, $xmlRequest);
         
         $return = curl_exec($this->process);
+        $content=$this->xmlToArray($return);
+
         $httpcode = curl_getinfo($this->process, CURLINFO_HTTP_CODE);
         curl_close($this->process);
         
-        $content = json_decode($return);
-        
         if($httpcode!="200" && $httpcode!="204"){
-            throw new Exception("El servicio SOAP" . $path . " retorno un error: " . (isset($content->detail)? $content->detail : $httpcode), $httpcode . " respuesta: " . $return . " parametros: " . $params);
+            throw new Exception("El servicio SOAP" . $url . " retorno un error: " . $httpcode . " response: " . $return . " request: " . $xmlRequest);
         }
         
         return $content;
     }
     
-    function desencriptar_AES($encrypted_data_hex, $key)
-    {
-        $td = mcrypt_module_open(MCRYPT_RIJNDAEL_128, '', MCRYPT_MODE_CBC, '');
-        $iv_size_hex = mcrypt_enc_get_iv_size($td)*2;
-        $iv = pack("H*", substr($encrypted_data_hex, 0, $iv_size_hex));
-        $encrypted_data_bin = pack("H*", substr($encrypted_data_hex, $iv_size_hex));
-        mcrypt_generic_init($td, $key, $iv);
-        $decrypted = mdecrypt_generic($td, $encrypted_data_bin);
-        mcrypt_generic_deinit($td);
-        mcrypt_module_close($td);
-        return $decrypted;
+    function generarXMLSoapRequest($soapNamespace, $soapMethod, $params){
+        $currentDate=new DateTime('now');
+        $currentDate=$currentDate->format(DateTime::ATOM);
+        $authString=md5($currentDate . md5($this->passOFSC));
+        
+        $xml='<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="' . $soapNamespace . '">';
+        $xml=$xml . '   <soapenv:Header/><soapenv:Body><urn:' . $soapMethod . '>';
+        $xml=$xml . '<user><now>' . $currentDate . '</now>';
+        $xml=$xml . '<login>' . $this->login . '</login>';
+        $xml=$xml . '<company>' . $this->company . '</company>';
+        $xml=$xml . '<auth_string>' . $authString . '</auth_string>';
+        $xml=$xml . '</user>';
+        foreach ($params as $item) {
+            foreach ($item as $c => $v) {
+                if(isset($v)){
+                    if(is_array($v)){
+                        $xml=$xml . '<' . $c .'>';
+                        foreach ($v as $clave => $valor) {
+                            if(isset($valor)){
+                                $xml=$xml . '<' . $clave .'>'. $valor . '</' . $clave . '>';
+                            }
+                        }
+                        $xml=$xml . '</' . $c . '>';
+                    }else{
+                        $xml=$xml . '<' . $c .'>'. $v . '</' . $c . '>';
+                    }
+                }
+            }
+        }
+        
+        $xml=$xml . ' </urn:' . $soapMethod . '></soapenv:Body></soapenv:Envelope>';
+        return $xml;
+        
+    }
+    /**
+     * Convert XML to an Array
+     *
+     * @param string  $XML
+     * @return array
+     */
+    function xmlToArray($xmlStr){
+        $xml_parser = xml_parser_create();
+        xml_parse_into_struct($xml_parser, $xmlStr, $vals);
+        xml_parser_free($xml_parser);
+        // wyznaczamy tablice z powtarzajacymi sie tagami na tym samym poziomie
+        $_tmp='';
+        foreach ($vals as $xml_elem) {
+            $x_tag=$xml_elem['tag'];
+            $x_level=$xml_elem['level'];
+            $x_type=$xml_elem['type'];
+            if ($x_level!=1 && $x_type == 'close') {
+                if (isset($multi_key[$x_tag][$x_level]))
+                    $multi_key[$x_tag][$x_level]=1;
+                    else
+                        $multi_key[$x_tag][$x_level]=0;
+            }
+            if ($x_level!=1 && $x_type == 'complete') {
+                if ($_tmp==$x_tag)
+                    $multi_key[$x_tag][$x_level]=1;
+                    $_tmp=$x_tag;
+            }
+        }
+        // jedziemy po tablicy
+        foreach ($vals as $xml_elem) {
+            $x_tag=$xml_elem['tag'];
+            $x_level=$xml_elem['level'];
+            $x_type=$xml_elem['type'];
+            if ($x_type == 'open')
+                $level[$x_level] = $x_tag;
+                $start_level = 1;
+                $php_stmt = '$xml_array';
+                if ($x_type=='close' && $x_level!=1)
+                    $multi_key[$x_tag][$x_level]++;
+                    while ($start_level < $x_level) {
+                        $php_stmt .= '[$level['.$start_level.']]';
+                        if (isset($multi_key[$level[$start_level]][$start_level]) && $multi_key[$level[$start_level]][$start_level])
+                            $php_stmt .= '['.($multi_key[$level[$start_level]][$start_level]-1).']';
+                            $start_level++;
+                    }
+                    $add='';
+                    if (isset($multi_key[$x_tag][$x_level]) && $multi_key[$x_tag][$x_level] && ($x_type=='open' || $x_type=='complete')) {
+                        if (!isset($multi_key2[$x_tag][$x_level]))
+                            $multi_key2[$x_tag][$x_level]=0;
+                            else
+                                $multi_key2[$x_tag][$x_level]++;
+                                $add='['.$multi_key2[$x_tag][$x_level].']';
+                    }
+                    if (isset($xml_elem['value']) && trim($xml_elem['value'])!='' && !array_key_exists('attributes', $xml_elem)) {
+                        if ($x_type == 'open')
+                            $php_stmt_main=$php_stmt.'[$x_type]'.$add.'[\'content\'] = $xml_elem[\'value\'];';
+                            else
+                                $php_stmt_main=$php_stmt.'[$x_tag]'.$add.' = $xml_elem[\'value\'];';
+                                eval($php_stmt_main);
+                    }
+                    if (array_key_exists('attributes', $xml_elem)) {
+                        if (isset($xml_elem['value'])) {
+                            $php_stmt_main=$php_stmt.'[$x_tag]'.$add.'[\'content\'] = $xml_elem[\'value\'];';
+                            eval($php_stmt_main);
+                        }
+                        foreach ($xml_elem['attributes'] as $key=>$value) {
+                            $php_stmt_att=$php_stmt.'[$x_tag]'.$add.'[$key] = $value;';
+                            eval($php_stmt_att);
+                        }
+                    }
+        }
+        return $xml_array;
     }
 }
 ?>

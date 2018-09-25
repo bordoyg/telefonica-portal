@@ -37,7 +37,7 @@
 								<td>Sat</td>
 							</thead>
 							<tbody>
-								<?php 
+							<?php 
 								try{
 								    $Controlador = $GLOBALS['Controlador'];
 								    $action=$_REQUEST[Dispatcher::OPTION_PARAM];
@@ -61,6 +61,7 @@
 								    }
 								    
 								    $calendar=$Controlador->createCalendar($cantDias);
+								    /*
 								    $currentStrDate=date('Y-m-d');
 								    for($i=0;$i<$cantSemanas + 1;$i++){
 								        if($i==$cantSemanas){
@@ -92,7 +93,7 @@
 								        }
 								        echo '</tr>';
 								    }
-								    
+								    */
 								} catch (Exception $e) {
 								    $Controlador->logDebug('Hubo un error inesperado', $e);
 								}
@@ -103,34 +104,36 @@
 					</div>
 					<?php 
 					
+					try{
+    					for($i=0;$i<6;$i++){
+    					    for($j=0;$j<7;$j++){
+    					        if(isset($calendar[$i][$j]->timeSlots)){
+    					            echo '<div class="day-timeslots is-hidden" id="' . $calendar[$i][$j]->dayOfMonth->format('Ymd') . '">';
+    					            for($k=0; $k<count($calendar[$i][$j]->timeSlots); $k++){
+    					                $dateTimeConverter=new DateTime();
+    					                $dateTimeConverter= $dateTimeConverter->createFromFormat('H:i:s', $calendar[$i][$j]->timeSlots[$k]->timeFrom);
+    					                $timeFrom=$dateTimeConverter->format('H:i');
+    					                
+    					                $dateTimeConverter=new DateTime();
+    					                $dateTimeConverter= $dateTimeConverter->createFromFormat('H:i:s', $calendar[$i][$j]->timeSlots[$k]->timeTo);
+    					                $timeTo=$dateTimeConverter->format('H:i');
+    					                
+    					                echo ' <div class="date_checkbox">';
+    					                echo '     <label><input type="radio" name="' . Controlador::SCHUEDULE_DATE_PARAM . '"';
+    					                echo '         value="' . $calendar[$i][$j]->dayOfMonth->format('Y-m-d') .'|'. $calendar[$i][$j]->timeSlots[$k]->label . '"';
+    					                echo '         onclick="timeslotSelected(this);"><span';
+    					                echo '         class="checkmark"></span>';
+    					                echo '     <p>' . $timeFrom . ' - ' . $timeTo . '</p></label>';
+    					                echo ' </div>';
+    					            }
+    					            echo ' </div>';
+    					        }
+    					    }
+    					}
 					
-					for($i=0;$i<6;$i++){
-					    for($j=0;$j<7;$j++){
-					        if(isset($calendar[$i][$j]->timeSlots)){
-					            echo '<div class="day-timeslots is-hidden" id="' . $calendar[$i][$j]->dayOfMonth->format('Ymd') . '">';
-					            for($k=0; $k<count($calendar[$i][$j]->timeSlots); $k++){
-					                $dateTimeConverter=new DateTime();
-					                $dateTimeConverter= $dateTimeConverter->createFromFormat('H:i:s', $calendar[$i][$j]->timeSlots[$k]->timeFrom);
-					                $timeFrom=$dateTimeConverter->format('H:i');
-					                
-					                $dateTimeConverter=new DateTime();
-					                $dateTimeConverter= $dateTimeConverter->createFromFormat('H:i:s', $calendar[$i][$j]->timeSlots[$k]->timeTo);
-					                $timeTo=$dateTimeConverter->format('H:i');
-					                
-					                echo ' <div class="date_checkbox">';
-					                echo '     <label><input type="radio" name="' . Controlador::SCHUEDULE_DATE_PARAM . '"';
-					                echo '         value="' . $calendar[$i][$j]->dayOfMonth->format('Y-m-d') .'|'. $calendar[$i][$j]->timeSlots[$k]->label . '"';
-					                echo '         onclick="timeslotSelected(this);"><span';
-					                echo '         class="checkmark"></span>';
-					                echo '     <p>' . $timeFrom . ' - ' . $timeTo . '</p></label>';
-					                echo ' </div>';
-					            }
-					            echo ' </div>';
-					        }
-					    }
-					}
-					
-					
+                    } catch (Exception $e) {
+                        $Controlador->logDebug('Hubo un error inesperado', $e);
+                    }
 
 					?>
 					<!-- 

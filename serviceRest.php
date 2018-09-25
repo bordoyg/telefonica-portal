@@ -52,23 +52,10 @@ class ServiceRest {
         $content = json_decode($return);
         
         if($httpcode!="200" && $httpcode!="204"){
-            throw new Exception("El servicio " . $method . " " . $path . " retorno un error: " . (isset($content->detail)? $content->detail : $httpcode), $httpcode . " respuesta: " . $return . " parametros: " . $params);
+            throw new Exception("El servicio " . $method . " " . $url . " retorno un error: " . (isset($content->detail)? $content->detail : $httpcode), $httpcode . " respuesta: " . $return . " parametros: " . $params);
         }
 
         return $content;
-    }
-    
-    function desencriptar_AES($encrypted_data_hex, $key)
-    {
-        $td = mcrypt_module_open(MCRYPT_RIJNDAEL_128, '', MCRYPT_MODE_CBC, '');
-        $iv_size_hex = mcrypt_enc_get_iv_size($td)*2;
-        $iv = pack("H*", substr($encrypted_data_hex, 0, $iv_size_hex));
-        $encrypted_data_bin = pack("H*", substr($encrypted_data_hex, $iv_size_hex));
-        mcrypt_generic_init($td, $key, $iv);
-        $decrypted = mdecrypt_generic($td, $encrypted_data_bin);
-        mcrypt_generic_deinit($td);
-        mcrypt_module_close($td);
-        return $decrypted;
     }
 }
 ?>
