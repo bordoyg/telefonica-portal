@@ -92,10 +92,50 @@ class Controlador {
         array_push($params, array('activity_field'=>array('name'=>'XA_NOT_ACCOMPLISHED', 'value'=>0)));
         
         $response=$this->serviceSoap->request("/soap/capacity/", "urn:toa:capacity", "get_capacity", $params);
-
-        echo '<BR>VAL:' . $response['SOAP-ENV:ENVELOPE']['SOAP-ENV:BODY']['URN:GET_CAPACITY_RESPONSE']['ACTIVITY_DURATION'];
-        echo '<BR>VAL:' . $response['SOAP-ENV:ENVELOPE']['SOAP-ENV:BODY']['URN:GET_CAPACITY_RESPONSE']['ACTIVITY_TRAVEL_TIME'];
-        return $response;
+        $response=$response['SOAP-ENV:ENVELOPE']['SOAP-ENV:BODY']['URN:GET_CAPACITY_RESPONSE'];
+        
+        $timeSlotsMap=array();
+        if(isset($response['TIME_SLOT_INFO'])){
+            for($i=0; $i<count($response['TIME_SLOT_INFO']); $i++){
+                $timeSlot=new stdClass();
+                $timeSlot->timeFrom=$response['TIME_SLOT_INFO'][$i]['TIME_FROM'];
+                $timeSlot->timeTo=$response['TIME_SLOT_INFO'][$i]['TIME_TO'];
+                $timeSlot->label=$response['TIME_SLOT_INFO'][$i]['TIME_LABEL'];
+                $timeSlot->name=$response['TIME_SLOT_INFO'][$i]['TIME_NAME'];
+                $timeSlotsMap[$response['TIME_SLOT_INFO'][$i]['LABEL']]= $timeSlot;
+            }
+        }
+        $dates=array();
+        $datesAux=array();
+        $timeSlots=array();
+        
+        for($i=0; $i<count($response['CAPACITY']); $i++){
+            if(isset($response['CAPACITY'][i]['TIMESLOT'])
+                && isset($response['CAPACITY'][i]['AVAILABLE'])){
+                
+            
+                $availableQuota=$response['CAPACITY'][i]['AVAILABLE'];
+                $activityDuration=$response['ACTIVITY_DURATION'];
+                
+                if($availableQuota>$activityDuration){
+                    if(!isset($datesAux[$response['CAPACITY'][i]['DATE']])){
+                        $datesAux[$response['CAPACITY'][i]['DATE']]=array();
+                    }
+                    $datesAux[$response['CAPACITY'][i]['DATE']][$response['CAPACITY'][i]['TIMESLOT']]=$timeSlotsMap[$response['CAPACITY'][i]['TIMESLOT']];
+                }
+            }
+            if(count($datesAux[$response['CAPACITY'][i]['DATE']][$response['CAPACITY'][i]['TIMESLOT']])>0){
+                $date=new stdClass();
+                $d=new DateTime();
+                
+                $date->date=$d->createFromFormat("Y-m-d", $response['CAPACITY'][i]['DATE']);
+                $date->timeSlots=$timeSlots;
+                array_push($dates, $date);
+            }
+                
+        }
+        
+        return $dates;
         
         
     }
@@ -128,9 +168,9 @@ class Controlador {
         $queryString=$queryString . '&XA_VELOCIDAD=' . $activity->XA_VELOCIDAD;
         $queryString=$queryString . '&XA_NOT_ACCOMPLISHED=' . $activity->XA_NOT_ACCOMPLISHED;
         
-        $this->logDebug($queryString);
+        Utils::logDebug($queryString);
         $activityBookingOptions=$this->service->request('/rest/ofscCapacity/v1/activityBookingOptions', 'GET', $queryString);
-        $this->logDebug(json_encode($activityBookingOptions));
+        Utils::logDebug(json_encode($activityBookingOptions));
         $timeSlotsMap=array();
         if(isset($activityBookingOptions->timeSlotsDictionary)){
             for($i=0; $i<count($activityBookingOptions->timeSlotsDictionary); $i++){
@@ -174,7 +214,7 @@ class Controlador {
 
             return $out;
         } catch (Exception $e) {
-            $this->logDebug('Hubo un error al buscar la cita', $e);
+            Utils::logDebug('Hubo un error al buscar la cita', $e);
             $this->addMessageError($e->getMessage());
             return null;
         }
@@ -188,7 +228,7 @@ class Controlador {
             $firstDayCalendar=$firstDay->sub(new DateInterval("P" . $dayWeekFirstDay . "D"));
             
             $availability=$this->findAvailabilitySOAP($days);
-            /*
+            
             for($i=0;$i<8;$i++){
                 $calendar[$i]=array();
                 for($j=0;$j<7;$j++){
@@ -210,9 +250,9 @@ class Controlador {
                     
                     $firstDayCalendar->add(new DateInterval("P1D"));
                 }
-            }*/
+            }
         }catch(Exception $e){
-            $this->logDebug('Hubo un error al cancelar la cita', $e);
+            Utils::logDebug('Hubo un error al cancelar la cita', $e);
             $this->addMessageError(Controlador::ERROR_GENERIC_MSJ);
             return Dispatcher::MESSAGES_URL;
         }
@@ -239,7 +279,7 @@ class Controlador {
             $this->addMessageError(Controlador::MSJ_ORDEN_CANCELADA);
             return Dispatcher::MESSAGES_URL;
         } catch (Exception $e) {
-            $this->logDebug('Hubo un error al cancelar la cita', $e);
+            Utils::logDebug('Hubo un error al cancelar la cita', $e);
             $this->addMessageError(Controlador::ERROR_GENERIC_MSJ);
             return Dispatcher::MESSAGES_URL;
         }
@@ -277,7 +317,7 @@ class Controlador {
             $this->addMessageError($msj);
             return Dispatcher::MESSAGES_URL;
         }catch(Exception $e){
-            $this->logDebug('Hubo un error al reagendar la cita', $e);
+            Utils::logDebug('Hubo un error al reagendar la cita', $e);
             $this->addMessageError(Controlador::ERROR_GENERIC_MSJ);
             return Dispatcher::MESSAGES_URL;
         }        
@@ -295,7 +335,7 @@ class Controlador {
             $this->addMessageError(Controlador::MSJ_ORDEN_CONFIRMADA);
             return Dispatcher::MESSAGES_URL;
         }catch(Exception $e){
-            $this->logDebug('Hubo un error al confirmar la cita', $e);
+            Utils::logDebug('Hubo un error al confirmar la cita', $e);
             $this->addMessageError(Controlador::ERROR_GENERIC_MSJ);
             return Dispatcher::MESSAGES_URL;
         }
@@ -319,14 +359,14 @@ class Controlador {
         $dtETA=new DateTime();
         $dtETA=$dtETA->createFromFormat("Y-m-d H:i:s", $activity->startTime);
         
-        $this->logDebug("Current: " . $dtCurrent->format("Y-m-d H:i:s"));
-        $this->logDebug("dtETA: " . $dtETA->format("Y-m-d H:i:s"));
+        Utils::logDebug("Current: " . $dtCurrent->format("Y-m-d H:i:s"));
+        Utils::logDebug("dtETA: " . $dtETA->format("Y-m-d H:i:s"));
         
         $interval=$dtCurrent->diff($dtETA, false);
         $intervalInSeconds = (new DateTime())->setTimeStamp(0)->add($interval)->getTimeStamp();
         $intervalInMinutes = $intervalInSeconds/60;
         
-        $this->logDebug("interval en minutos: " . $intervalInMinutes);
+        Utils::logDebug("interval en minutos: " . $intervalInMinutes);
         
         return strcmp($activity->status, Controlador::STATUS_PENDING)==0 && strcmp($activity->XA_ROUTE, "1") && $intervalInMinutes>=20;
     }
@@ -360,18 +400,6 @@ class Controlador {
     }
     function addMessageError($msj){
         $_REQUEST[Controlador::MESSAGE_PARAM]=$msj;
-    }
-
-    function logDebug($msj, Exception $e=null){
-        if(strcmp($GLOBALS['config']['logDebug'],"1")!=0){
-            return;
-        }
-        if($e!=null){
-            $msj=$msj . "\n EXCEPTION\ncause: " . $e->getCode() . " " . $e->getMessage() . "\n";
-            $msj=$msj . "in: " . $e->getFile() . ":" . $e->getLine() . "\n" . $e->getTraceAsString();
-        }
-        
-        echo '<div key="logDebug" time="' . time() . '" style="display:none;"><pre>' . $msj . '</pre></div>';
     }
     function getActivityIdFromContext(){
         $activityID=isset($_GET[Controlador::ACTIVITY_PARAM]) ? $_GET[Controlador::ACTIVITY_PARAM] : null ;

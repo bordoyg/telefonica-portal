@@ -61,7 +61,7 @@
 								    }
 								    
 								    $calendar=$Controlador->createCalendar($cantDias);
-								    /*
+								    
 								    $currentStrDate=date('Y-m-d');
 								    for($i=0;$i<$cantSemanas + 1;$i++){
 								        if($i==$cantSemanas){
@@ -93,9 +93,9 @@
 								        }
 								        echo '</tr>';
 								    }
-								    */
+								    
 								} catch (Exception $e) {
-								    $Controlador->logDebug('Hubo un error inesperado', $e);
+								    Utils::logDebug('Hubo un error inesperado', $e);
 								}
 																
 								?>
@@ -132,7 +132,7 @@
     					}
 					
                     } catch (Exception $e) {
-                        $Controlador->logDebug('Hubo un error inesperado', $e);
+                        Utils::logDebug('Hubo un error inesperado', $e);
                     }
 
 					?>

@@ -40,7 +40,7 @@ class Dispatcher {
             $this->controlador = $GLOBALS['Controlador'];
         } catch (Exception $e) {
             $this->controlador->addMessageError('Hubo un error inesperado al inicializar la aplicacion');
-            $this->controlador->logDebug('Hubo un error inesperado al inicializar la aplicacion', $e);
+            Utils::logDebug('Hubo un error inesperado al inicializar la aplicacion', $e);
             return Dispatcher::MENU_URL;
         }
     }
@@ -89,7 +89,7 @@ class Dispatcher {
             }
         } catch (Exception $e) {
             $this->controlador->addMessageError('Hubo un error inesperado: ' . $e->getMessage());
-            $this->controlador->logDebug('Hubo un error inesperado', $e);
+            Utils::logDebug('Hubo un error inesperado', $e);
             return Dispatcher::MESSAGES_URL;
         }
     }
