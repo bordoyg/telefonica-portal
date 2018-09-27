@@ -134,80 +134,8 @@
                     } catch (Exception $e) {
                         Utils::logDebug('Hubo un error inesperado', $e);
                     }
-
 					?>
-					<!-- 
-					<div class="day-timeslots is-hidden" id="20180726">
-						<div class="date_checkbox">
-							<label><input type="radio" id="201807260700" name="timeslot"
-								value="201807260700|AM|BK_BOG_COMF_CHAPIN|300"
-								onclick="timeslotSelected(this);" disabled><span
-								class="checkmark"></span>
-							<p>07:00 - 12:00</p></label>
-						</div>
-						<div class="date_checkbox">
-							<label><input type="radio" id="201807261200" name="timeslot"
-								value="201807261200|PM|BK_BOG_COMF_CHAPIN|420"
-								onclick="timeslotSelected(this);"><span class="checkmark"></span>
-							<p>12:00 - 19:00</p></label>
-						</div>
-					</div>
-					<div class="day-timeslots is-hidden" id="20180728">
-						<div class="date_checkbox">
-							<label><input type="radio" id="201807280700" name="timeslot"
-								value="201807280700|AM|BK_BOG_COMF_CHAPIN|300"
-								onclick="timeslotSelected(this);"><span class="checkmark"></span>
-							<p>07:00 - 12:00</p></label>
-						</div>
-						<div class="date_checkbox">
-							<label><input type="radio" id="201807281200" name="timeslot"
-								value="201807281200|PM|BK_BOG_COMF_CHAPIN|420"
-								onclick="timeslotSelected(this);"><span class="checkmark"></span>
-							<p>12:00 - 19:00</p></label>
-						</div>
-					</div>
-					<div class="day-timeslots is-hidden" id="20180730">
-						<div class="date_checkbox">
-							<label><input type="radio" id="201807300700" name="timeslot"
-								value="201807300700|AM|BK_BOG_COMF_CHAPIN|300"
-								onclick="timeslotSelected(this);"><span class="checkmark"></span>
-							<p>07:00 - 12:00</p></label>
-						</div>
-						<div class="date_checkbox">
-							<label><input type="radio" id="201807301200" name="timeslot"
-								value="201807301200|PM|BK_BOG_COMF_CHAPIN|420"
-								onclick="timeslotSelected(this);"><span class="checkmark"></span>
-							<p>12:00 - 19:00</p></label>
-						</div>
-					</div>
-					<div class="day-timeslots is-hidden" id="20180729">
-						<div class="date_checkbox">
-							<label><input type="radio" id="201807290700" name="timeslot"
-								value="201807290700|AM|BK_BOG_COMF_CHAPIN|300"
-								onclick="timeslotSelected(this);"><span class="checkmark"></span>
-							<p>07:00 - 12:00</p></label>
-						</div>
-						<div class="date_checkbox">
-							<label><input type="radio" id="201807291200" name="timeslot"
-								value="201807291200|PM|BK_BOG_COMF_CHAPIN|420"
-								onclick="timeslotSelected(this);"><span class="checkmark"></span>
-							<p>12:00 - 19:00</p></label>
-						</div>
-					</div>
-					<div class="day-timeslots is-hidden" id="20180727">
-						<div class="date_checkbox">
-							<label><input type="radio" id="201807270700" name="timeslot"
-								value="201807270700|AM|BK_BOG_COMF_CHAPIN|300"
-								onclick="timeslotSelected(this);"><span class="checkmark"></span>
-							<p>07:00 - 12:00</p></label>
-						</div>
-						<div class="date_checkbox">
-							<label><input type="radio" id="201807271200" name="timeslot"
-								value="201807271200|PM|BK_BOG_COMF_CHAPIN|420"
-								onclick="timeslotSelected(this);"><span class="checkmark"></span>
-							<p>12:00 - 19:00</p></label>
-						</div>
-					</div>-->
+					
 					<div class="container">
 						<div class="row colors_date">
 							<div class="col-xs-12 col-sm-4">

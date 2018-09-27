@@ -94,50 +94,54 @@ class Controlador {
         $response=$this->serviceSoap->request("/soap/capacity/", "urn:toa:capacity", "get_capacity", $params);
         $response=$response['SOAP-ENV:ENVELOPE']['SOAP-ENV:BODY']['URN:GET_CAPACITY_RESPONSE'];
         
+        
         $timeSlotsMap=array();
         if(isset($response['TIME_SLOT_INFO'])){
             for($i=0; $i<count($response['TIME_SLOT_INFO']); $i++){
                 $timeSlot=new stdClass();
                 $timeSlot->timeFrom=$response['TIME_SLOT_INFO'][$i]['TIME_FROM'];
                 $timeSlot->timeTo=$response['TIME_SLOT_INFO'][$i]['TIME_TO'];
-                $timeSlot->label=$response['TIME_SLOT_INFO'][$i]['TIME_LABEL'];
-                $timeSlot->name=$response['TIME_SLOT_INFO'][$i]['TIME_NAME'];
+                $timeSlot->label=$response['TIME_SLOT_INFO'][$i]['LABEL'];
+                $timeSlot->name=$response['TIME_SLOT_INFO'][$i]['NAME'];
                 $timeSlotsMap[$response['TIME_SLOT_INFO'][$i]['LABEL']]= $timeSlot;
+                
             }
         }
+       
         $dates=array();
         $datesAux=array();
-        $timeSlots=array();
-        
         for($i=0; $i<count($response['CAPACITY']); $i++){
-            if(isset($response['CAPACITY'][i]['TIMESLOT'])
-                && isset($response['CAPACITY'][i]['AVAILABLE'])){
-                
-            
-                $availableQuota=$response['CAPACITY'][i]['AVAILABLE'];
+            if(isset($response['CAPACITY'][$i]['TIME_SLOT'])
+                && isset($response['CAPACITY'][$i]['AVAILABLE'])){
+                    
+                $availableQuota=$response['CAPACITY'][$i]['AVAILABLE'];
                 $activityDuration=$response['ACTIVITY_DURATION'];
                 
                 if($availableQuota>$activityDuration){
-                    if(!isset($datesAux[$response['CAPACITY'][i]['DATE']])){
-                        $datesAux[$response['CAPACITY'][i]['DATE']]=array();
+                    if(!isset($datesAux[$response['CAPACITY'][$i]['DATE']])){
+                        $datesAux[$response['CAPACITY'][$i]['DATE']]=array();
                     }
-                    $datesAux[$response['CAPACITY'][i]['DATE']][$response['CAPACITY'][i]['TIMESLOT']]=$timeSlotsMap[$response['CAPACITY'][i]['TIMESLOT']];
+                    $datesAux[$response['CAPACITY'][$i]['DATE']][$response['CAPACITY'][$i]['TIME_SLOT']]=$timeSlotsMap[$response['CAPACITY'][$i]['TIME_SLOT']];
                 }
             }
-            if(count($datesAux[$response['CAPACITY'][i]['DATE']][$response['CAPACITY'][i]['TIMESLOT']])>0){
+        }
+        
+        foreach ($datesAux as $clave => $valor) {
+            if(isset($valor)){
                 $date=new stdClass();
                 $d=new DateTime();
                 
-                $date->date=$d->createFromFormat("Y-m-d", $response['CAPACITY'][i]['DATE']);
+                $date->date=$d->createFromFormat("Y-m-d", $clave);
+                $timeSlots=array();
+                foreach ($valor as $c => $v) {
+                    array_push($timeSlots, $v);
+                }
                 $date->timeSlots=$timeSlots;
                 array_push($dates, $date);
             }
-                
         }
-        
+
         return $dates;
-        
-        
     }
     function findAvailability($days) {
         $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
@@ -228,7 +232,6 @@ class Controlador {
             $firstDayCalendar=$firstDay->sub(new DateInterval("P" . $dayWeekFirstDay . "D"));
             
             $availability=$this->findAvailabilitySOAP($days);
-            
             for($i=0;$i<8;$i++){
                 $calendar[$i]=array();
                 for($j=0;$j<7;$j++){
@@ -312,7 +315,7 @@ class Controlador {
             $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
             $diaCita= $dateStart->format('jS F Y') . ', Jornada: ' . $activity->timeSlot . '(' . $dateStart->format('g:i A') . ' - ' . $dateEnd->format('g:i A') . ')';
             
-            $msj= clone Controlador::MSJ_ORDEN_MODIFICADA;
+            $msj= Controlador::MSJ_ORDEN_MODIFICADA;
             $msj=str_replace("@diaCita@", $diaCita, $msj);
             $this->addMessageError($msj);
             return Dispatcher::MESSAGES_URL;

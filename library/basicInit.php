@@ -18,5 +18,5 @@ isset($htmlFile) ? require_once(APPPATH .  '/widgets/custom/library/'. $htmlFile
 <head>
 </head>
 <body>
-basicInit
+
 </body>
