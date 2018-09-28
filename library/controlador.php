@@ -291,6 +291,44 @@ class Controlador {
 
         return Dispatcher::SCHEDULE_DATE_URL;
     }
+    function excecuteScheduleConfirmSOAP(){
+        try{
+            $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+            $activity=$this->findActivityData($activityID);
+            //rawTimeslot Ej: 2018-08-01|AM
+            $rawTimeslot=$_REQUEST[Controlador::SCHUEDULE_DATE_PARAM];
+            $scheduleDate=substr($rawTimeslot, 0, strrpos($rawTimeslot, '|'));
+            $scheduleTimeslot=substr($rawTimeslot, strrpos($rawTimeslot, '|') + 1);
+            //Se actualiza el timeslot, date y el estado XA_CONFIRMACITA
+            
+            $params=array();
+            array_push($params, array('activity_id'=>$activityID));
+            array_push($params, array('position_in_route'=>'unchanged'));
+            array_push($params, array('properties'=>array('name'=>'XA_CONFIRMACITA', 'value'=>'MODIFICADA')));
+            array_push($params, array('properties'=>array('name'=>'time_slot', 'value'=>$scheduleTimeslot)));
+            array_push($params, array('properties'=>array('name'=>'date', 'value'=>$scheduleDate)));
+            
+            $response=$this->serviceSoap->request('/soap/activity/v3/',"urn:toa:activity", "update_activity", $params);
+            $response=$response['SOAP-ENV:ENVELOPE']['SOAP-ENV:BODY']['NS1:UPDATE_ACTIVITY_RESPONSE'];
+            if($response['RESULT_CODE']!=0){
+                throw new Exception($response['ERROR_MSG']);
+            }
+            
+            $activity=$this->findActivityData($activityID);
+            $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
+            $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
+            $diaCita= $dateStart->format('jS F Y') . ', Jornada: ' . $activity->timeSlot . '(' . $dateStart->format('g:i A') . ' - ' . $dateEnd->format('g:i A') . ')';
+            
+            $msj= Controlador::MSJ_ORDEN_MODIFICADA;
+            $msj=str_replace("@diaCita@", $diaCita, $msj);
+            $this->addMessageError($msj);
+            return Dispatcher::MESSAGES_URL;
+        }catch(Exception $e){
+            Utils::logDebug('Hubo un error al reagendar la cita', $e);
+            $this->addMessageError(Controlador::ERROR_GENERIC_MSJ);
+            return Dispatcher::MESSAGES_URL;
+        }
+    }
     function excecuteScheduleConfirm(){
         try{
             $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];

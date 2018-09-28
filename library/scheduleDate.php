@@ -17,7 +17,7 @@
 				<p>Confirmaci&oacute;n</p></li>
 			</ul>
 		</div>
-		<h2 class="text_center">Elije la fecha y jornada de tu cita.</h2>
+		<h2 class="text_center">Elija la fecha y jornada de tu cita.</h2>
 
 		<div class="container">
 			<form action="" method="post">
