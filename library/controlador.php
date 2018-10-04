@@ -21,6 +21,10 @@ class Controlador {
 	const MSJ_ORDEN_MODIFICADA="Tu cita para la instalaci&oacute;n de los servicios Movistar ha sido modificada. @diaCita@. No olvides tramitar la autorizaci&oacute;n para el ingreso del t&eacute;cnico a tu domicilio";
 	const MSJ_ORDEN_CANCELADA="De acuerdo a tu elecci&oacute;n tu cita ha sido cancelada. Podr&aacute;s reprogramarla posteriormente comunic&aacute;ndote a la l&iacute;nea de atenci&oacute;n gratuita 01 80009 969090";
 	
+	const SUB_STATUS_CANCELADA="CANCELADA";
+	const SUB_STATUS_CONFIRMADA="CONFIRMADA";
+	const SUB_STATUS_MODIFICADA="MODIFICADA";
+	
     private $service=NULL;
     private $serviceSoap=NULL;
     
@@ -215,7 +219,9 @@ class Controlador {
         try {
             //Buscar los datos de la actividad
             $out = $this->service->request('/rest/ofscCore/v1/activities/' . $activityID, 'GET');
-
+            if(!isset($out->activityId)){
+                return null;
+            }
             return $out;
         } catch (Exception $e) {
             Utils::logDebug('Hubo un error al buscar la cita', $e);
@@ -274,7 +280,7 @@ class Controlador {
             //Se actualiza el dia = null
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId . '/custom-actions/move', 'POST', $params);
 
-            $params=array("timeSlot"=>NULL, "XA_CONFIRMACITA"=>"CANCELADA");
+            $params=array("timeSlot"=>NULL, "XA_CONFIRMACITA"=>Controlador::SUB_STATUS_CANCELADA);
             $params=json_encode($params);
             //Se actualiza el timeslot y el estado XA_CONFIRMACITA
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
@@ -304,7 +310,7 @@ class Controlador {
             $params=array();
             array_push($params, array('activity_id'=>$activityID));
             array_push($params, array('position_in_route'=>'unchanged'));
-            array_push($params, array('properties'=>array('name'=>'XA_CONFIRMACITA', 'value'=>'MODIFICADA')));
+            array_push($params, array('properties'=>array('name'=>'XA_CONFIRMACITA', 'value'=>Controlador::SUB_STATUS_MODIFICADA)));
             array_push($params, array('properties'=>array('name'=>'time_slot', 'value'=>$scheduleTimeslot)));
             array_push($params, array('properties'=>array('name'=>'date', 'value'=>$scheduleDate)));
             
@@ -343,7 +349,7 @@ class Controlador {
 
             
             $scheduleTimeslot=substr($rawTimeslot, strrpos($rawTimeslot, '|') + 1);
-            $params=array("timeSlot"=>$scheduleTimeslot, "XA_CONFIRMACITA"=>"MODIFICADA");
+            $params=array("timeSlot"=>$scheduleTimeslot, "XA_CONFIRMACITA"=>Controlador::SUB_STATUS_MODIFICADA);
             $params=json_encode($params);
             //Se actualiza el timeslot y el estado XA_CONFIRMACITA
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
@@ -368,7 +374,7 @@ class Controlador {
         try{
             $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
             $activity=$this->findActivityData($activityID);
-            $params=array("XA_CONFIRMACITA"=>"CONFIRMADA");
+            $params=array("XA_CONFIRMACITA"=>Controlador::SUB_STATUS_CONFIRMADA);
             $params=json_encode($params);
             //Se actualiza el estado XA_CONFIRMACITA
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
@@ -392,10 +398,14 @@ class Controlador {
         return Dispatcher::MENU_URL;
     }
     function isValidActivity(){
-        return true;
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
-        
+        if(!isset($activity) 
+            || !isset($activity->startTime)
+            || !isset($activity->status)
+            || !isset($activity->XA_ROUTE)){
+           return false; 
+        }
         $dtCurrent= new DateTime("now");
         $dtETA=new DateTime();
         $dtETA=$dtETA->createFromFormat("Y-m-d H:i:s", $activity->startTime);
@@ -409,18 +419,16 @@ class Controlador {
         
         Utils::logDebug("interval en minutos: " . $intervalInMinutes);
         
-        return strcmp($activity->status, Controlador::STATUS_PENDING)==0 && strcmp($activity->XA_ROUTE, "1") && $intervalInMinutes>=20;
+        Utils::logDebug("Estado pending: " . strcmp($activity->status, Controlador::STATUS_PENDING)==0);
+        Utils::logDebug("XA_ROUTE: " . strcmp($activity->XA_ROUTE, "1"));
+        Utils::logDebug("interval mayor a 20: " . $intervalInMinutes>=20);
+        
+        return strcmp($activity->status, Controlador::STATUS_PENDING)==0 && strcmp($activity->XA_ROUTE, "1")==0 && $intervalInMinutes>=20;
     }
     function showConfirm(){
-        return true;
-        $activityID=$this->getActivityIdFromContext();
-        $activity=$this->findActivityData($activityID);
-        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date, new DateTimeZone($activity->timeZone));
-        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'), new DateTimeZone($activity->timeZone));
-        return $activityDate > $currentDate;
+        return $this->showCancel();
     }
     function showCancel(){
-        return true;
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
         $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date, new DateTimeZone($activity->timeZone));

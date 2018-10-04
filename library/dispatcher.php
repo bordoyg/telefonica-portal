@@ -55,6 +55,11 @@ class Dispatcher {
                 $this->controlador->addMessageError(Controlador::ERROR_ORDEN_INEXISTENTE);
                 return Dispatcher::MESSAGES_URL;
             }else{
+                $activityIDInParam=isset($_GET[Controlador::ACTIVITY_PARAM]) ? $_GET[Controlador::ACTIVITY_PARAM] : null ;
+                $activityIDInCookie=$_COOKIE[Controlador::ACTIVITY_PARAM];
+                if(strcmp($activityIDInParam, $activityIDInCookie)!=0){
+                    $activityID=$activityIDInCookie;
+                }
                 $activity=$this->getControlador()->findActivityData($activityID);
                 if (isset($activity)){
                     setcookie(Controlador::ACTIVITY_PARAM, $activityID);
