@@ -397,6 +397,26 @@ class Controlador {
     function excecuteMenu(){
         return Dispatcher::MENU_URL;
     }
+    function existActivity(){
+        $activityID=isset($_GET[Controlador::ACTIVITY_PARAM]) ? $_GET[Controlador::ACTIVITY_PARAM] : null ;
+        if (!isset($activityID)){
+            $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+        }
+        if (!isset($activityID)){
+            //Expiramos la cookie
+            setcookie(Controlador::ACTIVITY_PARAM, $activityID,time()-3600);
+            return false;
+        }else{
+            $activity=$this->findActivityData($activityID);
+            if (!isset($activity)){
+                //Expiramos la cookie
+                setcookie(Controlador::ACTIVITY_PARAM, $activityID,time()-3600);
+                return false;
+            }
+        }
+        setcookie(Controlador::ACTIVITY_PARAM, $activityID);
+        return true;
+    }
     function isValidActivity(){
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
@@ -440,7 +460,6 @@ class Controlador {
         return $this->showCancel();
     }
     function showTechnicanLocation(){
-        return true;
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
         $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date, new DateTimeZone($activity->timeZone));

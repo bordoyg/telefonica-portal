@@ -47,31 +47,6 @@ class Dispatcher {
     function resolveAction() {
         $action = isset($_REQUEST[Dispatcher::OPTION_PARAM]) ? $_REQUEST[Dispatcher::OPTION_PARAM] : null ;
         try {
-            $activityID=isset($_GET[Controlador::ACTIVITY_PARAM]) ? $_GET[Controlador::ACTIVITY_PARAM] : null ;
-            if (!isset($activityID)){
-                $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
-            }
-            if (!isset($activityID)){
-                $this->controlador->addMessageError(Controlador::ERROR_ORDEN_INEXISTENTE);
-                return Dispatcher::MESSAGES_URL;
-            }else{
-                $activityIDInParam=isset($_GET[Controlador::ACTIVITY_PARAM]) ? $_GET[Controlador::ACTIVITY_PARAM] : null ;
-                $activityIDInCookie=$_COOKIE[Controlador::ACTIVITY_PARAM];
-                if(strcmp($activityIDInParam, $activityIDInCookie)!=0){
-                    $activityID=$activityIDInCookie;
-                }
-                $activity=$this->getControlador()->findActivityData($activityID);
-                if (isset($activity)){
-                    setcookie(Controlador::ACTIVITY_PARAM, $activityID);
-                }else{
-                    //Expiramos la cookie
-                    setcookie(Controlador::ACTIVITY_PARAM, $activityID,time()-3600);
-                    $this->controlador->addMessageError(Controlador::ERROR_ORDEN_INEXISTENTE);
-                    return Dispatcher::MESSAGES_URL;
-                }
-            }
-            
-                   
             if (strcmp(Dispatcher::CONFIRMAR_LABEL, $action) === 0){
                 return $this->controlador->excecuteConfirmConfirm();
             }

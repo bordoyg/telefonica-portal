@@ -6,13 +6,21 @@ if(!isset($GLOBALS['dispatcher'])){
 }
 $dispatcher = $GLOBALS['dispatcher'];
 
-//Validacion vigencia
-if($dispatcher->getControlador()->isValidActivity()){
-    $htmlFile=$dispatcher->resolveAction();
+
+//validacion de existencia
+if($dispatcher->getControlador()->existActivity()){
+    //Validacion vigencia
+    if($dispatcher->getControlador()->isValidActivity()){
+        $htmlFile=$dispatcher->resolveAction();
+    }else{
+        $dispatcher->getControlador()->addMessageError(Controlador::ERROR_ORDEN_NO_VIGENTE);
+        $htmlFile= Dispatcher::MESSAGES_URL;
+    }
 }else{
-    $dispatcher->getControlador()->addMessageError(Controlador::ERROR_ORDEN_NO_VIGENTE);
+    $dispatcher->getControlador()->addMessageError(Controlador::ERROR_ORDEN_INEXISTENTE);
     $htmlFile= Dispatcher::MESSAGES_URL;
 }
+
 isset($htmlFile) ? require_once(APPPATH .  '/widgets/custom/library/'. $htmlFile) :'';
 ?>
 <head>
