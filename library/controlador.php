@@ -443,7 +443,22 @@ class Controlador {
         Utils::logDebug("XA_ROUTE: " . strcmp($activity->XA_ROUTE, "1"));
         Utils::logDebug("interval mayor a 20: " . $intervalInMinutes>=20);
         
-        return strcmp($activity->status, Controlador::STATUS_PENDING)==0 && strcmp($activity->XA_ROUTE, "1")==0 && $intervalInMinutes>=20;
+        $out= strcmp($activity->status, Controlador::STATUS_PENDING)==0 && strcmp($activity->XA_ROUTE, "1")==0 && $intervalInMinutes>=20;
+        if($out){
+            //Guardamos la url de acceso en el campo XA_PROJECT_CODE
+            $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]?". implode($_SERVER['argv']);
+            if($actual_link!=$activity->XA_PROJECT_CODE){
+                $params=array("XA_PROJECT_CODE"=>$actual_link);
+                $params=json_encode($params);
+                try{
+                    //Se actualiza el estado XA_PROJECT_CODE
+                    $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
+                }catch(Exception $e){
+                    Utils::logDebug('Hubo un error al guardar el campo XA_PROJECT_CODE con el valor: ' . $actual_link, $e);
+                }
+            }
+        }
+        return $out;
     }
     function showConfirm(){
         return $this->showCancel();
