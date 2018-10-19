@@ -3,13 +3,6 @@
 <head></head>
 <?php require_once(APPPATH . 'widgets/custom/library/header.php'); ?>
 <body>
-    <style>
-       /* Set the size of the div element that contains the map */
-      #map {
-        height: 400px;  /* The height is 400 pixels */
-        width: 100%;  /* The width is the width of the web page */
-       }
-    </style>
 	<div id="cont_agend">
 		<div class="banner_top text_center">
 			<h1>Telef&oacute;nica</h1>
@@ -47,27 +40,32 @@
             </div>
             <div style="height:10px; clear: both;"></div>
             
-			
+              <div id="mapdiv" style="height: 400px; width: 100%;"></div>
+              <script type="text/javascript" src="/euf/assets/others/telefonica/js/OpenLayers.js"></script>
+              <script>
+                map = new OpenLayers.Map("mapdiv");
+                map.addLayer(new OpenLayers.Layer.OSM());
 
-            <div id="map"></div>
-            <script>
-                // Initialize and add the map
-                function initMap() {
-                  // El mapa, centrado en el domicilio del cliente
-                  var map = new google.maps.Map(document.getElementById('map'), {zoom: 15 <?php echo isset($_REQUEST[Controlador::LOCATION_CUSTOMER_PARAM])? ', center:'.$_REQUEST[Controlador::LOCATION_CUSTOMER_PARAM] : ''; ?>});
-                  // El marcador, seteado en la posision del tecnico si exsite
-                  var marker = new google.maps.Marker({map: map <?php echo isset($_REQUEST[Controlador::LOCATION_TECHNICAN_PARAM])? ', position:'.$_REQUEST[Controlador::LOCATION_TECHNICAN_PARAM] : ''; ?>});
-                }
-            </script>
-            <!--Load the API from the specified URL
-            * The async attribute allows the browser to render the page while the API loads
-            * The key parameter will contain your own API key (which is not needed for this tutorial)
-            * The callback parameter executes the initMap() function
-            -->
-            <script async defer
-            	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDTCrs1Dqz_aMDCQx4UWjD87f9_0xq6nQc&callback=initMap">
-            </script>
-            
+                <?php 
+                    if(isset($_REQUEST[Controlador::LOCATION_TECHNICAN_PARAM])){
+                        echo 'var lonLatTechnican = new OpenLayers.LonLat(' . $_REQUEST[Controlador::LOCATION_TECHNICAN_PARAM] . ')';
+                        echo '.transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());';
+                        echo 'var markers = new OpenLayers.Layer.Markers( "Markers" );';
+                        echo 'map.addLayer(markers);';
+                        echo 'markers.addMarker(new OpenLayers.Marker(lonLatTechnican));';
+                    }
+                ?>
+                var zoom=16;
+                <?php 
+                    if(isset($_REQUEST[Controlador::LOCATION_CUSTOMER_PARAM])){
+                        echo 'var lonLatAddress = new OpenLayers.LonLat(' . $_REQUEST[Controlador::LOCATION_CUSTOMER_PARAM] . ')';
+                        echo '.transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());';
+                        echo 'map.setCenter(lonLatAddress, zoom);';
+                    }
+                ?>
+
+              </script>
+     
             <div style="height:10px; clear: both;"></div>
             <script src="/euf/assets/others/telefonica/js/easytimer.min.js"></script>
             <div style="float:right;" id="basicUsage"></div>

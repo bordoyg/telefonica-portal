@@ -10,7 +10,8 @@ class Controlador {
 	const LOCATION_CUSTOMER_PARAM='locationCustomer';
 	const LOCATION_TECHNICAN="technicanLocation";
 	const SCHUEDULE_DATE_PARAM='timeSlot';
-	const STATUS_LOCALIZABLE=array('onTheWay', 'started');
+	const STATUS_LOCALIZABLE=array("onTheWay", "started");
+	const STATUS_VIGENTE=array("onTheWay", "started", "pending");
 	const STATUS_PENDING="pending";
 	
 	const ERROR_GENERIC_MSJ="Debido a un problema t&eacute;cnico no podemos procesar tu solicitud en este momento. Por favor intenta lo nuevamente m&aacute;s tarde. Si tienes alguna inquietud puedes comunicarte a la l&iacute;nea 01 80009 969090.";
@@ -43,7 +44,7 @@ class Controlador {
     function findTechnicanLocation($activity){
         //Obtenemos la posicion del domicilio
         if(isset($activity->latitude) && isset($activity->longitude)){
-            $_REQUEST[Controlador::LOCATION_CUSTOMER_PARAM]='{lat:'.$activity->latitude.',lng:'.$activity->longitude.'}';
+            $_REQUEST[Controlador::LOCATION_CUSTOMER_PARAM]=$activity->longitude.','.$activity->latitude;
         }
         
         //Obtenemos la posicion del tecnico
@@ -54,7 +55,7 @@ class Controlador {
              if(isset($locationData->coordinates) && isset($locationData->coordinates->latitude) && isset($locationData->coordinates->longitude)){
                  $lat=$locationData->coordinates->latitude;
                  $lng=$locationData->coordinates->longitude;
-                 $_REQUEST[Controlador::LOCATION_TECHNICAN_PARAM]='{lat:' . $lat . ', lng:' . $lng . '}';
+                 $_REQUEST[Controlador::LOCATION_TECHNICAN_PARAM]=  $lng. ',' . $lat ;
              }else{
                  $this->addMessageError("No se puedo establecer la ubicacion del t&eacute;cnico, intenta mas tarde");
              }
@@ -438,13 +439,13 @@ class Controlador {
         $intervalInMinutes = $intervalInSeconds/60;
         
         Utils::logDebug("interval en minutos: " . $intervalInMinutes);
+        Utils::logDebug('Estado localizable: ' . in_array($activity->status, Controlador::STATUS_VIGENTE));
+        Utils::logDebug('XA_ROUTE: ' . (strcmp($activity->XA_ROUTE,"1")==0));
+        Utils::logDebug('interval mayor a 20: ' . ($intervalInMinutes>=20));
         
-        Utils::logDebug("Estado pending: " . strcmp($activity->status, Controlador::STATUS_PENDING)==0);
-        Utils::logDebug("XA_ROUTE: " . strcmp($activity->XA_ROUTE, "1"));
-        Utils::logDebug("interval mayor a 20: " . $intervalInMinutes>=20);
-        
-        $out= strcmp($activity->status, Controlador::STATUS_PENDING)==0 && strcmp($activity->XA_ROUTE, "1")==0 && $intervalInMinutes>=20;
-        if($out){
+        $isVigente= in_array($activity->status, Controlador::STATUS_VIGENTE) && (strcmp($activity->XA_ROUTE, "1")==0) && $intervalInMinutes>=0;
+        Utils::logDebug('isVigente: ' . ($isVigente));
+        if($isVigente){
             //Guardamos la url de acceso en el campo XA_PROJECT_CODE
             $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]?". implode($_SERVER['argv']);
             if($actual_link!=$activity->XA_PROJECT_CODE){
@@ -458,7 +459,7 @@ class Controlador {
                 }
             }
         }
-        return $out;
+        return $isVigente;
     }
     function showConfirm(){
         return $this->showCancel();
@@ -479,7 +480,10 @@ class Controlador {
         $activity=$this->findActivityData($activityID);
         $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date, new DateTimeZone($activity->timeZone));
         $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'), new DateTimeZone($activity->timeZone));
-        return in_array($activity->status, Controlador::STATUS_LOCALIZABLE) && $activityDate == $currentDate;
+        $currentDate=$currentDate->format("Y-m-d");
+        $activityDate=$activityDate->format("Y-m-d");
+        Utils::logDebug("SHOWTECHNICANLOCATION: " . in_array($activity->status, Controlador::STATUS_LOCALIZABLE) . " - " . $activityDate == $currentDate);
+        return /*in_array($activity->status, Controlador::STATUS_LOCALIZABLE) &&*/ $activityDate == $currentDate;
     }
     function addMessageError($msj){
         $_REQUEST[Controlador::MESSAGE_PARAM]=$msj;

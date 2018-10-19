@@ -37,12 +37,12 @@ class ServiceSoap {
         curl_setopt($this->process, CURLOPT_HTTPGET, FALSE);
         curl_setopt($this->process, CURLOPT_POSTFIELDS, $xmlRequest);
         
-        Utils::logDebug("Se va a invocar al servicio: " . $url);
-        Utils::logDebug("XMLRequest: " . $xmlRequest);
+        //Utils::logDebug("Se va a invocar al servicio: " . $url);
+        //Utils::logDebug("XMLRequest: " . $xmlRequest);
         $return = curl_exec($this->process);
         $httpcode = curl_getinfo($this->process, CURLINFO_HTTP_CODE);
-        Utils::logDebug("La respuesta del servicio fue: " . $httpcode);
-        Utils::logDebug("XMLResponse: " . $return);
+        //Utils::logDebug("La respuesta del servicio fue: " . $httpcode);
+        //Utils::logDebug("XMLResponse: " . $return);
         
         curl_close($this->process);
         $content=$this->xmlToArray($return);
