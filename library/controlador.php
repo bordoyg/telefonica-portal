@@ -497,15 +497,27 @@ class Controlador {
     }
     function desencriptar_AES($encrypted_data_hex, $key)
     {
-        $td = mcrypt_module_open(MCRYPT_RIJNDAEL_128, '', MCRYPT_MODE_CBC, '');
-        $iv_size_hex = mcrypt_enc_get_iv_size($td)*2;
-        $iv = pack("H*", substr($encrypted_data_hex, 0, $iv_size_hex));
-        $encrypted_data_bin = pack("H*", substr($encrypted_data_hex, $iv_size_hex));
-        mcrypt_generic_init($td, $key, $iv);
-        $decrypted = mdecrypt_generic($td, $encrypted_data_bin);
-        mcrypt_generic_deinit($td);
-        mcrypt_module_close($td);
-        return $decrypted;
+        try {
+            $cipher = new RightNow\Connect\Crypto\v1_3\AES();
+            $cipher->Mode->ID =1;
+            $cipher->IV->Value = 'p0r7417313f0n1c4';
+            $cipher->KeySize->LookupName = "128_bits";
+            $cipher->Key = 'p0r7417313f0n1c4';
+            $cipher->Text = $encrypted_data_hex;
+            
+//             echo "Text to be encrypted : " .$cipher->Text . "<br>";
+//             $cipher->Padding->Id = 2;
+//             $cipher->encrypt();
+//             $encrypted_text = $cipher->EncryptedText;
+//             echo "Encrypted Text : " .base64_encode($encrypted_text)."<br>";
+            
+            $cipher->decrypt();
+            $decrypted_text = $cipher->Text;
+//            echo "Decrypted Text : " .$decrypted_text;
+        }
+        catch (Exception $err ) {
+            Utils::logDebug('Hubo un error al desencriptar la actividad: ' . $encrypted_data_hex, $e);
+        }
     }
 }
 ?>
