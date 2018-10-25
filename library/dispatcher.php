@@ -45,8 +45,9 @@ class Dispatcher {
         }
     }
     function resolveAction() {
-        $action = isset($_REQUEST[Dispatcher::OPTION_PARAM]) ? $_REQUEST[Dispatcher::OPTION_PARAM] : null ;
         try {
+            $action = isset($_REQUEST[Dispatcher::OPTION_PARAM]) ? $_REQUEST[Dispatcher::OPTION_PARAM] : null ;
+            
             if (strcmp(Dispatcher::CONFIRMAR_LABEL, $action) === 0){
                 return $this->controlador->excecuteConfirmConfirm();
             }

@@ -237,8 +237,12 @@ class Controlador {
             $firstDay->setDate(date("Y"), date("m"), 1);
             $dayWeekFirstDay=$firstDay->format("w");
             $firstDayCalendar=$firstDay->sub(new DateInterval("P" . $dayWeekFirstDay . "D"));
+            try{
+                $availability=$this->findAvailabilitySOAP($days);
+            }catch(Exception $e){
+                Utils::logDebug('Hubo un error al buscar los dias habilitados', $e);
+            }
             
-            $availability=$this->findAvailabilitySOAP($days);
             for($i=0;$i<8;$i++){
                 $calendar[$i]=array();
                 for($j=0;$j<7;$j++){
@@ -247,22 +251,24 @@ class Controlador {
                     $dateItem=new stdClass();
                     $dateItem->dayOfMonth=$dayOfMonth;
                     
-                    
-                    for($k=0; $k<count($availability); $k++){
-                        $availabilityDate=$availability[$k]->date->format("Ymd");
-                        $dayOfCalendar=$dateItem->dayOfMonth->format("Ymd");
-                        
-                        if(strcmp($availabilityDate,$dayOfCalendar)==0){
-                            $dateItem->timeSlots=$availability[$k]->timeSlots;
+                    if(isset($availability)){
+                        for($k=0; $k<count($availability); $k++){
+                            $availabilityDate=$availability[$k]->date->format("Ymd");
+                            $dayOfCalendar=$dateItem->dayOfMonth->format("Ymd");
+                            
+                            if(strcmp($availabilityDate,$dayOfCalendar)==0){
+                                $dateItem->timeSlots=$availability[$k]->timeSlots;
+                            }
                         }
                     }
+                    
                     $calendar[$i][$j]=$dateItem;
                     
                     $firstDayCalendar->add(new DateInterval("P1D"));
                 }
             }
         }catch(Exception $e){
-            Utils::logDebug('Hubo un error al cancelar la cita', $e);
+            Utils::logDebug('Hubo un error al crear el calendario', $e);
             $this->addMessageError(Controlador::ERROR_GENERIC_MSJ);
             return Dispatcher::MESSAGES_URL;
         }
@@ -399,67 +405,77 @@ class Controlador {
         return Dispatcher::MENU_URL;
     }
     function existActivity(){
-        $activityID=isset($_GET[Controlador::ACTIVITY_PARAM]) ? $_GET[Controlador::ACTIVITY_PARAM] : null ;
-        if (!isset($activityID)){
-            $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
-        }
-        if (!isset($activityID)){
-            //Expiramos la cookie
-            setcookie(Controlador::ACTIVITY_PARAM, $activityID,time()-3600);
-            return false;
-        }else{
-            $activity=$this->findActivityData($activityID);
-            if (!isset($activity)){
+        try{
+            $activityID=isset($_GET[Controlador::ACTIVITY_PARAM]) ? $_GET[Controlador::ACTIVITY_PARAM] : null ;
+            if (!isset($activityID)){
+                $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+            }
+            if (!isset($activityID)){
                 //Expiramos la cookie
                 setcookie(Controlador::ACTIVITY_PARAM, $activityID,time()-3600);
                 return false;
-            }
-        }
-        setcookie(Controlador::ACTIVITY_PARAM, $activityID);
-        return true;
-    }
-    function isValidActivity(){
-        $activityID=$this->getActivityIdFromContext();
-        $activity=$this->findActivityData($activityID);
-        if(!isset($activity) 
-            || !isset($activity->startTime)
-            || !isset($activity->status)
-            || !isset($activity->XA_ROUTE)){
-           return false; 
-        }
-        $dtCurrent= new DateTime("now");
-        $dtETA=new DateTime();
-        $dtETA=$dtETA->createFromFormat("Y-m-d H:i:s", $activity->startTime);
-        
-        Utils::logDebug("Current: " . $dtCurrent->format("Y-m-d H:i:s"));
-        Utils::logDebug("dtETA: " . $dtETA->format("Y-m-d H:i:s"));
-        
-        $interval=$dtCurrent->diff($dtETA, false);
-        $intervalInSeconds = (new DateTime())->setTimeStamp(0)->add($interval)->getTimeStamp();
-        $intervalInMinutes = $intervalInSeconds/60;
-        
-        Utils::logDebug("interval en minutos: " . $intervalInMinutes);
-        Utils::logDebug('Estado localizable: ' . in_array($activity->status, Controlador::STATUS_VIGENTE));
-        Utils::logDebug('XA_ROUTE: ' . (strcmp($activity->XA_ROUTE,"1")==0));
-        Utils::logDebug('interval mayor a 20: ' . ($intervalInMinutes>=20));
-        
-        $isVigente= in_array($activity->status, Controlador::STATUS_VIGENTE) && (strcmp($activity->XA_ROUTE, "1")==0) && $intervalInMinutes>=0;
-        Utils::logDebug('isVigente: ' . ($isVigente));
-        if($isVigente){
-            //Guardamos la url de acceso en el campo XA_PROJECT_CODE
-            $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]?". implode($_SERVER['argv']);
-            if($actual_link!=$activity->XA_PROJECT_CODE){
-                $params=array("XA_PROJECT_CODE"=>$actual_link);
-                $params=json_encode($params);
-                try{
-                    //Se actualiza el estado XA_PROJECT_CODE
-                    $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
-                }catch(Exception $e){
-                    Utils::logDebug('Hubo un error al guardar el campo XA_PROJECT_CODE con el valor: ' . $actual_link, $e);
+            }else{
+                $activity=$this->findActivityData($activityID);
+                if (!isset($activity)){
+                    //Expiramos la cookie
+                    setcookie(Controlador::ACTIVITY_PARAM, $activityID,time()-3600);
+                    return false;
                 }
             }
+            setcookie(Controlador::ACTIVITY_PARAM, $activityID);
+            return true;
+        }catch(Exception $e){
+            Utils::logDebug('Error en existActivity ', $e);
+            return false;
         }
-        return $isVigente;
+    }
+    function isValidActivity(){
+        try{
+            $activityID=$this->getActivityIdFromContext();
+            $activity=$this->findActivityData($activityID);
+            if(!isset($activity)
+                || !isset($activity->startTime)
+                || !isset($activity->status)
+                || !isset($activity->XA_ROUTE)){
+                    return false;
+            }
+            $dtCurrent= new DateTime("now");
+            $dtETA=new DateTime();
+            $dtETA=$dtETA->createFromFormat("Y-m-d H:i:s", $activity->startTime);
+            
+            Utils::logDebug("Current: " . $dtCurrent->format("Y-m-d H:i:s"));
+            Utils::logDebug("dtETA: " . $dtETA->format("Y-m-d H:i:s"));
+            
+            $interval=$dtCurrent->diff($dtETA, false);
+            $intervalInSeconds = (new DateTime())->setTimeStamp(0)->add($interval)->getTimeStamp();
+            $intervalInMinutes = $intervalInSeconds/60;
+            
+            Utils::logDebug("interval en minutos: " . $intervalInMinutes);
+            Utils::logDebug('Estado localizable: ' . in_array($activity->status, Controlador::STATUS_VIGENTE));
+            Utils::logDebug('XA_ROUTE: ' . (strcmp($activity->XA_ROUTE,"1")==0));
+            Utils::logDebug('interval mayor a 20: ' . ($intervalInMinutes>=20));
+            
+            $isVigente= in_array($activity->status, Controlador::STATUS_VIGENTE) && (strcmp($activity->XA_ROUTE, "1")==0) && $intervalInMinutes>=0;
+            Utils::logDebug('isVigente: ' . ($isVigente));
+            if($isVigente){
+                //Guardamos la url de acceso en el campo XA_PROJECT_CODE
+                $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]?". implode($_SERVER['argv']);
+                if($actual_link!=$activity->XA_PROJECT_CODE){
+                    $params=array("XA_PROJECT_CODE"=>$actual_link);
+                    $params=json_encode($params);
+                    try{
+                        //Se actualiza el estado XA_PROJECT_CODE
+                        $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
+                    }catch(Exception $e){
+                        Utils::logDebug('Hubo un error al guardar el campo XA_PROJECT_CODE con el valor: ' . $actual_link, $e);
+                    }
+                }
+            }
+            return $isVigente;
+        }catch(Exception $e){
+            Utils::logDebug('Error en isValidActivity ', $e);
+            return false;
+        }
     }
     function showConfirm(){
         return $this->showCancel();
