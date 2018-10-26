@@ -22,9 +22,9 @@ class Controlador {
 	const MSJ_ORDEN_MODIFICADA="Tu cita para la instalaci&oacute;n de los servicios Movistar ha sido modificada. @diaCita@. No olvides tramitar la autorizaci&oacute;n para el ingreso del t&eacute;cnico a tu domicilio";
 	const MSJ_ORDEN_CANCELADA="De acuerdo a tu elecci&oacute;n tu cita ha sido cancelada. Podr&aacute;s reprogramarla posteriormente comunic&aacute;ndote a la l&iacute;nea de atenci&oacute;n gratuita 01 80009 969090";
 	
-	const SUB_STATUS_CANCELADA="CANCELADA";
-	const SUB_STATUS_CONFIRMADA="CONFIRMADA";
-	const SUB_STATUS_MODIFICADA="MODIFICADA";
+	const SUB_STATUS_CANCELADA="Cancelada";
+	const SUB_STATUS_CONFIRMADA="Confirmada";
+	const SUB_STATUS_MODIFICADA="Modificada";
 	
     private $service=NULL;
     private $serviceSoap=NULL;
@@ -78,23 +78,21 @@ class Controlador {
             array_push($params, array('date'=>$date));
         }
         
-        array_push($params, array('calculate_duration'=>true));
+        //array_push($params, array('calculate_duration'=>true));
         array_push($params, array('calculate_travel_time'=>true));
         array_push($params, array('calculate_work_skill'=>true));
         array_push($params, array('return_time_slot_info'=>true));
         array_push($params, array('determine_location_by_work_zone'=>true));
         array_push($params, array('dont_aggregate_results'=>true));
-        array_push($params, array('min_time_to_end_of_time_slot'=>0));
+        //array_push($params, array('min_time_to_end_of_time_slot'=>0));
         array_push($params, array('activity_field'=>array('name'=>'XA_WORK_ZONE_KEY', 'value'=>$activity->XA_WORK_ZONE_KEY)));
         array_push($params, array('activity_field'=>array('name'=>'XA_QUADRANT', 'value'=>$activity->XA_QUADRANT)));
         array_push($params, array('activity_field'=>array('name'=>'XA_ACCESS_TECHNOLOGY', 'value'=>$activity->XA_ACCESS_TECHNOLOGY)));
         array_push($params, array('activity_field'=>array('name'=>'worktype_label', 'value'=>$activity->activityType)));
         array_push($params, array('activity_field'=>array('name'=>'XA_WORK_TYPE', 'value'=>$activity->XA_WORK_TYPE)));
-        array_push($params, array('activity_field'=>array('name'=>'XA_NUMBER_DECODERS', 'value'=>0)));
         array_push($params, array('activity_field'=>array('name'=>'XA_CUSTOMER_SEGMENT', 'value'=>$activity->XA_CUSTOMER_SEGMENT)));
-        array_push($params, array('activity_field'=>array('name'=>'XA_ESTRATO', 'value'=>$activity->XA_ESTRATO)));
-        array_push($params, array('activity_field'=>array('name'=>'XA_VELOCIDAD', 'value'=>$activity->XA_VELOCIDAD)));
-        array_push($params, array('activity_field'=>array('name'=>'XA_NOT_ACCOMPLISHED', 'value'=>0)));
+        array_push($params, array('activity_field'=>array('name'=>'XA_CENTRAL', 'value'=>$activity->XA_CENTRAL)));
+        array_push($params, array('activity_field'=>array('name'=>'XA_BROADBAND_TECHNOLOGY', 'value'=>$activity->XA_BROADBAND_TECHNOLOGY)));
         
         $response=$this->serviceSoap->request("/soap/capacity/", "urn:toa:capacity", "get_capacity", $params);
         $response=$response['SOAP-ENV:ENVELOPE']['SOAP-ENV:BODY']['URN:GET_CAPACITY_RESPONSE'];
@@ -287,9 +285,9 @@ class Controlador {
             //Se actualiza el dia = null
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId . '/custom-actions/move', 'POST', $params);
 
-            $params=array("timeSlot"=>NULL, "XA_CONFIRMACITA"=>Controlador::SUB_STATUS_CANCELADA);
+            $params=array("timeSlot"=>NULL, "XA_REMINDER_REPLY"=>Controlador::SUB_STATUS_CANCELADA);
             $params=json_encode($params);
-            //Se actualiza el timeslot y el estado XA_CONFIRMACITA
+            //Se actualiza el timeslot y el estado XA_REMINDER_REPLY
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
             
             $this->addMessageError(Controlador::MSJ_ORDEN_CANCELADA);
@@ -312,12 +310,12 @@ class Controlador {
             $rawTimeslot=$_REQUEST[Controlador::SCHUEDULE_DATE_PARAM];
             $scheduleDate=substr($rawTimeslot, 0, strrpos($rawTimeslot, '|'));
             $scheduleTimeslot=substr($rawTimeslot, strrpos($rawTimeslot, '|') + 1);
-            //Se actualiza el timeslot, date y el estado XA_CONFIRMACITA
+            //Se actualiza el timeslot, date y el estado XA_REMINDER_REPLY
             
             $params=array();
             array_push($params, array('activity_id'=>$activityID));
             array_push($params, array('position_in_route'=>'unchanged'));
-            array_push($params, array('properties'=>array('name'=>'XA_CONFIRMACITA', 'value'=>Controlador::SUB_STATUS_MODIFICADA)));
+            array_push($params, array('properties'=>array('name'=>'XA_REMINDER_REPLY', 'value'=>Controlador::SUB_STATUS_MODIFICADA)));
             array_push($params, array('properties'=>array('name'=>'time_slot', 'value'=>$scheduleTimeslot)));
             array_push($params, array('properties'=>array('name'=>'date', 'value'=>$scheduleDate)));
             
@@ -356,9 +354,9 @@ class Controlador {
 
             
             $scheduleTimeslot=substr($rawTimeslot, strrpos($rawTimeslot, '|') + 1);
-            $params=array("timeSlot"=>$scheduleTimeslot, "XA_CONFIRMACITA"=>Controlador::SUB_STATUS_MODIFICADA);
+            $params=array("timeSlot"=>$scheduleTimeslot, "XA_REMINDER_REPLY"=>Controlador::SUB_STATUS_MODIFICADA);
             $params=json_encode($params);
-            //Se actualiza el timeslot y el estado XA_CONFIRMACITA
+            //Se actualiza el timeslot y el estado XA_REMINDER_REPLY
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
 
             $activity=$this->findActivityData($activityID);
@@ -381,9 +379,9 @@ class Controlador {
         try{
             $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
             $activity=$this->findActivityData($activityID);
-            $params=array("XA_CONFIRMACITA"=>Controlador::SUB_STATUS_CONFIRMADA);
+            $params=array("XA_REMINDER_REPLY"=>Controlador::SUB_STATUS_CONFIRMADA);
             $params=json_encode($params);
-            //Se actualiza el estado XA_CONFIRMACITA
+            //Se actualiza el estado XA_REMINDER_REPLY
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
             
             $this->addMessageError(Controlador::MSJ_ORDEN_CONFIRMADA);
@@ -435,8 +433,7 @@ class Controlador {
             $activity=$this->findActivityData($activityID);
             if(!isset($activity)
                 || !isset($activity->startTime)
-                || !isset($activity->status)
-                || !isset($activity->XA_ROUTE)){
+                || !isset($activity->status)){
                     return false;
             }
             $dtCurrent= new DateTime("now");
@@ -452,25 +449,11 @@ class Controlador {
             
             Utils::logDebug("interval en minutos: " . $intervalInMinutes);
             Utils::logDebug('Estado localizable: ' . in_array($activity->status, Controlador::STATUS_VIGENTE));
-            Utils::logDebug('XA_ROUTE: ' . (strcmp($activity->XA_ROUTE,"1")==0));
             Utils::logDebug('interval mayor a 20: ' . ($intervalInMinutes>=20));
             
-            $isVigente= in_array($activity->status, Controlador::STATUS_VIGENTE) && (strcmp($activity->XA_ROUTE, "1")==0) && $intervalInMinutes>=0;
+            $isVigente= in_array($activity->status, Controlador::STATUS_VIGENTE) && $intervalInMinutes>=0;
             Utils::logDebug('isVigente: ' . ($isVigente));
-            if($isVigente){
-                //Guardamos la url de acceso en el campo XA_PROJECT_CODE
-                $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]?". implode($_SERVER['argv']);
-                if($actual_link!=$activity->XA_PROJECT_CODE){
-                    $params=array("XA_PROJECT_CODE"=>$actual_link);
-                    $params=json_encode($params);
-                    try{
-                        //Se actualiza el estado XA_PROJECT_CODE
-                        $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
-                    }catch(Exception $e){
-                        Utils::logDebug('Hubo un error al guardar el campo XA_PROJECT_CODE con el valor: ' . $actual_link, $e);
-                    }
-                }
-            }
+
             return $isVigente;
         }catch(Exception $e){
             Utils::logDebug('Error en isValidActivity ', $e);
@@ -483,8 +466,8 @@ class Controlador {
     function showCancel(){
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
-        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date, new DateTimeZone($activity->timeZone));
-        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'), new DateTimeZone($activity->timeZone));
+        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date, new DateTimeZone($activity->timeZoneIANA));
+        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'), new DateTimeZone($activity->timeZoneIANA));
  
         return ($activity->status == Controlador::STATUS_PENDING) && ($activityDate > $currentDate);
     }
@@ -494,8 +477,8 @@ class Controlador {
     function showTechnicanLocation(){
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
-        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date, new DateTimeZone($activity->timeZone));
-        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'), new DateTimeZone($activity->timeZone));
+        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date, new DateTimeZone($activity->timeZoneIANA));
+        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'), new DateTimeZone($activity->timeZoneIANA));
         $currentDate=$currentDate->format("Y-m-d");
         $activityDate=$activityDate->format("Y-m-d");
         Utils::logDebug("SHOWTECHNICANLOCATION: " . in_array($activity->status, Controlador::STATUS_LOCALIZABLE) . " - " . $activityDate == $currentDate);
