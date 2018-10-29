@@ -46,15 +46,6 @@
                 map = new OpenLayers.Map("mapdiv");
                 map.addLayer(new OpenLayers.Layer.OSM());
 
-                <?php 
-                    if(isset($_REQUEST[Controlador::LOCATION_TECHNICAN_PARAM])){
-                        echo 'var lonLatTechnican = new OpenLayers.LonLat(' . $_REQUEST[Controlador::LOCATION_TECHNICAN_PARAM] . ')';
-                        echo '.transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());';
-                        echo 'var markers = new OpenLayers.Layer.Markers( "Markers" );';
-                        echo 'map.addLayer(markers);';
-                        echo 'markers.addMarker(new OpenLayers.Marker(lonLatTechnican));';
-                    }
-                ?>
                 var zoom=16;
                 <?php 
                     if(isset($_REQUEST[Controlador::LOCATION_CUSTOMER_PARAM])){
