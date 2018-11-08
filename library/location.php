@@ -5,7 +5,7 @@
 <body>
 	<div id="cont_agend">
 		<div class="banner_top text_center">
-			<h1>Telef&oacute;nica</h1>
+			<h1>EBT</h1>
 			<h1>Portal de autogesti&oacute;n</h1>
 		</div>
 <!-- 		<div class="container"> -->
