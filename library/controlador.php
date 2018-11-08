@@ -14,13 +14,119 @@ class Controlador {
 	const STATUS_VIGENTE=array("onTheWay", "started", "pending");
 	const STATUS_PENDING="pending";
 	
-	const ERROR_GENERIC_MSJ="Debido a un problema t&eacute;cnico no podemos procesar tu solicitud en este momento. Por favor intenta lo nuevamente m&aacute;s tarde. Si tienes alguna inquietud puedes comunicarte a la l&iacute;nea 01 80009 969090.";
-	const ERROR_ORDEN_INEXISTENTE="La orden no existe";
-	const ERROR_ORDEN_NO_VIGENTE="Tu cita no puede ser confirmada o modificada debido a que no se encuentra vigente en este momento. Si tienes alguna inquietud puedes comunicarte a la l&iacute;nea 01 80009 969090.";
+	const ERROR_GENERIC_MSJ='<div class="row appointment-info">
+                            <p>
+                                <span>No fue posible procesar tu </span>
+                            </p>
+                            <p>
+                                <span>solicitud. </span>
+                            </p>
+                            <p>
+                                <span>Por favor intentalo m&aacute;s</span>
+                            </p>
+                            <p>
+                                <span>tarde.</span>
+                            </p>
+                        </div>';
+	const ERROR_ORDEN_INEXISTENTE='<div class="row appointment-info">
+                                <p>
+                                    <span class="text-bold">La orden no existe </span>
+                                </p>
+                            </div>';
+	const ERROR_ORDEN_NO_VIGENTE='<div class="row appointment-info">
+                            <p>
+                                <span>Tu cita no puede ser confirmada</span>
+                            </p>
+                            <p>
+                                <span>o modificada debido a que no se</span>
+                            </p>
+                            <p>
+                                <span>encuentra vigente en este</span>
+                            </p>
+                            <p>
+                                <span>momento.</span>
+                            </p>
+                            <p>
+                                <span>Si tienes alguna inquietud puedes</span>
+                            </p>
+                            <p>
+                                <span>comunicarte a la l&iacute;nea</span>
+                            </p>
+                            <p>
+                                <span class="contact-number text-underline">01 80009 969090</span><span></span>
+                            </p>
+                        </div>';
 	
-	const MSJ_ORDEN_CONFIRMADA="Gracias por confirmar tu cita. No olvides tramitar la autorizaci&oacute;n para el ingreso del t&eacute;cnico a tu domicilio";
-	const MSJ_ORDEN_MODIFICADA="Tu cita para la instalaci&oacute;n de los servicios Movistar ha sido modificada. @diaCita@. No olvides tramitar la autorizaci&oacute;n para el ingreso del t&eacute;cnico a tu domicilio";
-	const MSJ_ORDEN_CANCELADA="De acuerdo a tu elecci&oacute;n tu cita ha sido cancelada. Podr&aacute;s reprogramarla posteriormente comunic&aacute;ndote a la l&iacute;nea de atenci&oacute;n gratuita 01 80009 969090";
+	const MSJ_ORDEN_CONFIRMADA='<div class="row appointment-info">
+                            <p>
+                                <span>Tu cita fue confirmada </span>
+                            </p>
+                            <p>
+                                <span>para el </span>
+                            </p>
+                            <p>
+                                <span class="appointment-date-formatted">@@$dateFormatted@@</span>
+                                <span> </span>
+                            </p>
+                            <p>
+                                <span>entre las @@$dateStartHours@@ y las @@$dateEndHours@@.</span>
+                            </p>
+                        </div>
+                        <div class="row appointment-remember-ad text-left">
+                            <p>
+                                <span class="text-bold">Recordá:</span>
+                                <span>&nbsp; tiene que haber alguien en el domicilio y te vamos a avisar por SMS cuando el t&eacute;cnico est&eacute; en camino.</span>
+                            </p>
+                        </div>';
+	const MSJ_ORDEN_MODIFICADA='<div class="row appointment-info">
+                            <p>
+                                <span>Tu cita fue </span>
+                            </p>
+                            <p>
+                                <span>reagendada para el</span>
+                            </p>
+                            <p>
+                                <span class="appointment-date-formatted">@@$dateFormatted@@</span>
+                                <span> </span>
+                            </p>
+                            <p>
+                                <span>entre las @@$dateStartHours@@ y las @@$dateEndHours@@.</span>
+                            </p>
+                        </div>
+                        <div class="row appointment-remember-ad text-left">
+                            <p>
+                                <span class="text-bold">Recordá:</span>
+                            </p>
+                            <p>
+                                <span>&#149;Tiene que haber alguien en el domicilio</span>
+                            </p>
+                            <p>
+                                <span>&#149;Te vamos a avisar por SMS cuando el t&eacute;cnico </span>
+                            </p>
+                            <p>
+                                <span>est&eacute; en camino.</span>
+                            </p>
+                        </div>';
+	const MSJ_ORDEN_CANCELADA='<div class="row appointment-info">
+                            <p>
+                                <span>Tu cita fue cancelada.</span>
+                            </p>
+                            <p>
+                                <span>Podrás reagendarla</span>
+                            </p>
+                            <p>
+                                <span>llamando al</span>
+                            </p>
+                            <p>
+                                <span class="contact-number text-underline">0800-222-0114</span>
+                            </p>
+                            <p>
+                                <span>&nbsp;de lunes a viernes de 9 a</span>
+                            </p>
+                            <p>
+                                <span>21hs.</span>
+                            </p>
+                        </div>';
 	
 	const SUB_STATUS_CANCELADA="Cancelada";
 	const SUB_STATUS_CONFIRMADA="Confirmada";
@@ -330,7 +436,17 @@ class Controlador {
             $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
             $diaCita= $dateStart->format('jS F Y') . ', Jornada: ' . $activity->timeSlot . '(' . $dateStart->format('g:i A') . ' - ' . $dateEnd->format('g:i A') . ')';
             
-            $msj= Controlador::MSJ_ORDEN_MODIFICADA;
+            // buscar dateStart y dateEnd de la actividad
+            $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
+            $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
+
+            $vars = array(
+              '@@$dateFormatted@@'       => $dateStart->format('d-M-Y'),
+              '@@$dateStartHours@@'       => $dateStart->format('H'),
+              '@@$dateEndHours@@'       => $dateEnd->format('H\h\s')
+            );
+
+            $msj= strtr(Controlador::MSJ_ORDEN_MODIFICADA, $vars);
             $msj=str_replace("@diaCita@", $diaCita, $msj);
             $this->addMessageError($msj);
             return Dispatcher::MESSAGES_URL;
@@ -364,7 +480,17 @@ class Controlador {
             $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
             $diaCita= $dateStart->format('jS F Y') . ', Jornada: ' . $activity->timeSlot . '(' . $dateStart->format('g:i A') . ' - ' . $dateEnd->format('g:i A') . ')';
             
-            $msj= Controlador::MSJ_ORDEN_MODIFICADA;
+            // buscar dateStart y dateEnd de la actividad
+            $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
+            $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
+
+            $vars = array(
+              '@@$dateFormatted@@'       => $dateStart->format('d-M-Y'),
+              '@@$dateStartHours@@'       => $dateStart->format('H'),
+              '@@$dateEndHours@@'       => $dateEnd->format('H\h\s')
+            );
+
+            $msj= strtr(Controlador::MSJ_ORDEN_MODIFICADA, $vars);
             $msj=str_replace("@diaCita@", $diaCita, $msj);
             $this->addMessageError($msj);
             return Dispatcher::MESSAGES_URL;
@@ -384,7 +510,17 @@ class Controlador {
             //Se actualiza el estado XA_REMINDER_REPLY
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
             
-            $this->addMessageError(Controlador::MSJ_ORDEN_CONFIRMADA);
+            // buscar dateStart y dateEnd de la actividad
+            $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
+            $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
+
+            $vars = array(
+              '@@$dateFormatted@@'       => $dateStart->format('d-M-Y'),
+              '@@$dateStartHours@@'       => $dateStart->format('H'),
+              '@@$dateEndHours@@'       => $dateEnd->format('H\h\s')
+            );
+
+            $this->addMessageError(strtr(Controlador::MSJ_ORDEN_CONFIRMADA, $vars));
             return Dispatcher::MESSAGES_URL;
         }catch(Exception $e){
             Utils::logDebug('Hubo un error al confirmar la cita', $e);

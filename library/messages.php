@@ -3,34 +3,47 @@
 <head></head>
 <?php require_once(APPPATH . 'widgets/custom/library/header.php'); ?>
 <body>
-	<div id="cont_agend">
-		<div class="banner_top text_center">
-			<h1>Telef&oacute;nica</h1>
-			<h1>Portal de autogesti&oacute;n</h1>
-		</div>
+	<div id="appointment-confirmation">
 		<div class="container">
-		<form action="" method="post">
-			<div class="box_cont text_center">
-				<span class="icon_big"><i class="demo-icon icon-icon_agenda"></i></span>
-				<h2>Estimado cliente</h2>
-				<h3>
-				<?php 
-				echo $_REQUEST[Controlador::MESSAGE_PARAM];
-				?>
-				</h3>
-				<?php 
-				if(strcmp(Controlador::ERROR_ORDEN_INEXISTENTE, $_REQUEST[Controlador::MESSAGE_PARAM])!=0
-				    && strcmp(Controlador::ERROR_ORDEN_NO_VIGENTE, $_REQUEST[Controlador::MESSAGE_PARAM])!=0){
-				    
-			        if(!isset($_REQUEST[Dispatcher::NO_VOLVER])){
-			            echo '<form action="" method="post">';
-			            echo '    <div><button type="submit" class="button btn btn-lg btn-primary" >Volver</button></div>';
-			            echo '</form>';
-			        }
-				}
-				?>
+			<div class="row">
+				<div class="col-xs-offset-0 col-sm-offset-2 col-md-offset-4 col-lg-offset-4 col-xs-12 col-sm-8 col-md-4 col-lg-4 text-center">
+					<form action="" method="post">
+						<div class="row header-image">
+                            <img class="img " src="/euf/assets/others/telefonica/images/logo-movistar.png">
+                        </div>
+                        
+                        <?php echo $_REQUEST[Controlador::MESSAGE_PARAM]; ?>
+                        
+                        <?php 
+							if(strcmp(Controlador::ERROR_ORDEN_INEXISTENTE, $_REQUEST[Controlador::MESSAGE_PARAM])!=0
+							    && strcmp(Controlador::ERROR_ORDEN_NO_VIGENTE, $_REQUEST[Controlador::MESSAGE_PARAM])!=0) {
+							    
+						        if(!isset($_REQUEST[Dispatcher::NO_VOLVER])) { ?>
+			                        
+			                        <div class="row appointment-thanks-msg">
+			                            <p>
+			                                <span>¡Muchas gracias!</span>
+			                            </p>
+								        <div class="row action-back">
+				                            <div class="col-xs-offset-1 col-sm-offset-3 col-md-offset-3 col-lg-offset-3 col-xs-10 col-sm-6 col-md-6 col-lg-6">
+				                                <button type="button" onclick="window.location.href=window.location.href;" 
+				                                        class="btn btn-lg btn-block btn-primary">Volver</button>
+				                            </div>
+			                        	</div>
+                        			</div>
+                        <?php 
+							        }
+								}
+							?>
+                        <div class="row separator">
+                            <img id="u7_img" class="img " src="/euf/assets/others/telefonica/images/separator.png"/>
+                        </div>
+                        <div class="row footer-image">
+                            <img id="u6_img" class="img " src="/euf/assets/others/telefonica/images/footer-movistar.png"/>
+                        </div>
+					</form>
+				</div>
 			</div>
-		</form>
 		</div>
 	</div>
 </body>

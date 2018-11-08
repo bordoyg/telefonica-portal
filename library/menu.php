@@ -3,92 +3,96 @@
 <head></head>
 <?php require_once(APPPATH . 'widgets/custom/library/header.php'); ?>
 <body>
-	<div id="cont_agend">
-		<div class="banner_top text_center">
-			<h1>Telef&oacute;nica</h1>
-			<h1>Portal de autogesti&oacute;n</h1>
-		</div>
+	<div id="appointment-confirmation">
 		<div class="container">
-		<form action="" method="post">
-			<div class="box_cont text_center">
-				<span class="icon_big"><i class="demo-icon icon-icon_agenda"></i></span>
-				<h2>Estimado cliente</h2>
-				<h3>
-				<?php 
-				    $dispatcher = $GLOBALS['dispatcher'];
-				    $Controlador = $dispatcher->getControlador();
-					if($Controlador->showConfirm()){
-					    $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
-					    $activity=$dispatcher->getControlador()->findActivityData($activityID);
-					    $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
-					    $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
-					    echo 'Tu cita de instalaci&oacute;n est&aacute; programada para el ' . $dateStart->format('jS F Y') . ', en la jornada ' . $activity->timeSlot . '(' . $dateStart->format('g:i A') . ' - ' . $dateEnd->format('g:i A') . ') Conf&iacute;rmanos tu disponibilidad para atender la visita del t&eacute;cnico.';
-					    
-					    echo '<div>';
-					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CONFIRMAR_LABEL . '"';
-					    echo 'class="button btn btn-lg btn-primary" >Confirmar</button>';
-					    echo '</div>';
-					}
-					
-				?>
-				</h3>
-			</div>
+			<div class="row">
+				<div class="col-xs-offset-0 col-sm-offset-2 col-md-offset-4 col-lg-offset-4 col-xs-12 col-sm-8 col-md-4 col-lg-4 text-center">
+                    <form action="" method="post">
+                        <div class="row header-image">
+                            <img class="img " src="/euf/assets/others/telefonica/images/logo-movistar.png">
+                        </div>
+                        <?php
+                            $dispatcher = $GLOBALS['dispatcher'];
+                            $Controlador = $dispatcher->getControlador();
+                            if($Controlador->showConfirm()) {
+                            $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+                            $activity=$dispatcher->getControlador()->findActivityData($activityID);
+                            $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
+                            $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
+                        ?>
+                        <div class="row appointment-info">
+                            <p>
+                                <span>Tu cita para</span>
+                            </p>
+                            <p>
+                                <span>Instalación/Reparación </span>
+                            </p>
+                            <p>
+                                <span>est&aacute; progamada para el </span>
+                            </p>
+                            <p>
+                                <span class="appointment-date-formatted"><?php echo $dateStart->format('d-M-Y'); ?></span>
+                                <span> </span>
+                            </p>
+                            <p>
+                                <span>entre las <?php echo $dateStart->format('H'); ?> y las <?php echo $dateEnd->format('H\h\s'); ?>.</span>
+                            </p>
+                        </div>
+                        <div class="row action-confirm">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM; ?>"
+                                        value="<?php echo Dispatcher::CONFIRMAR_LABEL; ?>"
+                                        class="btn btn-lg btn-block btn-primary">Confirmar Cita</button>
+                            </div>
+                        </div>
+                        <?php } ?>
+                        <div class="row action-modify">
+                            <?php
+                                $dispatcher = $GLOBALS['dispatcher'];
+                                $Controlador = $dispatcher->getControlador();
+                                if($Controlador->showSchedule()) { ?>
 
-			<div class="box_cont text_center">
-				<h3>
-				<?php 
-				    $dispatcher = $GLOBALS['dispatcher'];
-				    $Controlador = $dispatcher->getControlador();
-				    if($Controlador->showSchedule()){
-					    echo 'Si lo deseas puedes modificar tu cita de instalaci&oacute;n para otro d&iacute;a o jornada, sujeto a disponibilidad actual de visitas';
-					    
-					    echo '<div>';
-					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::SCHEDULE_DATE_LABEL . '"';
-					    echo 'class="button btn btn-lg btn-primary" >Modificar</button>';
-					    echo '</div>';
-					}
-					
-				?>
-				</h3>
+                                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                    <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM; ?>"
+                                            value="<?php echo Dispatcher::SCHEDULE_DATE_LABEL; ?>"
+                                            class="btn btn-lg btn-block btn-secondary pull-left">Modificarla</button>
+                                </div>
+
+                            <?php } ?>
+                            <?php
+                                $dispatcher = $GLOBALS['dispatcher'];
+                                $Controlador = $dispatcher->getControlador();
+                                if($Controlador->showCancel()){ ?>
+
+                                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                    <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM; ?>"
+                                            value="<?php echo Dispatcher::CANCELAR_LABEL; ?>"
+                                            class="btn btn-lg btn-block btn-secondary pull-right">Cancelarla</button>
+                                </div>
+
+                            <?php } ?>
+                            <?php
+                                $dispatcher = $GLOBALS['dispatcher'];
+                                $Controlador = $dispatcher->getControlador();
+                                if($Controlador->showTechnicanLocation()){
+                                echo 'Puedes consultar la ubicaci&oacute;n del t&eacute;cnico aca';
+
+                                echo '<div class="col-lg-12">';
+                                echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::UBICACION_LABEL . '"';
+                                echo 'class="button btn btn-lg btn-primary" >Ver t&eacute;cnico</button>';
+                                echo '</div>';
+                                }
+                            ?>
+                        </div>
+                        <div class="row separator">
+                            <img id="u7_img" class="img " src="/euf/assets/others/telefonica/images/separator.png"/>
+                        </div>
+                        <div class="row footer-image">
+                            <img id="u6_img" class="img " src="/euf/assets/others/telefonica/images/footer-movistar.png"/>
+                        </div>
+                    </form>
+                </div>
 			</div>
-			
-			
-			<div class="box_cont text_center">
-				<h3>
-				<?php 
-				    $dispatcher = $GLOBALS['dispatcher'];
-				    $Controlador = $dispatcher->getControlador();
-				    if($Controlador->showCancel()){
-					    echo 'Puedes cancelar tu cita s&iacute; as&iacute; lo deseas. Podr&aacute;s reprogramarla posteriormente comunic&aacute;ndote a la l&iacute;nea de atenci&oacute;n gratuita 01 80009 969090';
-					    
-					    echo '<div>';
-					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CANCELAR_LABEL . '"';
-					    echo 'class="button btn btn-lg btn-primary" >Cancelar</button>';
-					    echo '</div>';
-					}
-					
-				?>
-				</h3>
-			</div>
-			
-			<div class="box_cont text_center">
-				<h3>
-				<?php 
-				    $dispatcher = $GLOBALS['dispatcher'];
-				    $Controlador = $dispatcher->getControlador();
-				    if($Controlador->showTechnicanLocation()){
-					    echo 'Puedes consultar la ubicaci&oacute;n del t&eacute;cnico aca';
-					    
-					    echo '<div>';
-					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::UBICACION_LABEL . '"';
-					    echo 'class="button btn btn-lg btn-primary" >Ver t&eacute;cnico</button>';
-					    echo '</div>';
-					}
-					
-				?>
-				</h3>
-			</div>
-			</form>
 		</div>
 	</div>
 </body>
