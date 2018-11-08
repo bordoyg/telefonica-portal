@@ -19,7 +19,7 @@ class Controlador {
 	const ERROR_ORDEN_NO_VIGENTE="Tu cita no puede ser confirmada o modificada debido a que no se encuentra vigente en este momento. Si tienes alguna inquietud puedes comunicarte a la l&iacute;nea 01 80009 969090.";
 	
 	const MSJ_ORDEN_CONFIRMADA="Gracias por confirmar tu cita. No olvides tramitar la autorizaci&oacute;n para el ingreso del t&eacute;cnico a tu domicilio";
-	const MSJ_ORDEN_MODIFICADA="Tu cita para la instalaci&oacute;n de los servicios EBT ha sido modificada. @diaCita@. No olvides tramitar la autorizaci&oacute;n para el ingreso del t&eacute;cnico a tu domicilio";
+	const MSJ_ORDEN_MODIFICADA="Tu cita para la instalaci&oacute;n de los servicios ETB ha sido modificada. @diaCita@. No olvides tramitar la autorizaci&oacute;n para el ingreso del t&eacute;cnico a tu domicilio";
 	const MSJ_ORDEN_CANCELADA="De acuerdo a tu elecci&oacute;n tu cita ha sido cancelada. Podr&aacute;s reprogramarla posteriormente comunic&aacute;ndote a la l&iacute;nea de atenci&oacute;n gratuita 01 80009 969090";
 	
 	const SUB_STATUS_CANCELADA="CANCELADA";
