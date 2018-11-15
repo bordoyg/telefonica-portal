@@ -141,7 +141,27 @@ class Controlador {
                 foreach ($valor as $c => $v) {
                     array_push($timeSlots, $v);
                 }
-                $date->timeSlots=$timeSlots;
+                
+                //Ordenamiento Timeslots
+                $sortedTimeSlots=array();
+                $dateTimeConverter=new DateTime();
+                $minTimeSlotFrom='99:99:99';
+                $minTimeSlot=0;
+                for($l=0; $l<count($timeSlots); $l++){
+                    for($m=0; $m<count($timeSlots)-$l; $m++){
+                        $dateTimeConverter= $dateTimeConverter->createFromFormat('H:i:s', $timeSlots[$m]->timeFrom);
+                        $currentTimeSlotFrom=$dateTimeConverter->format('H:i:s');
+                        $minTimeSlot=$timeSlots[$m];
+                        if(strcmp($currentTimeSlotFrom, $minTimeSlotFrom)<0){
+                            $minTimeSlotFrom=$currentTimeSlotFrom;
+                            $minTimeSlot=$timeSlots[$m];
+                        }
+                    }
+                    
+                    array_push($sortedTimeSlots, $minTimeSlot);
+                }
+                
+                $date->timeSlots=$sortedTimeSlots;
                 array_push($dates, $date);
             }
         }
@@ -203,17 +223,33 @@ class Controlador {
                     }
                 }
             }
-            
-            if(count($timeSlots)>0){
+            //Ordenamiento Timeslots
+            $sortedTimeSlots=array();
+            $dateTimeConverter=new DateTime();
+            $minTimeSlotFrom='99:99:99';
+            $minTimeSlot=0;
+            for($l=0; $l<count($timeSlots); $l++){
+                for($m=0; $m<count($timeSlots); $m++){
+                    $dateTimeConverter= $dateTimeConverter->createFromFormat('H:i:s', $timeSlots[$m]->timeFrom);
+                    $currentTimeSlotFrom=$dateTimeConverter->format('H:i:s');
+                    if(strcmp($currentTimeSlotFrom, $minTimeSlotFrom)<0){
+                        $minTimeSlotFrom=$currentTimeSlotFrom;
+                        $minTimeSlot=$timeSlots[$m];
+                    }
+                }
+                array_push($sortedTimeSlots, $minTimeSlot);
+            }
+
+            if(count($sortedTimeSlots)>0){
                $date=new stdClass();
                $d=new DateTime();
                
                $date->date=$d->createFromFormat("Y-m-d", $activityBookingOptions->dates[$i]->date);
-               $date->timeSlots=$timeSlots;
+               $date->timeSlots=$sortedTimeSlots;
                array_push($dates, $date);
             }
         }
-        
+
         return $dates;
     }
     function findActivityData($activityID){
