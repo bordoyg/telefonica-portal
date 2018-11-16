@@ -232,6 +232,7 @@ class Controlador {
                 for($m=0; $m<count($timeSlots); $m++){
                     $dateTimeConverter= $dateTimeConverter->createFromFormat('H:i:s', $timeSlots[$m]->timeFrom);
                     $currentTimeSlotFrom=$dateTimeConverter->format('H:i:s');
+                    $minTimeSlot=$timeSlots[$m];
                     if(strcmp($currentTimeSlotFrom, $minTimeSlotFrom)<0){
                         $minTimeSlotFrom=$currentTimeSlotFrom;
                         $minTimeSlot=$timeSlots[$m];
@@ -366,7 +367,7 @@ class Controlador {
             $activity=$this->findActivityData($activityID);
             $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
             $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
-            $diaCita= $dateStart->format('jS F Y') . ', Jornada: ' . $activity->timeSlot . '(' . $dateStart->format('g:i A') . ' - ' . $dateEnd->format('g:i A') . ')';
+            $diaCita= $dateStart->format('d') . ' de ' . $GLOBALS['translateMonth'][$dateStart->format('F')] . ' de ' .$dateStart->format('Y') . ', Jornada: ' . $activity->timeSlot . '(' . $dateStart->format('g:i A') . ' - ' . $dateEnd->format('g:i A') . ')';
             
             $msj= Controlador::MSJ_ORDEN_MODIFICADA;
             $msj=str_replace("@diaCita@", $diaCita, $msj);
@@ -400,7 +401,7 @@ class Controlador {
             $activity=$this->findActivityData($activityID);
             $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
             $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
-            $diaCita= $dateStart->format('jS F Y') . ', Jornada: ' . $activity->timeSlot . '(' . $dateStart->format('g:i A') . ' - ' . $dateEnd->format('g:i A') . ')';
+            $diaCita= $dateStart->format('d') . ' de ' . $GLOBALS['translateMonth'][$dateStart->format('F')] . ' de ' .$dateStart->format('Y'). ', Jornada: ' . $activity->timeSlot . '(' . $dateStart->format('g:i A') . ' - ' . $dateEnd->format('g:i A') . ')';
             
             $msj= Controlador::MSJ_ORDEN_MODIFICADA;
             $msj=str_replace("@diaCita@", $diaCita, $msj);
