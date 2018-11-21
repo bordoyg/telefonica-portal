@@ -39,14 +39,12 @@
             </div>
             </div>
             <div style="height:10px; clear: both;"></div>
-
               <div id="map" class="map"></div>
-             
-
               <script type="text/javascript">
+              
                   function createStyle(src, img) {
-                      return new Style({
-                        image: new Icon(/** @type {module:ol/style/Icon~Options} */ ({
+                      return new ol.style.Style({
+                        image: new ol.style.Icon(/** @type {module:ol/style/Icon~Options} */ ({
                           anchor: [0.5, 0.96],
                           crossOrigin: 'anonymous',
                           src: src,
@@ -55,23 +53,24 @@
                         }))
                       });
                     }
-    
-                    var iconFeature = new Feature(new Point([0, 0]));
-                    iconFeature.set('style', createStyle('data/icon.png', undefined));
-                    var vectorLayer = new ol.layer.VectorLayer({
-                        style: function(feature) {
-                          return feature.get('style');
-                        },
-                        source: new ol.source.VectorSource({features: [iconFeature]})
-                      });
-                    var titleLayer=new ol.layer.Tile({
-                        source: new ol.source.OSM()
-                      }),
+                  var titleLayer=new ol.layer.Tile({ source: new ol.source.OSM() });
+                  var vectorLayer = new ol.layer.Vector({});
+                <?php 
+                    if(isset($_REQUEST[Controlador::LOCATION_TECHNICAN_PARAM])){
+                        echo 'var iconFeature = new ol.Feature(new ol.geom.Point([0, 0]));';
+                        echo 'iconFeature.set(\'style\', createStyle(\'/euf/assets/others/telefonica/images/marker-icon.png\', undefined));';
+                        echo 'var vectorLayer = new ol.layer.Vector({';
+                        echo 'style: function(feature) {';
+                        echo '    return feature.get(\'style\');';
+                        echo '}, source: new ol.source.Vector({features: [iconFeature]}) });';
+                    }
+                ?>
+                    
                   <?php 
                       if(isset($_REQUEST[Controlador::LOCATION_CUSTOMER_PARAM])){
                           echo 'var lonLatAddress = ol.proj.fromLonLat([' . $_REQUEST[Controlador::LOCATION_CUSTOMER_PARAM] . ']);';
                       }else{
-                          echo 'var lonLatAddress = ol.proj.fromLonLat([0, 0])';
+                          echo 'var lonLatAddress = ol.proj.fromLonLat([0, 0]);';
                       }
                   ?>
                   var map = new ol.Map({
@@ -82,17 +81,6 @@
                       zoom: 16
                     })
                   });
-            
-                <?php 
-                    if(isset($_REQUEST[Controlador::LOCATION_TECHNICAN_PARAM])){
-                        echo 'var lonLatTechnican = ol.proj.fromLonLat([' . $_REQUEST[Controlador::LOCATION_TECHNICAN_PARAM] . ']);';
-                        echo 'var markers = new OpenLayers.Layer.Markers( "Markers" );';
-                        echo 'map.addLayer(markers);';
-                        echo 'markers.addMarker(new OpenLayers.Marker(lonLatTechnican));';
-                    }
-                ?>
-                
-
               </script>
 
             <div style="height:10px; clear: both;"></div>
