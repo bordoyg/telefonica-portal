@@ -39,33 +39,62 @@
             </div>
             </div>
             <div style="height:10px; clear: both;"></div>
-            
-              <div id="mapdiv" style="height: 400px; width: 100%;"></div>
-              <script type="text/javascript" src="/euf/assets/others/telefonica/js/OpenLayers.js"></script>
-              <script>
-                map = new OpenLayers.Map("mapdiv");
-                map.addLayer(new OpenLayers.Layer.OSM());
 
+              <div id="map" class="map"></div>
+             
+
+              <script type="text/javascript">
+                  function createStyle(src, img) {
+                      return new Style({
+                        image: new Icon(/** @type {module:ol/style/Icon~Options} */ ({
+                          anchor: [0.5, 0.96],
+                          crossOrigin: 'anonymous',
+                          src: src,
+                          img: img,
+                          imgSize: img ? [img.width, img.height] : undefined
+                        }))
+                      });
+                    }
+    
+                    var iconFeature = new Feature(new Point([0, 0]));
+                    iconFeature.set('style', createStyle('data/icon.png', undefined));
+                    var vectorLayer = new ol.layer.VectorLayer({
+                        style: function(feature) {
+                          return feature.get('style');
+                        },
+                        source: new ol.source.VectorSource({features: [iconFeature]})
+                      });
+                    var titleLayer=new ol.layer.Tile({
+                        source: new ol.source.OSM()
+                      }),
+                  <?php 
+                      if(isset($_REQUEST[Controlador::LOCATION_CUSTOMER_PARAM])){
+                          echo 'var lonLatAddress = ol.proj.fromLonLat([' . $_REQUEST[Controlador::LOCATION_CUSTOMER_PARAM] . ']);';
+                      }else{
+                          echo 'var lonLatAddress = ol.proj.fromLonLat([0, 0])';
+                      }
+                  ?>
+                  var map = new ol.Map({
+                    target: 'map',
+                    layers: [titleLayer, vectorLayer],
+                    view: new ol.View({
+                      center: lonLatAddress,
+                      zoom: 16
+                    })
+                  });
+            
                 <?php 
                     if(isset($_REQUEST[Controlador::LOCATION_TECHNICAN_PARAM])){
-                        echo 'var lonLatTechnican = new OpenLayers.LonLat(' . $_REQUEST[Controlador::LOCATION_TECHNICAN_PARAM] . ')';
-                        echo '.transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());';
+                        echo 'var lonLatTechnican = ol.proj.fromLonLat([' . $_REQUEST[Controlador::LOCATION_TECHNICAN_PARAM] . ']);';
                         echo 'var markers = new OpenLayers.Layer.Markers( "Markers" );';
                         echo 'map.addLayer(markers);';
                         echo 'markers.addMarker(new OpenLayers.Marker(lonLatTechnican));';
                     }
                 ?>
-                var zoom=16;
-                <?php 
-                    if(isset($_REQUEST[Controlador::LOCATION_CUSTOMER_PARAM])){
-                        echo 'var lonLatAddress = new OpenLayers.LonLat(' . $_REQUEST[Controlador::LOCATION_CUSTOMER_PARAM] . ')';
-                        echo '.transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());';
-                        echo 'map.setCenter(lonLatAddress, zoom);';
-                    }
-                ?>
+                
 
               </script>
-     
+
             <div style="height:10px; clear: both;"></div>
             <script src="/euf/assets/others/telefonica/js/easytimer.min.js"></script>
             <div style="float:right;" id="basicUsage"></div>

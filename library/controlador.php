@@ -90,6 +90,7 @@ class Controlador {
         array_push($params, array('activity_field'=>array('name'=>'XA_ACCESS_TECHNOLOGY', 'value'=>$activity->XA_ACCESS_TECHNOLOGY)));
         array_push($params, array('activity_field'=>array('name'=>'worktype_label', 'value'=>$activity->activityType)));
         array_push($params, array('activity_field'=>array('name'=>'XA_WORK_TYPE', 'value'=>$activity->XA_WORK_TYPE)));
+        array_push($params, array('activity_field'=>array('name'=>'XA_WORK_TYPE_DETAILED', 'value'=>$activity->XA_WORK_TYPE_DETAILED)));
         array_push($params, array('activity_field'=>array('name'=>'XA_NUMBER_DECODERS', 'value'=>0)));
         array_push($params, array('activity_field'=>array('name'=>'XA_CUSTOMER_SEGMENT', 'value'=>$activity->XA_CUSTOMER_SEGMENT)));
         array_push($params, array('activity_field'=>array('name'=>'XA_ESTRATO', 'value'=>$activity->XA_ESTRATO)));
@@ -471,28 +472,29 @@ class Controlador {
             $activityID=$this->getActivityIdFromContext();
             $activity=$this->findActivityData($activityID);
             if(!isset($activity)
+                || !isset($activity->date)
                 || !isset($activity->startTime)
                 || !isset($activity->status)
                 || !isset($activity->XA_ROUTE)){
                     return false;
             }
-            $dtCurrent= new DateTime("now");
-            $dtETA=new DateTime();
-            $dtETA=$dtETA->createFromFormat("Y-m-d H:i:s", $activity->startTime);
+//             $dtCurrent= new DateTime("now");
+//             $dtETA=new DateTime();
+//             $dtETA=$dtETA->createFromFormat("Y-m-d H:i:s", $activity->startTime);
             
-            Utils::logDebug("Current: " . $dtCurrent->format("Y-m-d H:i:s"));
-            Utils::logDebug("dtETA: " . $dtETA->format("Y-m-d H:i:s"));
+//             Utils::logDebug("Current: " . $dtCurrent->format("Y-m-d H:i:s"));
+//             Utils::logDebug("dtETA: " . $dtETA->format("Y-m-d H:i:s"));
             
-            $interval=$dtCurrent->diff($dtETA, false);
-            $intervalInSeconds = (new DateTime())->setTimeStamp(0)->add($interval)->getTimeStamp();
-            $intervalInMinutes = $intervalInSeconds/60;
+//             $interval=$dtCurrent->diff($dtETA, false);
+//             $intervalInSeconds = (new DateTime())->setTimeStamp(0)->add($interval)->getTimeStamp();
+//             $intervalInMinutes = $intervalInSeconds/60;
             
-            Utils::logDebug("interval en minutos: " . $intervalInMinutes);
-            Utils::logDebug('Estado localizable: ' . in_array($activity->status, Controlador::STATUS_VIGENTE));
-            Utils::logDebug('XA_ROUTE: ' . (strcmp($activity->XA_ROUTE,"1")==0));
-            Utils::logDebug('interval mayor a 20: ' . ($intervalInMinutes>=20));
+//             Utils::logDebug("interval en minutos: " . $intervalInMinutes);
+//             Utils::logDebug('Estado localizable: ' . in_array($activity->status, Controlador::STATUS_VIGENTE));
+//             Utils::logDebug('XA_ROUTE: ' . (strcmp($activity->XA_ROUTE,"1")==0));
+//             Utils::logDebug('interval mayor a 20: ' . ($intervalInMinutes>=20));
             
-            $isVigente= in_array($activity->status, Controlador::STATUS_VIGENTE) && (strcmp($activity->XA_ROUTE, "1")==0) && $intervalInMinutes>=0;
+            $isVigente= ($this->showTechnicanLocation() || $this->showCancel()) && (strcmp($activity->XA_ROUTE, "1")==0) /*&& $intervalInMinutes>=0*/;
             Utils::logDebug('isVigente: ' . ($isVigente));
             if($isVigente){
                 //Guardamos la url de acceso en el campo XA_PROJECT_CODE
@@ -536,7 +538,7 @@ class Controlador {
         $currentDate=$currentDate->format("Y-m-d");
         $activityDate=$activityDate->format("Y-m-d");
         Utils::logDebug("SHOWTECHNICANLOCATION: " . in_array($activity->status, Controlador::STATUS_LOCALIZABLE) . " - " . $activityDate == $currentDate);
-        return /*in_array($activity->status, Controlador::STATUS_LOCALIZABLE) &&*/ $activityDate == $currentDate;
+        return in_array($activity->status, Controlador::STATUS_LOCALIZABLE) && $activityDate == $currentDate;
     }
     function addMessageError($msj){
         $_REQUEST[Controlador::MESSAGE_PARAM]=$msj;
