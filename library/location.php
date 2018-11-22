@@ -54,15 +54,18 @@
                       });
                     }
                   var titleLayer=new ol.layer.Tile({ source: new ol.source.OSM() });
-                  var vectorLayer = new ol.layer.Vector({});
+                  
                 <?php 
                     if(isset($_REQUEST[Controlador::LOCATION_TECHNICAN_PARAM])){
-                        echo 'var iconFeature = new ol.Feature(new ol.geom.Point([0, 0]));';
+                        echo 'var iconFeature = new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat([' . $_REQUEST[Controlador::LOCATION_TECHNICAN_PARAM] . '])));';
                         echo 'iconFeature.set(\'style\', createStyle(\'/euf/assets/others/telefonica/images/marker-icon.png\', undefined));';
                         echo 'var vectorLayer = new ol.layer.Vector({';
                         echo 'style: function(feature) {';
                         echo '    return feature.get(\'style\');';
                         echo '}, source: new ol.source.Vector({features: [iconFeature]}) });';
+
+                    }else{
+                        echo 'var vectorLayer = new ol.layer.Vector({});';
                     }
                 ?>
                     
