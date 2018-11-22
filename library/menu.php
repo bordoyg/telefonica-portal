@@ -22,7 +22,7 @@
 					    $activity=$dispatcher->getControlador()->findActivityData($activityID);
 					    $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
 					    $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
-					    echo 'Tu cita de instalaci&oacute;n est&aacute; programada para el ' . $dateStart->format('jS F Y') . ', en la jornada ' . $activity->timeSlot . '(' . $dateStart->format('g:i A') . ' - ' . $dateEnd->format('g:i A') . ') Conf&iacute;rmanos tu disponibilidad para atender la visita del t&eacute;cnico.';
+					    echo 'Tu cita de instalaci&oacute;n est&aacute; programada para el ' . $dateStart->format('d') . ' de ' . $GLOBALS['translateMonth'][$dateStart->format('F')]  . ' de ' . $dateStart->format('Y') . ', en la jornada ' . $activity->timeSlot . '(' . $dateStart->format('g:i A') . ' - ' . $dateEnd->format('g:i A') . ') Conf&iacute;rmanos tu disponibilidad para atender la visita del t&eacute;cnico.';
 					    
 					    echo '<div>';
 					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CONFIRMAR_LABEL . '"';

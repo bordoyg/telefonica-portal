@@ -23,18 +23,19 @@
 			<form action="" method="post">
 				<div class="wrap_calendar">
 					<div class="calendar">
+
 						<header>
-							<h2 class="month"><?php echo date("F");?></h2>
+							<h2 class="month"><?php echo $GLOBALS['translateMonth'][date("F")];?></h2>
 						</header>
 						<table>
 							<thead>
-								<td>Sun</td>
-								<td>Mon</td>
-								<td>Tue</td>
-								<td>Wed</td>
-								<td>Thu</td>
-								<td>Fri</td>
-								<td>Sat</td>
+								<td>Dom</td>
+								<td>Lun</td>
+								<td>Mar</td>
+								<td>Mie</td>
+								<td>Jue</td>
+								<td>Vie</td>
+								<td>Sab</td>
 							</thead>
 							<tbody>
 							<?php 
