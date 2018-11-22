@@ -1,6 +1,22 @@
 <?php
 require_once(APPPATH . 'widgets/custom/library/utils.php');
 
+$translateMonth=array();
+$translateMonth['January']='Enero';
+$translateMonth['February']='Febrero';
+$translateMonth['March']='Marzo';
+$translateMonth['April']='Abril';
+$translateMonth['May']='Mayo';
+$translateMonth['June']='Junio';
+$translateMonth['July']='Julio';
+$translateMonth['August']='Agosto';
+$translateMonth['September']='Septiembre';
+$translateMonth['October']='Octubre';
+$translateMonth['November']='Noviembre';
+$translateMonth['December']='Diciembre';
+
+$GLOBALS['translateMonth']=$translateMonth;
+
 if(!isset($GLOBALS['dispatcher'])){
     $GLOBALS['dispatcher']=new Dispatcher();
 }
@@ -26,5 +42,4 @@ isset($htmlFile) ? require_once(APPPATH .  '/widgets/custom/library/'. $htmlFile
 <head>
 </head>
 <body>
-
 </body>

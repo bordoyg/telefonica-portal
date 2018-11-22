@@ -30,7 +30,7 @@
             if(isset($_REQUEST[Controlador::LOCATION_TECHNICAN]->resourceDetails->avatar->imageData)){
                 $mediaType=$_REQUEST[Controlador::LOCATION_TECHNICAN]->resourceDetails->avatar->mediaType;
                 $imageData=$_REQUEST[Controlador::LOCATION_TECHNICAN]->resourceDetails->avatar->imageData;
-                echo '<img src="data: ' . $mediaType . ';base64,' . $imageData . '" />';
+                echo '<img src="data: ' . $mediaType . ';base64,' . $imageData . '" height="120" width="120" />';
             }else{
                 echo '<img class="display_no_photo" height="120" width="120" ></img>';
             }
@@ -39,32 +39,50 @@
             </div>
             </div>
             <div style="height:10px; clear: both;"></div>
-            
-              <div id="mapdiv" style="height: 400px; width: 100%;"></div>
-              <script type="text/javascript" src="/euf/assets/others/telefonica/js/OpenLayers.js"></script>
-              <script>
-                map = new OpenLayers.Map("mapdiv");
-                map.addLayer(new OpenLayers.Layer.OSM());
+              <div id="map" class="map"></div>
+              <script type="text/javascript">
+              
+                  function createStyle(src, img) {
+                      return new ol.style.Style({
+                        image: new ol.style.Icon(/** @type {module:ol/style/Icon~Options} */ ({
+                          anchor: [0.5, 0.96],
+                          crossOrigin: 'anonymous',
+                          src: src,
+                          img: img,
+                          imgSize: img ? [img.width, img.height] : undefined
+                        }))
+                      });
+                    }
+                  var titleLayer=new ol.layer.Tile({ source: new ol.source.OSM() });
+                  var vectorLayer = new ol.layer.Vector({});
                 <?php 
                     if(isset($_REQUEST[Controlador::LOCATION_TECHNICAN_PARAM])){
-                        echo 'var lonLatTechnican = new OpenLayers.LonLat(' . $_REQUEST[Controlador::LOCATION_TECHNICAN_PARAM] . ')';
-                        echo '.transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());';
-                        echo 'var markers = new OpenLayers.Layer.Markers( "Markers" );';
-                        echo 'map.addLayer(markers);';
-                        echo 'markers.addMarker(new OpenLayers.Marker(lonLatTechnican));';
+                        echo 'var iconFeature = new ol.Feature(new ol.geom.Point([0, 0]));';
+                        echo 'iconFeature.set(\'style\', createStyle(\'/euf/assets/others/telefonica/images/marker-icon.png\', undefined));';
+                        echo 'var vectorLayer = new ol.layer.Vector({';
+                        echo 'style: function(feature) {';
+                        echo '    return feature.get(\'style\');';
+                        echo '}, source: new ol.source.Vector({features: [iconFeature]}) });';
                     }
                 ?>
-                var zoom=16;
-                <?php 
-                    if(isset($_REQUEST[Controlador::LOCATION_CUSTOMER_PARAM])){
-                        echo 'var lonLatAddress = new OpenLayers.LonLat(' . $_REQUEST[Controlador::LOCATION_CUSTOMER_PARAM] . ')';
-                        echo '.transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());';
-                        echo 'map.setCenter(lonLatAddress, zoom);';
-                    }
-                ?>
-
+                    
+                  <?php 
+                      if(isset($_REQUEST[Controlador::LOCATION_CUSTOMER_PARAM])){
+                          echo 'var lonLatAddress = ol.proj.fromLonLat([' . $_REQUEST[Controlador::LOCATION_CUSTOMER_PARAM] . ']);';
+                      }else{
+                          echo 'var lonLatAddress = ol.proj.fromLonLat([0, 0]);';
+                      }
+                  ?>
+                  var map = new ol.Map({
+                    target: 'map',
+                    layers: [titleLayer, vectorLayer],
+                    view: new ol.View({
+                      center: lonLatAddress,
+                      zoom: 16
+                    })
+                  });
               </script>
-     
+
             <div style="height:10px; clear: both;"></div>
             <script src="/euf/assets/others/telefonica/js/easytimer.min.js"></script>
             <div style="float:right;" id="basicUsage"></div>

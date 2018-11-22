@@ -28,7 +28,7 @@
 							<div class="wrap_calendar">
 								<div class="calendar">
 									<header>
-										<h2 class="month"><?php echo date("F");?></h2>
+										<h2 class="month"><?php echo $GLOBALS['translateMonth'][date("F")];?></h2>
 									</header>
 									<table>
 										<thead>

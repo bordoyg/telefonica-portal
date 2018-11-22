@@ -196,6 +196,7 @@ class Controlador {
         array_push($params, array('activity_field'=>array('name'=>'XA_ACCESS_TECHNOLOGY', 'value'=>$activity->XA_ACCESS_TECHNOLOGY)));
         array_push($params, array('activity_field'=>array('name'=>'worktype_label', 'value'=>$activity->activityType)));
         array_push($params, array('activity_field'=>array('name'=>'XA_WORK_TYPE', 'value'=>$activity->XA_WORK_TYPE)));
+        array_push($params, array('activity_field'=>array('name'=>'XA_NUMBER_DECODERS', 'value'=>0)));
         array_push($params, array('activity_field'=>array('name'=>'XA_CUSTOMER_SEGMENT', 'value'=>$activity->XA_CUSTOMER_SEGMENT)));
         array_push($params, array('activity_field'=>array('name'=>'XA_CENTRAL', 'value'=>$activity->XA_CENTRAL)));
         array_push($params, array('activity_field'=>array('name'=>'XA_BROADBAND_TECHNOLOGY', 'value'=>$activity->XA_BROADBAND_TECHNOLOGY)));
@@ -245,7 +246,27 @@ class Controlador {
                 foreach ($valor as $c => $v) {
                     array_push($timeSlots, $v);
                 }
-                $date->timeSlots=$timeSlots;
+                
+                //Ordenamiento Timeslots
+                $sortedTimeSlots=array();
+                $dateTimeConverter=new DateTime();
+                $minTimeSlotFrom='99:99:99';
+                $minTimeSlot=0;
+                for($l=0; $l<count($timeSlots); $l++){
+                    for($m=0; $m<count($timeSlots)-$l; $m++){
+                        $dateTimeConverter= $dateTimeConverter->createFromFormat('H:i:s', $timeSlots[$m]->timeFrom);
+                        $currentTimeSlotFrom=$dateTimeConverter->format('H:i:s');
+                        $minTimeSlot=$timeSlots[$m];
+                        if(strcmp($currentTimeSlotFrom, $minTimeSlotFrom)<0){
+                            $minTimeSlotFrom=$currentTimeSlotFrom;
+                            $minTimeSlot=$timeSlots[$m];
+                        }
+                    }
+                    
+                    array_push($sortedTimeSlots, $minTimeSlot);
+                }
+                
+                $date->timeSlots=$sortedTimeSlots;
                 array_push($dates, $date);
             }
         }
@@ -307,17 +328,34 @@ class Controlador {
                     }
                 }
             }
-            
-            if(count($timeSlots)>0){
+            //Ordenamiento Timeslots
+            $sortedTimeSlots=array();
+            $dateTimeConverter=new DateTime();
+            $minTimeSlotFrom='99:99:99';
+            $minTimeSlot=0;
+            for($l=0; $l<count($timeSlots); $l++){
+                for($m=0; $m<count($timeSlots); $m++){
+                    $dateTimeConverter= $dateTimeConverter->createFromFormat('H:i:s', $timeSlots[$m]->timeFrom);
+                    $currentTimeSlotFrom=$dateTimeConverter->format('H:i:s');
+                    $minTimeSlot=$timeSlots[$m];
+                    if(strcmp($currentTimeSlotFrom, $minTimeSlotFrom)<0){
+                        $minTimeSlotFrom=$currentTimeSlotFrom;
+                        $minTimeSlot=$timeSlots[$m];
+                    }
+                }
+                array_push($sortedTimeSlots, $minTimeSlot);
+            }
+
+            if(count($sortedTimeSlots)>0){
                $date=new stdClass();
                $d=new DateTime();
                
                $date->date=$d->createFromFormat("Y-m-d", $activityBookingOptions->dates[$i]->date);
-               $date->timeSlots=$timeSlots;
+               $date->timeSlots=$sortedTimeSlots;
                array_push($dates, $date);
             }
         }
-        
+
         return $dates;
     }
     function findActivityData($activityID){
@@ -434,7 +472,7 @@ class Controlador {
             $activity=$this->findActivityData($activityID);
             $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
             $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
-            $diaCita= $dateStart->format('jS F Y') . ', Jornada: ' . $activity->timeSlot . '(' . $dateStart->format('g:i A') . ' - ' . $dateEnd->format('g:i A') . ')';
+            $diaCita= $dateStart->format('d') . ' de ' . $GLOBALS['translateMonth'][$dateStart->format('F')] . ' de ' .$dateStart->format('Y') . ', Jornada: ' . $activity->timeSlot . '(' . $dateStart->format('g:i A') . ' - ' . $dateEnd->format('g:i A') . ')';
             
             // buscar dateStart y dateEnd de la actividad
             $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
@@ -478,7 +516,7 @@ class Controlador {
             $activity=$this->findActivityData($activityID);
             $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
             $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
-            $diaCita= $dateStart->format('jS F Y') . ', Jornada: ' . $activity->timeSlot . '(' . $dateStart->format('g:i A') . ' - ' . $dateEnd->format('g:i A') . ')';
+            $diaCita= $dateStart->format('d') . ' de ' . $GLOBALS['translateMonth'][$dateStart->format('F')] . ' de ' .$dateStart->format('Y'). ', Jornada: ' . $activity->timeSlot . '(' . $dateStart->format('g:i A') . ' - ' . $dateEnd->format('g:i A') . ')';
             
             // buscar dateStart y dateEnd de la actividad
             $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
@@ -568,26 +606,28 @@ class Controlador {
             $activityID=$this->getActivityIdFromContext();
             $activity=$this->findActivityData($activityID);
             if(!isset($activity)
+                || !isset($activity->date)
                 || !isset($activity->startTime)
                 || !isset($activity->status)){
                     return false;
             }
-            $dtCurrent= new DateTime("now");
-            $dtETA=new DateTime();
-            $dtETA=$dtETA->createFromFormat("Y-m-d H:i:s", $activity->startTime);
+//             $dtCurrent= new DateTime("now");
+//             $dtETA=new DateTime();
+//             $dtETA=$dtETA->createFromFormat("Y-m-d H:i:s", $activity->startTime);
             
-            Utils::logDebug("Current: " . $dtCurrent->format("Y-m-d H:i:s"));
-            Utils::logDebug("dtETA: " . $dtETA->format("Y-m-d H:i:s"));
+//             Utils::logDebug("Current: " . $dtCurrent->format("Y-m-d H:i:s"));
+//             Utils::logDebug("dtETA: " . $dtETA->format("Y-m-d H:i:s"));
             
-            $interval=$dtCurrent->diff($dtETA, false);
-            $intervalInSeconds = (new DateTime())->setTimeStamp(0)->add($interval)->getTimeStamp();
-            $intervalInMinutes = $intervalInSeconds/60;
+//             $interval=$dtCurrent->diff($dtETA, false);
+//             $intervalInSeconds = (new DateTime())->setTimeStamp(0)->add($interval)->getTimeStamp();
+//             $intervalInMinutes = $intervalInSeconds/60;
+
+//             Utils::logDebug("interval en minutos: " . $intervalInMinutes);
+//             Utils::logDebug('Estado localizable: ' . in_array($activity->status, Controlador::STATUS_VIGENTE));
+//             Utils::logDebug('XA_ROUTE: ' . (strcmp($activity->XA_ROUTE,"1")==0));
+//             Utils::logDebug('interval mayor a 20: ' . ($intervalInMinutes>=20));
             
-            Utils::logDebug("interval en minutos: " . $intervalInMinutes);
-            Utils::logDebug('Estado localizable: ' . in_array($activity->status, Controlador::STATUS_VIGENTE));
-            Utils::logDebug('interval mayor a 20: ' . ($intervalInMinutes>=20));
-            
-            $isVigente= in_array($activity->status, Controlador::STATUS_VIGENTE) && $intervalInMinutes>=0;
+            $isVigente= ($this->showTechnicanLocation() || $this->showCancel()) && (strcmp($activity->XA_ROUTE, "1")==0) /*&& $intervalInMinutes>=0*/;
             Utils::logDebug('isVigente: ' . ($isVigente));
 
             return $isVigente;
@@ -618,7 +658,7 @@ class Controlador {
         $currentDate=$currentDate->format("Y-m-d");
         $activityDate=$activityDate->format("Y-m-d");
         Utils::logDebug("SHOWTECHNICANLOCATION: " . in_array($activity->status, Controlador::STATUS_LOCALIZABLE) . " - " . $activityDate == $currentDate);
-        return /*in_array($activity->status, Controlador::STATUS_LOCALIZABLE) &&*/ $activityDate == $currentDate;
+        return in_array($activity->status, Controlador::STATUS_LOCALIZABLE) && $activityDate == $currentDate;
     }
     function addMessageError($msj){
         $_REQUEST[Controlador::MESSAGE_PARAM]=$msj;
