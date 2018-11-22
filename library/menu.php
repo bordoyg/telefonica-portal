@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head></head>
-<?php require_once(APPPATH . 'widgets/custom/library/header.php'); ?>
+<?php 
+require_once(APPPATH . 'widgets/custom/library/header.php'); 
+$dispatcher = $GLOBALS['dispatcher'];
+$Controlador = $dispatcher->getControlador();
+?>
 <body>
 	<div id="appointment-confirmation">
 		<div class="container">
