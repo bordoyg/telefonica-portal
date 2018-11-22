@@ -30,7 +30,7 @@
             if(isset($_REQUEST[Controlador::LOCATION_TECHNICAN]->resourceDetails->avatar->imageData)){
                 $mediaType=$_REQUEST[Controlador::LOCATION_TECHNICAN]->resourceDetails->avatar->mediaType;
                 $imageData=$_REQUEST[Controlador::LOCATION_TECHNICAN]->resourceDetails->avatar->imageData;
-                echo '<img src="data: ' . $mediaType . ';base64,' . $imageData . '" />';
+                echo '<img src="data: ' . $mediaType . ';base64,' . $imageData . '" height="120" width="120" />';
             }else{
                 echo '<img class="display_no_photo" height="120" width="120" ></img>';
             }
