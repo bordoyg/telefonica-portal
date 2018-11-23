@@ -71,9 +71,9 @@ class ServiceSoap {
                     if(is_array($v)){
                         $xml=$xml . '<' . $c .'>';
                         foreach ($v as $clave => $valor) {
-                            if(isset($valor)){
+                            //if(isset($valor)){
                                 $xml=$xml . '<' . $clave .'>'. $valor . '</' . $clave . '>';
-                            }
+                            //}
                         }
                         $xml=$xml . '</' . $c . '>';
                     }else{
