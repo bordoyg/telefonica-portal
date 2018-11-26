@@ -51,18 +51,16 @@ class Controlador {
          $locationData=$this->service->request('/rest/ofscCore/v1/whereIsMyTech', 'GET', 'activityId=' . $activity->activityId . '&includeAvatarImageData=true');
          $_REQUEST[Controlador::LOCATION_TECHNICAN]=$locationData;
          
-         if(in_array($locationData->status, Controlador::STATUS_LOCALIZABLE)){
-             if(isset($locationData->coordinates) && isset($locationData->coordinates->latitude) && isset($locationData->coordinates->longitude)){
-                 $lat=$locationData->coordinates->latitude;
-                 $lng=$locationData->coordinates->longitude;
-                 $_REQUEST[Controlador::LOCATION_TECHNICAN_PARAM]=  $lng. ',' . $lat ;
-             }else{
-                 $this->addMessageError("No se puedo establecer la ubicacion del t&eacute;cnico, intenta mas tarde");
-             }
+
+         if(isset($locationData->coordinates) && isset($locationData->coordinates->latitude) && isset($locationData->coordinates->longitude)){
+             $lat=$locationData->coordinates->latitude;
+             $lng=$locationData->coordinates->longitude;
+             $_REQUEST[Controlador::LOCATION_TECHNICAN_PARAM]=  $lng. ',' . $lat ;
          }else{
              $this->addMessageError("No se puedo establecer la ubicacion del t&eacute;cnico, intenta mas tarde");
          }
-         
+
+         return $locationData;
     }
     function findAvailabilitySOAP($days) {
         $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
@@ -533,12 +531,13 @@ class Controlador {
     function showTechnicanLocation(){
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
+        $locationData=$this->findTechnicanLocation($activity);
         $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date, new DateTimeZone($activity->timeZone));
         $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'), new DateTimeZone($activity->timeZone));
         $currentDate=$currentDate->format("Y-m-d");
         $activityDate=$activityDate->format("Y-m-d");
         Utils::logDebug("SHOWTECHNICANLOCATION: " . in_array($activity->status, Controlador::STATUS_LOCALIZABLE) . " - " . $activityDate == $currentDate);
-        return in_array($activity->status, Controlador::STATUS_LOCALIZABLE) && $activityDate == $currentDate;
+        return in_array($locationData->status, Controlador::STATUS_LOCALIZABLE) && $activityDate == $currentDate;
     }
     function addMessageError($msj){
         $_REQUEST[Controlador::MESSAGE_PARAM]=$msj;
