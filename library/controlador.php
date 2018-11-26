@@ -14,119 +14,13 @@ class Controlador {
 	const STATUS_VIGENTE=array("onTheWay", "started", "pending");
 	const STATUS_PENDING="pending";
 	
-	const ERROR_GENERIC_MSJ='<div class="row appointment-info">
-                            <p>
-                                <span>No fue posible procesar tu </span>
-                            </p>
-                            <p>
-                                <span>solicitud. </span>
-                            </p>
-                            <p>
-                                <span>Por favor intentalo m&aacute;s</span>
-                            </p>
-                            <p>
-                                <span>tarde.</span>
-                            </p>
-                        </div>';
-	const ERROR_ORDEN_INEXISTENTE='<div class="row appointment-info">
-                                <p>
-                                    <span class="text-bold">La orden no existe </span>
-                                </p>
-                            </div>';
-	const ERROR_ORDEN_NO_VIGENTE='<div class="row appointment-info">
-                            <p>
-                                <span>Tu cita no puede ser confirmada</span>
-                            </p>
-                            <p>
-                                <span>o modificada debido a que no se</span>
-                            </p>
-                            <p>
-                                <span>encuentra vigente en este</span>
-                            </p>
-                            <p>
-                                <span>momento.</span>
-                            </p>
-                            <p>
-                                <span>Si tienes alguna inquietud puedes</span>
-                            </p>
-                            <p>
-                                <span>comunicarte a la l&iacute;nea</span>
-                            </p>
-                            <p>
-                                <span class="contact-number text-underline">01 80009 969090</span><span></span>
-                            </p>
-                        </div>';
+	const ERROR_GENERIC_MSJ='<div class="row appointment-info"> <p> <span>No fue posible procesar tu </span></p><p><span>solicitud.</span></p><p><span>Por favor intentalo m&aacute;s</span></p><p><span>tarde.</span></p></div>';
+	const ERROR_ORDEN_INEXISTENTE='<div class="row appointment-info"><p><span class="text-bold">La orden no existe </span></p></div>';
+	const ERROR_ORDEN_NO_VIGENTE='<div class="row appointment-info"><p><span>Tu cita no puede ser confirmada</span></p><p><span>o modificada debido a que no se</span></p><p><span>encuentra vigente en este</span></p><p><span>momento.</span></p><p><span>Si tienes alguna inquietud puedes</span></p><p><span>comunicarte a la l&iacute;nea</span></p><p><span class="contact-number text-underline">01 80009 969090</span><span></span></p></div>';
 	
-	const MSJ_ORDEN_CONFIRMADA='<div class="row appointment-info">
-                            <p>
-                                <span>Tu cita fue confirmada </span>
-                            </p>
-                            <p>
-                                <span>para el </span>
-                            </p>
-                            <p>
-                                <span class="appointment-date-formatted">@@$dateFormatted@@</span>
-                                <span> </span>
-                            </p>
-                            <p>
-                                <span>entre las @@$dateStartHours@@ y las @@$dateEndHours@@.</span>
-                            </p>
-                        </div>
-                        <div class="row appointment-remember-ad text-left">
-                            <p>
-                                <span class="text-bold">Recordá:</span>
-                                <span>&nbsp; tiene que haber alguien en el domicilio y te vamos a avisar por SMS cuando el t&eacute;cnico est&eacute; en camino.</span>
-                            </p>
-                        </div>';
-	const MSJ_ORDEN_MODIFICADA='<div class="row appointment-info">
-                            <p>
-                                <span>Tu cita fue </span>
-                            </p>
-                            <p>
-                                <span>reagendada para el</span>
-                            </p>
-                            <p>
-                                <span class="appointment-date-formatted">@@$dateFormatted@@</span>
-                                <span> </span>
-                            </p>
-                            <p>
-                                <span>entre las @@$dateStartHours@@ y las @@$dateEndHours@@.</span>
-                            </p>
-                        </div>
-                        <div class="row appointment-remember-ad text-left">
-                            <p>
-                                <span class="text-bold">Recordá:</span>
-                            </p>
-                            <p>
-                                <span>&#149;Tiene que haber alguien en el domicilio</span>
-                            </p>
-                            <p>
-                                <span>&#149;Te vamos a avisar por SMS cuando el t&eacute;cnico </span>
-                            </p>
-                            <p>
-                                <span>est&eacute; en camino.</span>
-                            </p>
-                        </div>';
-	const MSJ_ORDEN_CANCELADA='<div class="row appointment-info">
-                            <p>
-                                <span>Tu cita fue cancelada.</span>
-                            </p>
-                            <p>
-                                <span>Podrás reagendarla</span>
-                            </p>
-                            <p>
-                                <span>llamando al</span>
-                            </p>
-                            <p>
-                                <span class="contact-number text-underline">0800-222-0114</span>
-                            </p>
-                            <p>
-                                <span>&nbsp;de lunes a viernes de 9 a</span>
-                            </p>
-                            <p>
-                                <span>21hs.</span>
-                            </p>
-                        </div>';
+	const MSJ_ORDEN_CONFIRMADA='<div class="row appointment-info"><p><span>Tu cita fue confirmada </span></p><p><span>para el </span></p><p><span class="appointment-date-formatted">@@$dateFormatted@@</span><span> </span></p><p><span>entre las @@$dateStartHours@@ y las @@$dateEndHours@@.</span></p></div><div class="row appointment-remember-ad text-left"><p><span class="text-bold">Recordá:</span><span>&nbsp; tiene que haber alguien en el domicilio y te vamos a avisar por SMS cuando el t&eacute;cnico est&eacute; en camino.</span></p></div>';
+	const MSJ_ORDEN_MODIFICADA='<div class="row appointment-info"><p><span>Tu cita fue </span></p><p><span>reagendada para el</span></p><p><span class="appointment-date-formatted">@@$dateFormatted@@</span><span> </span></p><p><span>entre las @@$dateStartHours@@ y las @@$dateEndHours@@.</span></p></div><div class="row appointment-remember-ad text-left"><p><span class="text-bold">Recordá:</span></p><p><span>&#149;Tiene que haber alguien en el domicilio</span></p><p><span>&#149;Te vamos a avisar por SMS cuando el t&eacute;cnico </span></p><p><span>est&eacute; en camino.</span></p></div>';
+	const MSJ_ORDEN_CANCELADA='<div class="row appointment-info"><p><span>Tu cita fue cancelada.</span></p><p><span>Podrás reagendarla</span></p><p><span>llamando al</span></p><p><span class="contact-number text-underline">0800-222-0114</span></p><p><span>&nbsp;de lunes a viernes de 9 a</span></p><p><span>21hs.</span></p></div>';
 	
 	const SUB_STATUS_CANCELADA="Cancelada";
 	const SUB_STATUS_CONFIRMADA="Confirmada";
@@ -154,21 +48,19 @@ class Controlador {
         }
         
         //Obtenemos la posicion del tecnico
-         $locationData=$this->service->request('/rest/ofscCore/v1/whereIsMyTech', 'GET', 'activityId=' . $activity->activityId . '&includeAvatarImageData=true');
-         $_REQUEST[Controlador::LOCATION_TECHNICAN]=$locationData;
-         
-         if(in_array($locationData->status, Controlador::STATUS_LOCALIZABLE)){
-             if(isset($locationData->coordinates) && isset($locationData->coordinates->latitude) && isset($locationData->coordinates->longitude)){
-                 $lat=$locationData->coordinates->latitude;
-                 $lng=$locationData->coordinates->longitude;
-                 $_REQUEST[Controlador::LOCATION_TECHNICAN_PARAM]=  $lng. ',' . $lat ;
-             }else{
-                 $this->addMessageError("No se puedo establecer la ubicacion del t&eacute;cnico, intenta mas tarde");
-             }
-         }else{
-             $this->addMessageError("No se puedo establecer la ubicacion del t&eacute;cnico, intenta mas tarde");
-         }
-         
+        $locationData=$this->service->request('/rest/ofscCore/v1/whereIsMyTech', 'GET', 'activityId=' . $activity->activityId . '&includeAvatarImageData=true');
+        $_REQUEST[Controlador::LOCATION_TECHNICAN]=$locationData;
+        
+        
+        if(isset($locationData->coordinates) && isset($locationData->coordinates->latitude) && isset($locationData->coordinates->longitude)){
+            $lat=$locationData->coordinates->latitude;
+            $lng=$locationData->coordinates->longitude;
+            $_REQUEST[Controlador::LOCATION_TECHNICAN_PARAM]=  $lng. ',' . $lat ;
+        }else{
+            $this->addMessageError("No se puedo establecer la ubicacion del t&eacute;cnico, intenta mas tarde");
+        }
+        
+        return $locationData;
     }
     function findAvailabilitySOAP($days) {
         $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
@@ -653,12 +545,13 @@ class Controlador {
     function showTechnicanLocation(){
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
-        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date, new DateTimeZone($activity->timeZoneIANA));
-        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'), new DateTimeZone($activity->timeZoneIANA));
+        $locationData=$this->findTechnicanLocation($activity);
+        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date, new DateTimeZone($activity->timeZone));
+        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'), new DateTimeZone($activity->timeZone));
         $currentDate=$currentDate->format("Y-m-d");
         $activityDate=$activityDate->format("Y-m-d");
         Utils::logDebug("SHOWTECHNICANLOCATION: " . in_array($activity->status, Controlador::STATUS_LOCALIZABLE) . " - " . $activityDate == $currentDate);
-        return in_array($activity->status, Controlador::STATUS_LOCALIZABLE) && $activityDate == $currentDate;
+        return in_array($locationData->status, Controlador::STATUS_LOCALIZABLE) && $activityDate == $currentDate;
     }
     function addMessageError($msj){
         $_REQUEST[Controlador::MESSAGE_PARAM]=$msj;
