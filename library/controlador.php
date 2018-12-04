@@ -518,9 +518,14 @@ class Controlador {
 //             Utils::logDebug('Estado localizable: ' . in_array($activity->status, Controlador::STATUS_VIGENTE));
 //             Utils::logDebug('XA_ROUTE: ' . (strcmp($activity->XA_ROUTE,"1")==0));
 //             Utils::logDebug('interval mayor a 20: ' . ($intervalInMinutes>=20));
-            
-            $isVigente= ($this->showTechnicanLocation() || $this->showCancel()) && (strcmp($activity->XA_ROUTE, "1")==0) /*&& $intervalInMinutes>=0*/;
-            Utils::logDebug('isVigente: ' . ($isVigente));
+            $isShowTechnicanLocation=$this->showTechnicanLocation();
+            $isShowCancel=$this->showCancel();
+            $isRoute=strcmp($activity->XA_ROUTE, "1")==0;
+            $isVigente= $isShowTechnicanLocation || $isShowCancel && $isRoute /*&& $intervalInMinutes>=0*/;
+            Utils::logDebug('isVigente: ' . $isVigente? 'true' : 'false');
+            Utils::logDebug('showTechnicanLocation: ' . $isShowTechnicanLocation? 'true' : 'false');
+            Utils::logDebug('showCancel: ' . $isShowCancel? 'true' : 'false');
+            Utils::logDebug('XA_ROUTE: ' . $isRoute? 'true' : 'false');
 
             return $isVigente;
         }catch(Exception $e){
@@ -534,8 +539,8 @@ class Controlador {
     function showCancel(){
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
-        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date, new DateTimeZone($activity->timeZoneIANA));
-        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'), new DateTimeZone($activity->timeZoneIANA));
+        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date);
+        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
  
         return ($activity->status == Controlador::STATUS_PENDING) && ($activityDate > $currentDate);
     }
@@ -546,12 +551,18 @@ class Controlador {
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
         $locationData=$this->findTechnicanLocation($activity);
-        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date, new DateTimeZone($activity->timeZone));
-        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'), new DateTimeZone($activity->timeZone));
+        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date);
+        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
         $currentDate=$currentDate->format("Y-m-d");
         $activityDate=$activityDate->format("Y-m-d");
-        Utils::logDebug("SHOWTECHNICANLOCATION: " . in_array($activity->status, Controlador::STATUS_LOCALIZABLE) . " - " . $activityDate == $currentDate);
-        return in_array($locationData->status, Controlador::STATUS_LOCALIZABLE) && $activityDate == $currentDate;
+        
+        $isValidState=in_array($locationData->status, Controlador::STATUS_LOCALIZABLE);
+        $isCurrentDate=$activityDate == $currentDate;
+        
+        Utils::logDebug("isValidState: " . $isValidState?'true':'false');
+        Utils::logDebug("isCurrentDate: " . $isCurrentDate?'true':'false');
+        
+        return $isValidState && $isCurrentDate;
     }
     function addMessageError($msj){
         $_REQUEST[Controlador::MESSAGE_PARAM]=$msj;
