@@ -56,25 +56,17 @@
                   var titleLayer=new ol.layer.Tile({ source: new ol.source.OSM() });
                   
                 <?php 
-                    if(isset($_REQUEST[Controlador::LOCATION_TECHNICAN_PARAM])){
-                        echo 'var iconFeature = new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat([' . $_REQUEST[Controlador::LOCATION_TECHNICAN_PARAM] . '])));';
-                        echo 'iconFeature.set(\'style\', createStyle(\'/euf/assets/others/telefonica/images/marker-icon.png\', undefined));';
-                        echo 'var vectorLayer = new ol.layer.Vector({';
-                        echo 'style: function(feature) {';
-                        echo '    return feature.get(\'style\');';
-                        echo '}, source: new ol.source.Vector({features: [iconFeature]}) });';
+                    echo 'var iconTechFeature = new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat([' . $_REQUEST[Controlador::LOCATION_TECHNICAN_PARAM] . '])));';
+                    echo 'iconTechFeature.set(\'style\', createStyle(\'/euf/assets/others/telefonica/images/tech-icon.png\', undefined));';
 
-                    }else{
-                        echo 'var vectorLayer = new ol.layer.Vector({});';
-                    }
-                ?>
+                    echo 'var lonLatAddress = ol.proj.fromLonLat([' . $_REQUEST[Controlador::LOCATION_CUSTOMER_PARAM] . ']);';
+                    echo 'var iconHomeFeature = new ol.Feature(new ol.geom.Point(lonLatAddress));';
+                    echo 'iconHomeFeature.set(\'style\', createStyle(\'/euf/assets/others/telefonica/images/home-icon.png\', undefined));';
                     
-                  <?php 
-                      if(isset($_REQUEST[Controlador::LOCATION_CUSTOMER_PARAM])){
-                          echo 'var lonLatAddress = ol.proj.fromLonLat([' . $_REQUEST[Controlador::LOCATION_CUSTOMER_PARAM] . ']);';
-                      }else{
-                          echo 'var lonLatAddress = ol.proj.fromLonLat([0, 0]);';
-                      }
+                    echo 'var vectorLayer = new ol.layer.Vector({';
+                    echo 'style: function(feature) {';
+                    echo '    return feature.get(\'style\');';
+                    echo '}, source: new ol.source.Vector({features: [iconTechFeature, iconHomeFeature]}) });';
                   ?>
                   var map = new ol.Map({
                     target: 'map',
@@ -84,6 +76,8 @@
                       zoom: 16
                     })
                   });
+                  var extent = vectorLayer.getSource().getExtent();
+                  map.getView().fit(extent);
               </script>
 
             <div style="height:10px; clear: both;"></div>
