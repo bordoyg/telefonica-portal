@@ -44,13 +44,13 @@ class ServiceRest {
             curl_setopt($this->process, CURLOPT_POSTFIELDS, $params);
         }
 
-        //Utils::logDebug("Se va a invocar al servicio: " . $url);
-        //Utils::logDebug("Metodo: " . $method);
-        //Utils::logDebug("Parametros: " . $params);
+        Utils::logDebug("Se va a invocar al servicio: " . $url);
+        Utils::logDebug("Metodo: " . $method);
+        Utils::logDebug("Parametros: " . $params);
         $return = curl_exec($this->process);
         $httpcode = curl_getinfo($this->process, CURLINFO_HTTP_CODE);
-        //Utils::logDebug("La respuesta del servicio fue: " . $httpcode);
-        //Utils::logDebug("Response: " . $return);
+        Utils::logDebug("La respuesta del servicio fue: " . $httpcode);
+        Utils::logDebug("Response: " . $return);
         curl_close($this->process);
 
         $content = json_decode($return);
