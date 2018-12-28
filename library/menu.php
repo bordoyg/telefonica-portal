@@ -21,6 +21,7 @@ $Controlador = $dispatcher->getControlador();
 				</div>
 				<?php 
 					if($Controlador->showConfirm()){
+					    echo '<div class="box_cont text_center">';
 					    echo '<h3>';
 					    $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
 					    $activity=$dispatcher->getControlador()->findActivityData($activityID);
