@@ -73,7 +73,7 @@ $Controlador = $dispatcher->getControlador();
 				    if($Controlador->showTechnicanLocation()){
 				        echo '<div class="box_cont text_center">';
 				        echo '<h3>';
-					    echo 'Puedes consultar la ubicaci&oacute;n del t&eacute;cnico aca';
+					    echo 'Movistar informa que un t&eacute;cnico se dirige a tu domicilio a realizar la instalaci&oacute;n de tus servicios. conoce aqu&iacute; la identidad y ubicaci&oacute;n del t&eacute;cnico)';
 					    
 					    echo '<div>';
 					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::UBICACION_LABEL . '"';
