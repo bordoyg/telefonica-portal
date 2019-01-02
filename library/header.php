@@ -1,24 +1,23 @@
 <head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Agendamiento</title>
-<link rel="stylesheet" href="/euf/assets/others/telefonica/css/bootstrap.min.css"> 
-<link rel="stylesheet" href="/euf/assets/others/telefonica/css/fonts_movi.css"> 
-<link rel="stylesheet" href="/euf/assets/others/telefonica/css/stylesGen.css">
-<link rel="stylesheet" href="/euf/assets/others/telefonica/css/ux.css"> 
-<link rel="stylesheet" href="/euf/assets/others/telefonica/css/jquery-ui.css"> 
-<link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/css/ol.css">
+	<meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <title>ETB</title>
 
-<script type="text/javascript" src="/euf/assets/others/telefonica/js/jquery-1.12.4.js"></script>
-<script type="text/javascript" src="/euf/assets/others/telefonica/js/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/euf/assets/others/telefonica/js/ie-emulation-modes-warning.js"></script> 
-<script type="text/javascript" src="/euf/assets/others/telefonica/js/ux.js"></script> 
-<script type="text/javascript" src="/euf/assets/others/telefonica/js/concertation.js"></script>
+    <link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/css/ol.css">
+    <link rel="shortcut icon" href="/euf/assets/others/etb/img/favicon.ico" />
 
-<script src="/euf/assets/others/telefonica/js/bootstrap.min.js"></script>
-<script src="/euf/assets/others/telefonica/js/ie10-viewport-bug-workaround.js"></script>
-<script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>
+    <link href='/euf/assets/others/etb/css/style.css' rel='stylesheet' type='text/css' />
+    <link href='/euf/assets/others/etb/css/slick.css' rel='stylesheet' type='text/css' />
+
+    <script src="/euf/assets/others/etb/js/jquery-3.2.0.min.js" type="text/javascript"></script>
+    <script src="/euf/assets/others/etb/js/lib/jquery.svgmagic.js" type="text/javascript"></script>
+    <script src="/euf/assets/others/etb/js/slick.js" type="text/javascript"></script>
+
+    <script src="/euf/assets/others/etb/js/site-scripts.js" type="text/javascript"></script>
+    <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>
 </head>
 
 <body>

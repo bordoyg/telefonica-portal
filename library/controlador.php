@@ -14,13 +14,14 @@ class Controlador {
 	const STATUS_VIGENTE=array("onTheWay", "started", "pending");
 	const STATUS_PENDING="pending";
 	
-	const ERROR_GENERIC_MSJ="Debido a un problema t&eacute;cnico no podemos procesar tu solicitud en este momento. Por favor intenta lo nuevamente m&aacute;s tarde. Si tienes alguna inquietud puedes comunicarte a la l&iacute;nea 01 80009 969090.";
+	const ERROR_GENERIC_MSJ="<h1 class=\"resalt\">ERROR</h1> <p>No fue posible procesar tu solicitud, por favor int&eacute;ntalo m&aacute;s tarde.</p> ";
 	const ERROR_ORDEN_INEXISTENTE="La orden no existe";
-	const ERROR_ORDEN_NO_VIGENTE="Tu cita no puede ser confirmada o modificada debido a que no se encuentra vigente en este momento. Si tienes alguna inquietud puedes comunicarte a la l&iacute;nea 01 80009 969090.";
+	const ERROR_ORDEN_NO_VIGENTE="Tu cita no puede ser confirmada o modificada debido a que no se encuentra vigente en este momento. ";
+	const ERROR_REAGENDAR_MSJ="<h1 class=\"resalt\">ERROR DE AGENDAMIENTO</h1> <p>No fue posible reagendar tu cita. Por favor inténtelo más tarde.</p>";
 	
-	const MSJ_ORDEN_CONFIRMADA="Gracias por confirmar tu cita. No olvides tramitar la autorizaci&oacute;n para el ingreso del t&eacute;cnico a tu domicilio";
-	const MSJ_ORDEN_MODIFICADA="Tu cita para la instalaci&oacute;n de los servicios Movistar ha sido modificada. @diaCita@. No olvides tramitar la autorizaci&oacute;n para el ingreso del t&eacute;cnico a tu domicilio";
-	const MSJ_ORDEN_CANCELADA="De acuerdo a tu elecci&oacute;n tu cita ha sido cancelada. Podr&aacute;s reprogramarla posteriormente comunic&aacute;ndote a la l&iacute;nea de atenci&oacute;n gratuita 01 80009 969090";
+	const MSJ_ORDEN_CONFIRMADA="<h1>Cita Confirmada</h1><p>Tu cita fue confirmada para el</p>@diaCita@<h3>Recuerda: tiene que haber alguien en el domicilio y te vamos a avisar por SMS cuando el t&eacute;cnico este en camino.</h3><p>¡MUCHAS GRACIAS!</p>";
+	const MSJ_ORDEN_MODIFICADA="<h1>Cita Confirmada</h1><p>Tu cita fue confirmada para el</p>@diaCita@<h3>Recuerda: tiene que haber alguien en el domicilio y te vamos a avisar por SMS cuando el t&eacute;cnico este en camino.</h3><p>¡MUCHAS GRACIAS!</p>";
+	const MSJ_ORDEN_CANCELADA="<h1>Cita Cancelada</h1><p>Tu cita programada para el</p><h2>@diaCita@</h2><p>con el fin de Instalaci&oacute;n/reparaci&oacute;n ha sido CANCELADA correctamente.</p>";
 	
 	const SUB_STATUS_CANCELADA="CANCELADA";
 	const SUB_STATUS_CONFIRMADA="CONFIRMADA";
@@ -327,7 +328,12 @@ class Controlador {
             //Se actualiza el timeslot y el estado XA_CONFIRMACITA
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
             
-            $this->addMessageError(Controlador::MSJ_ORDEN_CANCELADA);
+            $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
+            $diaCita= $dateStart->format('d') . ' - ' . $GLOBALS['translateMonth'][$dateStart->format('F')] . ' - ' .$dateStart->format('Y');
+            
+            $msj= Controlador::MSJ_ORDEN_CANCELADA;
+            $msj=str_replace("@diaCita@", $diaCita, $msj);
+            $this->addMessageError($msj);
             return Dispatcher::MESSAGES_URL;
         } catch (Exception $e) {
             Utils::logDebug('Hubo un error al cancelar la cita', $e);
@@ -373,7 +379,7 @@ class Controlador {
             return Dispatcher::MESSAGES_URL;
         }catch(Exception $e){
             Utils::logDebug('Hubo un error al reagendar la cita', $e);
-            $this->addMessageError(Controlador::ERROR_GENERIC_MSJ);
+            $this->addMessageError(Controlador::ERROR_REAGENDAR_MSJ);
             return Dispatcher::MESSAGES_URL;
         }
     }
@@ -407,7 +413,7 @@ class Controlador {
             return Dispatcher::MESSAGES_URL;
         }catch(Exception $e){
             Utils::logDebug('Hubo un error al reagendar la cita', $e);
-            $this->addMessageError(Controlador::ERROR_GENERIC_MSJ);
+            $this->addMessageError(Controlador::ERROR_REAGENDAR_MSJ);
             return Dispatcher::MESSAGES_URL;
         }        
     }
@@ -420,8 +426,14 @@ class Controlador {
             $params=json_encode($params);
             //Se actualiza el estado XA_CONFIRMACITA
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
+
+            $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
+            $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
+            $diaCita= '<h2>' . $dateStart->format('d') . '-' . $GLOBALS['translateMonth'][$dateStart->format('F')] . '-' .$dateStart->format('Y'). '</h2><p>entre las ' . $dateStart->format('g:i A') . ' y las ' . $dateEnd->format('g:i A') . ' hrs.</p>';
             
-            $this->addMessageError(Controlador::MSJ_ORDEN_CONFIRMADA);
+            $msj= Controlador::MSJ_ORDEN_CONFIRMADA;
+            $msj=str_replace("@diaCita@", $diaCita, $msj);
+            $this->addMessageError($msj);
             return Dispatcher::MESSAGES_URL;
         }catch(Exception $e){
             Utils::logDebug('Hubo un error al confirmar la cita', $e);
