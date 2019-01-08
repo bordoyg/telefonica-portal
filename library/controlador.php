@@ -454,6 +454,7 @@ class Controlador {
     function existActivity(){
         try{
             $activityID=isset($_GET[Controlador::ACTIVITY_PARAM]) ? $_GET[Controlador::ACTIVITY_PARAM] : null ;
+            Utils::logDebug('existActivity: ' . $activityID);
             if (!isset($activityID)){
                 $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
             }

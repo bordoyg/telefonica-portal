@@ -32,7 +32,7 @@ class Dispatcher {
     
     function __construct() {
         try{
-            $config=parse_ini_file (APPPATH. '/models/custom/telefonica/conf/config.ini', false);
+            $config=parse_ini_file (APPPATH. '/models/custom/etb/conf/config.ini', false);
             $GLOBALS['config']=$config;
             if(!isset( $GLOBALS['Controlador'])){
                 $GLOBALS['Controlador']=new Controlador();

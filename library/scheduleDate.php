@@ -153,10 +153,10 @@
 				</div>
                 
 				<div class="row">
-				<?php 
+					<?php 
 				      $noMoreDates=$_REQUEST[Dispatcher::OPTION_PARAM ];
  					  $noMoreDatesBool=strcmp($noMoreDates, Dispatcher::SCHEDULE_MORE_DATES)==0;
- 				 ?>
+ 				     ?>
 					<div class="col-xs-12 <?php echo $noMoreDatesBool? '':'col-sm-6'; ?> ">
 						<button type="submit" id="confirm" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_CONFIRM_LABEL ?>"
 							class="button btn_general" onclick="onSubmitButton(this);" disabled>Agendar mi cita</button>
