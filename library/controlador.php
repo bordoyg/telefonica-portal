@@ -118,8 +118,10 @@ class Controlador {
                     
                 $availableQuota=$response['CAPACITY'][$i]['AVAILABLE'];
                 $activityDuration=$response['ACTIVITY_DURATION'];
+                $travelTime=$response['ACTIVITY_TRAVEL_TIME'];
+                $timeNeeded=$activityDuration + $travelTime;
                 
-                if($availableQuota>$activityDuration){
+                if($availableQuota>$timeNeeded){
                     if(!isset($datesAux[$response['CAPACITY'][$i]['DATE']])){
                         $datesAux[$response['CAPACITY'][$i]['DATE']]=array();
                     }
