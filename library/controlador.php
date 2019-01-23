@@ -453,7 +453,11 @@ class Controlador {
     }
     function existActivity(){
         try{
-            $activityID=isset($_GET[Controlador::ACTIVITY_PARAM]) ? $_GET[Controlador::ACTIVITY_PARAM] : null ;
+            Utils::logDebug('INICIO existActivity');
+            foreach($_GET as $key=>$val) {
+                $activityID=$this->desencriptar_AES($key);
+                break;
+            }
             Utils::logDebug('existActivity: ' . $activityID);
             if (!isset($activityID)){
                 $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
@@ -555,34 +559,41 @@ class Controlador {
         $_REQUEST[Controlador::MESSAGE_PARAM]=$msj;
     }
     function getActivityIdFromContext(){
-        $activityID=isset($_GET[Controlador::ACTIVITY_PARAM]) ? $_GET[Controlador::ACTIVITY_PARAM] : null ;
+        Utils::logDebug('INICIO getActivityIdFromContext');
+        foreach($_GET as $key=>$val) {
+            Utils::logDebug('Se va a desencriptar');
+            Utils::logDebug($key);
+            
+            $activityID=$this->desencriptar_AES($key);
+            break;
+        }
         if (!isset($activityID)){
             $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
         }
         return $activityID;
     }
-    function desencriptar_AES($encrypted_data_hex, $key)
+    function desencriptar_AES($encrypted_data_hex)
     {
         try {
+            Utils::logDebug('id actividad encriptado');
+            Utils::logDebug($encrypted_data_hex);
             $cipher = new RightNow\Connect\Crypto\v1_3\AES();
             $cipher->Mode->ID =1;
             $cipher->IV->Value = 'p0r7417313f0n1c4';
             $cipher->KeySize->LookupName = "128_bits";
             $cipher->Key = 'p0r7417313f0n1c4';
-            $cipher->Text = $encrypted_data_hex;
-            
-//             echo "Text to be encrypted : " .$cipher->Text . "<br>";
-//             $cipher->Padding->Id = 2;
-//             $cipher->encrypt();
-//             $encrypted_text = $cipher->EncryptedText;
-//             echo "Encrypted Text : " .base64_encode($encrypted_text)."<br>";
+            $cipher->EncryptedText =base64_decode($encrypted_data_hex.'==');
             
             $cipher->decrypt();
             $decrypted_text = $cipher->Text;
-//            echo "Decrypted Text : " .$decrypted_text;
+            Utils::logDebug('id actividad desencriptado: ');
+            Utils::logDebug($decrypted_text);
+            return $decrypted_text;
         }
         catch (Exception $err ) {
-            Utils::logDebug('Hubo un error al desencriptar la actividad: ' . $encrypted_data_hex, $e);
+            Utils::logDebug('Hubo un error al desencriptar la actividad');
+            Utils::logDebug($encrypted_data_hex, $err);
+            return null;
         }
     }
 }
