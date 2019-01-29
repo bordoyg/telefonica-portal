@@ -205,7 +205,9 @@
 									</div>
 				 					<div class="col-xs-6 col-sm-6 padding-left-8px">
 				 						<button type="submit"
-				 							class="btn btn-lg btn-block btn-secondary" onclick="onSubmitButton(this);">Volver</button>
+				 						 	name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_CALLCENTER_CONTACT ?>"
+				 							class="btn btn-lg btn-block btn-secondary" onclick="onSubmitButton(this);"
+				 							style="font-size: 14px;padding: 8px 5px;">Contactar al callcenter</button>
 				 					</div>
 								</div>
 			 				<?php } ?>
