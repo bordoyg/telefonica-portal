@@ -564,6 +564,10 @@ class Controlador {
     }
     function desencriptar_AES($encrypted_data_hex)
     {
+        //En ambiente de test todavia no se envian url escriptadas
+        return $encrypted_data_hex;
+        
+        
         try {
             Utils::logDebug('id actividad encriptado');
             Utils::logDebug($encrypted_data_hex);
