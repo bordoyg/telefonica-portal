@@ -73,14 +73,17 @@ class Controlador {
         
         return $locationData;
     }
-    function findAvailabilitySOAP($days) {
+    function findAvailabilitySOAP($daysFrom, $daysTo) {
         $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
         $activity=$this->findActivityData($activityID);
         
         //Genero los dias para solicitar disponibilidad
-        $date = date("Y-m-d");
+        $fromDateStr=date("Y-m-d") ."+ " . $daysFrom . " days";
+        $fromDate = strtotime($fromDateStr);
+        $date = date("Y-m-d", $fromDate);
+        
         $params=array();
-        for($i=0; $i<$days - 1; $i++){
+        for($i=0; $i<$daysTo - 1; $i++){
             $newDate = strtotime($date."+ 1 days");
             $date = date("Y-m-d",$newDate);
 
@@ -180,6 +183,7 @@ class Controlador {
 
         return $dates;
     }
+    //@Deprecated
     function findAvailability($days) {
         $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
         $activity=$this->findActivityData($activityID);
@@ -279,7 +283,7 @@ class Controlador {
             return null;
         }
     }
-    function createCalendar($days){
+    function createCalendar($daysFrom, $daysTo){
         try{
             $calendar=array();
             $firstDay=new DateTime();
@@ -287,7 +291,7 @@ class Controlador {
             $dayWeekFirstDay=$firstDay->format("w");
             $firstDayCalendar=$firstDay->sub(new DateInterval("P" . $dayWeekFirstDay . "D"));
             try{
-                $availability=$this->findAvailabilitySOAP($days);
+                $availability=$this->findAvailabilitySOAP($daysFrom, $daysTo);
             }catch(Exception $e){
                 Utils::logDebug('Hubo un error al buscar los dias habilitados', $e);
                 try{
