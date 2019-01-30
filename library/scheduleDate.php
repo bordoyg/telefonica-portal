@@ -43,18 +43,53 @@
 										<tbody>
 										<?php 
 											try{
+											    
 											    $Controlador = $GLOBALS['Controlador'];
 											    $action=$_REQUEST[Dispatcher::OPTION_PARAM];
-											    $cantDias=$GLOBALS['config']['days-first-query-capacity'];
+											    $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+											    $activity=$Controlador->findActivityData($activityID);
+											    
+											    $daysFrom=$GLOBALS['config']['calendar-from'];
+											    $daysTo=$GLOBALS['config']['calendar-to'];
+											    $daysMore=$GLOBALS['config']['calendar-more'];
+											    if(strcmp(Controlador::AVERIA_LABEL, $Controlador->isAveriaOProvision($activity))==0){
+											        $tmpDaysFrom=$GLOBALS['config']['calendar-averias-from' . $activity->CUSTOMER_TYPE];
+											        if(isset($tmpDaysFrom)&& $tmpDaysFrom>=0){
+											            $daysFrom=$tmpDaysFrom;
+											        }
+											        $tmpDaysTo=$GLOBALS['config']['calendar-averias-to' . $activity->CUSTOMER_TYPE];
+											        if(isset($tmpDaysTo)&& $tmpDaysTo>0){
+											            $daysTo=$tmpDaysTo;
+											        }
+											        $tmpDaysMore=$GLOBALS['config']['calendar-averias-more' . $activity->CUSTOMER_TYPE];
+											        if(isset($tmpDaysMore)&& $tmpDaysMore>0){
+											            $daysMore=$tmpDaysMore;
+											        }
+											    }
+											    if(strcmp(Controlador::PROVISION_LABEL, $Controlador->isAveriaOProvision($activity))==0){
+											        $tmpDaysFrom=$GLOBALS['config']['calendar-provision-from'];
+											        if(isset($tmpDaysFrom)&& $tmpDaysFrom>=0){
+											            $daysFrom=$tmpDaysFrom;
+											        }
+											        $tmpDaysTo=$GLOBALS['config']['calendar-averias-to'];
+											        if(isset($tmpDaysTo)&& $tmpDaysTo>0){
+											            $daysTo=$tmpDaysTo;
+											        }
+											        $tmpDaysMore=$GLOBALS['config']['calendar-averias-more'];
+											        if(isset($tmpDaysMore)&& $tmpDaysMore>0){
+											            $daysMore=$tmpDaysMore;
+											        }
+											    }
+											    
 											    $cantSemanas=5;
 											    if (strcmp(Dispatcher::SCHEDULE_MORE_DATES, $action) === 0){
-											        $cantDias=$GLOBALS['config']['days-second-query-capacity'];
+											        $daysTo=$daysMore;
 											        echo '<input type="hidden" name="' . Dispatcher::SCHEDULE_NO_MORE_DATES . '" value"true"/>';
 											    }
 											    
 											    $endConsultedDay=new DateTime("now");
 											    $endConsultedDay=$endConsultedDay->sub(new DateInterval("P1D"));
-											    $endConsultedDay=$endConsultedDay->add(new DateInterval("P" . $cantDias . "D"));
+											    $endConsultedDay=$endConsultedDay->add(new DateInterval("P" . $daysTo . "D"));
 											    $month = date('m');
 											    $year = date('Y');
 											    $day = date("d", mktime(0,0,0, $month+1, 0, $year));
@@ -64,7 +99,7 @@
 											        $cantSemanas=6;
 											    }
 											    
-											    $calendar=$Controlador->createCalendar($cantDias);
+											    $calendar=$Controlador->createCalendar($daysFrom, $daysTo);
 											    
 											    $currentStrDate=date('Y-m-d');
 											    for($i=0;$i<$cantSemanas + 1;$i++){
