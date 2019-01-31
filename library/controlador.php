@@ -638,12 +638,10 @@ class Controlador {
 //             Utils::logDebug('interval mayor a 20: ' . ($intervalInMinutes>=20));
             $isShowTechnicanLocation=$this->showTechnicanLocation();
             $isShowCancel=$this->showCancel();
-            $isRoute=strcmp($activity->XA_ROUTE, "1")==0;
-            $isVigente= $isShowTechnicanLocation || $isShowCancel && $isRoute /*&& $intervalInMinutes>=0*/;
+            $isVigente= $isShowTechnicanLocation || $isShowCancel /*&& $intervalInMinutes>=0*/;
             Utils::logDebug('isVigente: ' . $isVigente? 'true' : 'false');
             Utils::logDebug('showTechnicanLocation: ' . $isShowTechnicanLocation? 'true' : 'false');
             Utils::logDebug('showCancel: ' . $isShowCancel? 'true' : 'false');
-            Utils::logDebug('XA_ROUTE: ' . $isRoute? 'true' : 'false');
 
             return $isVigente;
         }catch(Exception $e){
