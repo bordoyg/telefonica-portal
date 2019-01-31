@@ -19,6 +19,7 @@ class Dispatcher {
     const SCHEDULE_DATE_CALLCENTER_CONTACT = 'callCenterContact';
     const SCHEDULE_MORE_DATES = 'masFechasSchedule';
     const SCHEDULE_NO_MORE_DATES = 'noMasFechasSchedule';
+    const SCHEDULE_DATE_CONFIRM_LABEL='reagendarSchedule';
     const CANCELAR_LABEL = 'cancelar';
     const CANCEL_CONFIRM_LABEL = 'cancelConfirm';
     const SCHEDULE_DATE_LABEL = 'reagendar';
