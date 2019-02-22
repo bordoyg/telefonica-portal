@@ -248,7 +248,7 @@
 				 						<button type="submit"
 				 						 	name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_CALLCENTER_CONTACT ?>"
 				 							class="btn btn-lg btn-block btn-secondary" onclick="onSubmitButton(this);"
-				 							style="font-size: 14px;padding: 8px 5px;display:none;">Contactar al callcenter</button>
+				 							style="font-size: 14px;padding: 8px 5px;display:none;">Cancelar Cita</button>
 				 					</div>
 								</div>
 			 				<?php } ?>
