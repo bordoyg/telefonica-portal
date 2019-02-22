@@ -1,5 +1,6 @@
 <?php
 require_once(APPPATH . 'widgets/custom/library/controlador.php');
+use RightNow\Connect\v1_3 as RNCPHP;
 
 class Dispatcher {
     const INDEX_URL='index.php';
@@ -34,6 +35,13 @@ class Dispatcher {
         try{
             $config=parse_ini_file (APPPATH. '/models/custom/telefonica/conf/config.ini', false);
             $GLOBALS['config']=$config;
+            foreach($GLOBALS['config'] as $key=>$val){
+                try{
+                    $GLOBALS['config'][$key] = RNCPHP\MessageBase::fetch( $val )->Value;
+                }catch(\Exception $e){
+
+                }
+            }
             if(!isset( $GLOBALS['Controlador'])){
                 $GLOBALS['Controlador']=new Controlador();
             }

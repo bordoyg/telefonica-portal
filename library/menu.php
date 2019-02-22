@@ -22,13 +22,17 @@ $Controlador = $dispatcher->getControlador();
 				<?php 
 					if($Controlador->showConfirm()){
 					    echo '<div class="box_cont text_center">';
-					    echo '<h3>';
-					    $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
-					    $activity=$dispatcher->getControlador()->findActivityData($activityID);
+						echo '<h3>';
+						$activityID=$dispatcher->getControlador()->getActivityIdFromContext();
+					    //$activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+						$activity=$dispatcher->getControlador()->findActivityData($activityID);
+						 // LOG
+            // $log = new RNCPHP\CO\LOG();
+            // $log->LOG = $decrypted_text;
+            // $log->save();
 					    $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
 					    $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
 					    echo 'Tu cita de instalaci&oacute;n est&aacute; programada para el ' . $dateStart->format('d') . ' de ' . $GLOBALS['translateMonth'][$dateStart->format('F')]  . ' de ' . $dateStart->format('Y') . ', en la jornada ' . $activity->timeSlot . '(' . $dateStart->format('g:i A') . ' - ' . $dateEnd->format('g:i A') . ') Conf&iacute;rmanos tu disponibilidad para atender la visita del t&eacute;cnico.';
-					    
 					    echo '<div>';
 					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CONFIRMAR_LABEL . '"';
 					    echo 'class="button btn btn-lg btn-primary" >Confirmar</button>';
@@ -43,7 +47,6 @@ $Controlador = $dispatcher->getControlador();
 				        echo '<div class="box_cont text_center">';
 				        echo '<h3>';
 				        echo 'Si lo deseas puedes modificar tu cita de instalaci&oacute;n para otro d&iacute;a o jornada, sujeto a disponibilidad actual de visitas';
-					    
 					    echo '<div>';
 					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::SCHEDULE_DATE_LABEL . '"';
 					    echo 'class="button btn btn-lg btn-primary" >Modificar</button>';
@@ -58,7 +61,6 @@ $Controlador = $dispatcher->getControlador();
 				        echo '<div class="box_cont text_center">';
 				        echo '<h3>';
 					    echo 'Puedes cancelar tu cita s&iacute; as&iacute; lo deseas. Podr&aacute;s reprogramarla posteriormente comunic&aacute;ndote a la l&iacute;nea de atenci&oacute;n gratuita 01 80009 42545';
-					    
 					    echo '<div>';
 					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CANCELAR_LABEL . '"';
 					    echo 'class="button btn btn-lg btn-primary" >Cancelar</button>';
@@ -66,7 +68,6 @@ $Controlador = $dispatcher->getControlador();
 					    echo '</h3>';
 					    echo '</div>';
 					}
-					
 				?>
 
 				<?php 
@@ -74,7 +75,6 @@ $Controlador = $dispatcher->getControlador();
 				        echo '<div class="box_cont text_center">';
 				        echo '<h3>';
 					    echo 'Movistar informa que un t&eacute;cnico se dirige a tu domicilio a realizar la instalaci&oacute;n de tus servicios. conoce aqu&iacute; la identidad y ubicaci&oacute;n del t&eacute;cnico)';
-					    
 					    echo '<div>';
 					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::UBICACION_LABEL . '"';
 					    echo 'class="button btn btn-lg btn-primary" >Ver t&eacute;cnico</button>';
@@ -82,7 +82,6 @@ $Controlador = $dispatcher->getControlador();
 					    echo '</h3>';
 					    echo '</div>';
 					}
-					
 				?>
 
 			</form>

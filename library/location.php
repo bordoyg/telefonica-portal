@@ -23,7 +23,7 @@
             
             <div>
             <div style="float:left;">
-			<h4>Nombre del t&eacute;nico: <?php echo $_REQUEST[Controlador::LOCATION_TECHNICAN]->resourceDetails->name; ?></h4>
+			<h4>Nombre del t&eacute;cnico: <?php echo $_REQUEST[Controlador::LOCATION_TECHNICAN]->resourceDetails->name; ?></h4>
 			</div>
             <div style="float:right;">
             <?php 
@@ -67,21 +67,27 @@
                     echo 'style: function(feature) {';
                     echo '    return feature.get(\'style\');';
                     echo '}, source: new ol.source.Vector({features: [iconTechFeature, iconHomeFeature]}) });';
-                  ?>
-                  var map = new ol.Map({
-                    target: 'map',
-                    layers: [titleLayer, vectorLayer],
-                    view: new ol.View({
-                      center: lonLatAddress,
-                      zoom: 16
-                    })
-                  });
-                  var extent = vectorLayer.getSource().getExtent();
-                  map.getView().fit(extent);
+                    if($GLOBALS['config']['show-map'] == "true"){
+                    ?>
+    
+                      var map = new ol.Map({
+                        target: 'map',
+                        layers: [titleLayer, vectorLayer],
+                        view: new ol.View({
+                          center: lonLatAddress,
+                          zoom: 16
+                        })
+                      });
+                      var extent = vectorLayer.getSource().getExtent();
+                      map.getView().fit(extent);
+                      <?php } ?>
               </script>
 
             <div style="height:10px; clear: both;"></div>
             <script src="/euf/assets/others/telefonica/js/easytimer.min.js"></script>
+            <?php
+            if($GLOBALS['config']['show-map'] == "true"){
+            ?>
             <div style="float:right;" id="basicUsage"></div>
             <script>
                 var timer = new Timer();
@@ -89,7 +95,8 @@
                 timer.addEventListener('secondsUpdated', function (e) {
                     $('#basicUsage').html('&uacute;ltima posici&oacute;n ' + timer.getTimeValues().toString() + 's');
                 });
-    		</script>
+            </script>
+            <?php } ?>
     		<?php 
     		if(!isset($_REQUEST[Dispatcher::NO_VOLVER])){
     		    echo '<form action="" method="post">';

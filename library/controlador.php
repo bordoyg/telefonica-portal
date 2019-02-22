@@ -338,10 +338,12 @@ class Controlador {
             return Dispatcher::MESSAGES_URL;
         }
     }
+
     function excecuteScheduleCalendar(){
 
         return Dispatcher::SCHEDULE_DATE_URL;
     }
+
     function excecuteScheduleConfirmSOAP(){
         try{
             $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
@@ -380,6 +382,7 @@ class Controlador {
             return Dispatcher::MESSAGES_URL;
         }
     }
+
     function excecuteScheduleConfirm(){
         try{
             $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
@@ -433,15 +436,18 @@ class Controlador {
         }
 
     }
+
     function excecuteLocation(){
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
         $this->findTechnicanLocation($activity);
         return Dispatcher::LOCATION_URL;
     }
+
     function excecuteMenu(){
         return Dispatcher::MENU_URL;
     }
+
     function existActivity(){
         try{
             Utils::logDebug('INICIO existActivity');
@@ -471,6 +477,7 @@ class Controlador {
             return false;
         }
     }
+
     function isValidActivity(){
         try{
             $activityID=$this->getActivityIdFromContext();
@@ -520,9 +527,11 @@ class Controlador {
             return false;
         }
     }
+
     function showConfirm(){
         return $this->showCancel();
     }
+
     function showCancel(){
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
@@ -531,9 +540,11 @@ class Controlador {
  
         return ($activity->status == Controlador::STATUS_PENDING) && ($activityDate > $currentDate);
     }
+
     function showSchedule(){
         return $this->showCancel();
     }
+
     function showTechnicanLocation(){
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
@@ -545,9 +556,11 @@ class Controlador {
         Utils::logDebug("SHOWTECHNICANLOCATION: " . in_array($activity->status, Controlador::STATUS_LOCALIZABLE) . " - " . $activityDate == $currentDate);
         return in_array($locationData->status, Controlador::STATUS_LOCALIZABLE) && $activityDate == $currentDate;
     }
+
     function addMessageError($msj){
         $_REQUEST[Controlador::MESSAGE_PARAM]=$msj;
     }
+
     function getActivityIdFromContext(){
         Utils::logDebug('INICIO getActivityIdFromContext');
         foreach($_GET as $key=>$val) {
@@ -562,6 +575,7 @@ class Controlador {
         }
         return $activityID;
     }
+    
     function desencriptar_AES($encrypted_data_hex)
     {
         try {
