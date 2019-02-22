@@ -11,26 +11,36 @@ $Controlador = $dispatcher->getControlador();
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-offset-0 col-sm-offset-2 col-md-offset-4 col-lg-offset-4 col-xs-12 col-sm-8 col-md-4 col-lg-4 text-center">
-                    <form action="" method="post">
+                    <form id="myForm" action="" method="post">
                         <div class="row header-image">
                             <img class="img " src="/euf/assets/others/telefonica/images/logo-movistar.png">
                         </div>
                         <?php
                             $dispatcher = $GLOBALS['dispatcher'];
                             $Controlador = $dispatcher->getControlador();
-                            if($Controlador->showConfirm()) {
-                            $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+                            if($Controlador->showCancel() && !$Controlador->showTechnicanLocation()) {
+                            //$activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+                            $activityID=$dispatcher->getControlador()->getActivityIdFromContext();
                             $activity=$dispatcher->getControlador()->findActivityData($activityID);
                             $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
                             $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
+                            
                         ?>
                         <div class="row appointment-info">
                             <p>
-                                <span>Tu cita para</span>
+                                <span>Tu cita para </span>
+                                <?
+                                    if(strpos($activity->activityType, 'PRO')===0){
+                                        echo "<span>instalación</span>";
+                                    }else if(strpos($activity->activityType, 'REP')===0){
+                                        echo "<span>reparación</span>";
+                                    }
+                                ?>
                             </p>
-                            <p>
+                            <!-- <p>
+                                
                                 <span>Instalación/Reparación </span>
-                            </p>
+                            </p> -->
                             <p>
                                 <span>est&aacute; progamada para el </span>
                             </p>
@@ -42,6 +52,8 @@ $Controlador = $dispatcher->getControlador();
                                 <span>entre las <?php echo $dateStart->format('H'); ?> y las <?php echo $dateEnd->format('H\h\s'); ?>.</span>
                             </p>
                         </div>
+                        <?php } ?>
+                        <?php if($Controlador->showConfirm() && !$Controlador->showTechnicanLocation()) { ?>
                         <div class="row action-confirm">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM; ?>"
@@ -54,7 +66,7 @@ $Controlador = $dispatcher->getControlador();
                             <?php
                                 $dispatcher = $GLOBALS['dispatcher'];
                                 $Controlador = $dispatcher->getControlador();
-                                if($Controlador->showSchedule()) { ?>
+                                if($Controlador->showSchedule() && !$Controlador->showTechnicanLocation()) { ?>
 
                                 <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                                     <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM; ?>"
@@ -66,12 +78,34 @@ $Controlador = $dispatcher->getControlador();
                             <?php
                                 $dispatcher = $GLOBALS['dispatcher'];
                                 $Controlador = $dispatcher->getControlador();
-                                if($Controlador->showCancel()){ ?>
+                                if($Controlador->showCancel() && !$Controlador->showTechnicanLocation()){
+                                    if(!$Controlador->showSchedule()){
+                                        echo '<style>
+                                            #cancelarMenuBtn{
+                                                width:100%;
+                                                margin-top:20px;
+                                            }
+                                            #cancelarMenuDiv{
+                                                width:100%;
+                                                margin-top:20px;
+                                            }
 
-                                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                        </style>';
+                                    }
+                                    ?>
+
+                                
+
+                                <div id="cancelarMenuDiv" class="col-xs-6 col-sm-6 col-md-6 col-lg-6 cancelarBtnDiv">
+                                    <input  id ="cancelarMenuBtn" type="button" name="<?php echo Dispatcher::OPTION_PARAM; ?>"
+                                            value="Cancelarla"
+                                            class="btn btn-lg btn-block btn-secondary pull-right" 
+                                            onclick='
+                                                var event = new CustomEvent("cancelarMenuBtnClicked", { "detail": "Example of an event" });
+                                                document.dispatchEvent(event);'>
                                     <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM; ?>"
                                             value="<?php echo Dispatcher::CANCELAR_LABEL; ?>"
-                                            class="btn btn-lg btn-block btn-secondary pull-right">Cancelarla</button>
+                                            class="btn btn-lg btn-block btn-secondary pull-right" style="display:none;">Cancelarla</button>
                                 </div>
 
                             <?php } ?>
@@ -99,5 +133,7 @@ $Controlador = $dispatcher->getControlador();
 			</div>
 		</div>
 	</div>
+    
+    
 </body>
 </html>

@@ -2,6 +2,8 @@
 require_once(APPPATH . 'widgets/custom/library/serviceRest.php');
 require_once(APPPATH . 'widgets/custom/library/serviceSoap.php');
 
+use RightNow\Connect\v1_3 as RNCPHP;
+
 class Controlador {
     const MESSAGE_PARAM = 'errorMessage';
     const MESSAGES_MODAL_URL = 'messagesModal.php';
@@ -15,20 +17,23 @@ class Controlador {
 	const STATUS_PENDING="pending";
 	
 	const ERROR_GENERIC_MSJ='<div class="row appointment-info"> <p> <span>No fue posible procesar tu </span></p><p><span>solicitud.</span></p><p><span>Por favor intentalo m&aacute;s</span></p><p><span>tarde.</span></p></div>';
-	const ERROR_ORDEN_INEXISTENTE='<div class="row appointment-info"><p><span class="text-bold">La orden no existe </span></p></div>';
-	const ERROR_ORDEN_NO_VIGENTE='<div class="row appointment-info"><p><span>Tu cita no puede ser confirmada</span></p><p><span>o modificada debido a que no se</span></p><p><span>encuentra vigente en este</span></p><p><span>momento.</span></p><p><span>Si tienes alguna inquietud puedes</span></p><p><span>comunicarte a la l&iacute;nea</span></p><p><span class="contact-number text-underline">01 80009 969090</span><span></span></p></div>';
+    const ERROR_ORDEN_INEXISTENTE='<div class="row appointment-info"><p><span class="text-bold">La orden no existe </span></p></div>';
+    
+	const ERROR_ORDEN_NO_VIGENTE_AVERIAS='<div class="row appointment-info"><p><span>Tu cita no puede ser confirmada</span></p><p><span>o modificada debido a que no se</span></p><p><span>encuentra vigente en este</span></p><p><span>momento.</span></p><p><span>Si tienes alguna inquietud puedes</span></p><p><span>comunicarte a la l&iacute;nea</span></p><p><span class="contact-number text-underline">0800-222-8114</span><span></span></p></div>';
+	const ERROR_ORDEN_NO_VIGENTE_PROVISION='<div class="row appointment-info"><p><span>Tu cita no puede ser confirmada</span></p><p><span>o modificada debido a que no se</span></p><p><span>encuentra vigente en este</span></p><p><span>momento.</span></p><p><span>Si tienes alguna inquietud puedes</span></p><p><span>comunicarte a la l&iacute;nea</span></p><p><span class="contact-number text-underline">0800-222-8112</span><span></span></p></div>';
 	
 	const MSJ_ORDEN_CONFIRMADA='<div class="row appointment-info"><p><span>Tu cita fue confirmada </span></p><p><span>para el </span></p><p><span class="appointment-date-formatted">@@$dateFormatted@@</span><span> </span></p><p><span>entre las @@$dateStartHours@@ y las @@$dateEndHours@@.</span></p></div><div class="row appointment-remember-ad text-left"><p><span class="text-bold">Recordá:</span><span>&nbsp; tiene que haber alguien en el domicilio y te vamos a avisar por SMS cuando el t&eacute;cnico est&eacute; en camino.</span></p></div>';
 	const MSJ_ORDEN_MODIFICADA='<div class="row appointment-info"><p><span>Tu cita fue </span></p><p><span>reagendada para el</span></p><p><span class="appointment-date-formatted">@@$dateFormatted@@</span><span> </span></p><p><span>entre las @@$dateStartHours@@ y las @@$dateEndHours@@.</span></p></div><div class="row appointment-remember-ad text-left"><p><span class="text-bold">Recordá:</span></p><p><span>&#149;Tiene que haber alguien en el domicilio</span></p><p><span>&#149;Te vamos a avisar por SMS cuando el t&eacute;cnico </span></p><p><span>est&eacute; en camino.</span></p></div>';
-	const MSJ_ORDEN_CANCELADA='<div class="row appointment-info"><p><span>Tu cita fue cancelada.</span></p><p><span>Podrás reagendarla</span></p><p><span>llamando al</span></p><p><span class="contact-number text-underline">0800-222-0114</span></p><p><span>&nbsp;de lunes a viernes de 9 a</span></p><p><span>21hs.</span></p></div>';
-	const MSJ_ORDEN_NO_CANCELADA='<div class="row appointment-info"><p><span>Tu cita no pudo ser cancelada.</span></p><p><span>llamanos al</span></p><p><span class="contact-number text-underline">0800-222-0114 para cancelarla</span></p><p><span>&nbsp;de lunes a viernes de 9 a</span></p><p><span>21hs.</span></p></div>';
+    const MSJ_ORDEN_CANCELADA_AVERIAS='<div class="row appointment-info"><p><span>Tu cita fue cancelada.</span></p><p><span>Podrás reagendarla</span></p><p><span>llamando al</span></p><p><span class="contact-number text-underline">0800-222-8114</span></p><p><span>&nbsp;de lunes a viernes de 9 a</span></p><p><span>21hs.</span></p></div>';
+    const MSJ_ORDEN_CANCELADA_PROVISION='<div class="row appointment-info"><p><span>Tu cita fue cancelada.</span></p><p><span>Podrás reagendarla</span></p><p><span>llamando al</span></p><p><span class="contact-number text-underline">0800-222-8112</span></p><p><span>&nbsp;de lunes a viernes de 9 a</span></p><p><span>21hs.</span></p></div>';
+	const MSJ_ORDEN_NO_CANCELADA='<div class="row appointment-info"><p><span>Tu cita no pudo ser cancelada.</span></p><p><span>llamanos al</span></p><p><span class="contact-number text-underline">0800-222-8114 para cancelarla</span></p><p><span>&nbsp;de lunes a viernes de 9 a</span></p><p><span>21hs.</span></p></div>';
 	
 	const MSJ_CALLCENTER_CONTACT='<div class="row appointment-info"> <p> <span>Gracias por tu mensaje</span></p><p><span>Un representante se va a contactar con usted.</span></p></div>';
 	
-	const SUB_STATUS_SIN_FECHA="SINFECHASELECCIONADA";
-	const SUB_STATUS_CANCELADA="Cancelada";
-	const SUB_STATUS_CONFIRMADA="Confirmada";
-	const SUB_STATUS_MODIFICADA="Modificada";
+    const SUB_STATUS_SIN_FECHA="SINFECHASELECCIONADA";
+	const SUB_STATUS_CANCELADA="El cliente respondio Cancelada";
+	const SUB_STATUS_CONFIRMADA="El cliente respondio Confirmada";
+	const SUB_STATUS_MODIFICADA="El cliente respondio Reagendada";
 	const CHANEL_LABEL="WEBREAGENDAMIENTO";
 	const CANCEL_REASON="OKCONFIRMACLIENTEWEB";
 	
@@ -108,8 +113,21 @@ class Controlador {
         array_push($params, array('activity_field'=>array('name'=>'XA_BROADBAND_TECHNOLOGY', 'value'=>$activity->XA_BROADBAND_TECHNOLOGY)));
         array_push($params, array('activity_field'=>array('name'=>'XA_EFFORT_CODE', 'value'=>'WEB_AGENDAMIENTO')));
         
-        
+        //Push de datos Pablo
+        array_push($params, array('activity_field'=>array('name'=>'ACTIVITY_GROUP', 'value'=>NULL)));
+        array_push($params, array('activity_field'=>array('name'=>'PRIORITY', 'value'=>$activity->XA_PRIORITY)));
+        array_push($params, array('activity_field'=>array('name'=>'XA_TERMINATION_TYPE', 'value'=>$activity->XA_TERMINATION_TYPE)));
+        array_push($params, array('activity_field'=>array('name'=>'XA_CURRENT_DIAGNOSIS', 'value'=>$activity->XA_CURRENT_DIAGNOSIS)));
+        array_push($params, array('activity_field'=>array('name'=>'XA_TELEPHONE_TECHNOLOGY', 'value'=>$activity->XA_TELEPHONE_TECHNOLOGY)));
+        array_push($params, array('activity_field'=>array('name'=>'XA_CUSTOMER_TYPE', 'value'=>$activity->XA_CUSTOMER_TYPE)));
+        array_push($params, array('activity_field'=>array('name'=>'XA_CUSTOMER_SUBTYPE', 'value'=>$activity->XA_CUSTOMER_SUBTYPE)));
+        array_push($params, array('activity_field'=>array('name'=>'XA_TV_TECHNOLOGY', 'value'=>$activity->XA_TV_TECHNOLOGY)));
+        array_push($params, array('activity_field'=>array('name'=>'XA_COMPANY_NAME', 'value'=>$activity->XA_COMPANY_NAME)));
+        array_push($params, array('activity_field'=>array('name'=>'XA_GUARANTEE', 'value'=>$activity->XA_GUARANTEE)));
+
+
         $response=$this->serviceSoap->request("/soap/capacity/", "urn:toa:capacity", "get_capacity", $params);
+        
         $response=$response['SOAP-ENV:ENVELOPE']['SOAP-ENV:BODY']['URN:GET_CAPACITY_RESPONSE'];
         
         
@@ -297,7 +315,7 @@ class Controlador {
                 try{
                     $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
                     $params=array();
-                    array_push($params, array('XA_GETCAPACITYERROR'=>"FALLA_CONSULTA_CAPACIDAD"));
+                    $params['XA_GETCAPACITYERROR']= "FALLA_CONSULTA_CAPACIDAD";
                     $params=json_encode($params);
                     //Se actualiza el timeslot y el estado XA_REMINDER_REPLY
                     $this->service->request('/rest/ofscCore/v1/activities/' . $activityID, 'PATCH', $params);
@@ -336,7 +354,7 @@ class Controlador {
             try{
                 $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
                 $params=array();
-                array_push($params, array('XA_GETCAPACITYERROR'=>"FALLA_MOSTRAR_CAPACIDAD"));
+                $params['XA_GETCAPACITYERROR']= "FALLA_MOSTRAR_CAPACIDAD";
                 $params=json_encode($params);
                 //Se actualiza el timeslot y el estado XA_REMINDER_REPLY
                 $this->service->request('/rest/ofscCore/v1/activities/' . $activityID, 'PATCH', $params);
@@ -359,39 +377,77 @@ class Controlador {
                 $params=array("setDate"=>array("date"=>NULL));
                 $params=json_encode($params);
                 //Se actualiza el dia = null
-                $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId . '/custom-actions/move', 'POST', $params);
+                // $log = new RNCPHP\CO\LOG();
+                // $log->LOG = $params;
+                // $log->save();
+                
+                $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId . '/custom-actions/cancel', 'POST', $params);
                 
                 $currentDateTime=date('Y-m-d H:i:s');
                 $histroyReply=$activity->XA_HISTORY_REPLY . " | " . Controlador::SUB_STATUS_CANCELADA . ", " . Controlador::CHANEL_LABEL . ", " .  $currentDateTime;
                 $params=array();
-                array_push($params, array('timeSlot'=>NULL));
-                array_push($params, array('XA_REMINDER_REPLY'=>Controlador::SUB_STATUS_CANCELADA));
-                array_push($params, array('XA_CONFIRMATIONCHANNEL'=>Controlador::CHANEL_LABEL));
-                array_push($params, array('XA_DATETIME_REPLY'=>$currentDateTime));
-                array_push($params, array('XA_HISTORY_REPLY'=>$histroyReply));
+                
+                $params['timeSlot']=NULL;
+                $params['XA_REMINDER_REPLY']= Controlador::SUB_STATUS_CANCELADA;
+                $params['XA_CONFIRMATIONCHANNEL']= Controlador::CHANEL_LABEL;
+                $params['XA_CANCEL_REASON']= Controlador::CANCEL_REASON;
+                $params['XA_DATETIME_REPLY']= $currentDateTime;
+                $params['XA_HISTORY_REPLY']= $histroyReply;
+
+                //array push gonzalo
+                // array_push($params, array('timeSlot'=>NULL));
+                // array_push($params, array('XA_REMINDER_REPLY'=>Controlador::SUB_STATUS_CANCELADA));
+                // array_push($params, array('XA_CONFIRMATIONCHANNEL'=>Controlador::CHANEL_LABEL));
+                // array_push($params, array('XA_DATETIME_REPLY'=>$currentDateTime));
+                // array_push($params, array('XA_HISTORY_REPLY'=>$histroyReply));
                 
                 $params=json_encode($params);
+                
+                //LOG
+                //$log = new RNCPHP\CO\LOG();
+                //$log->LOG = $params;
+                //$log->save();
+
                 //Se actualiza el timeslot y el estado XA_REMINDER_REPLY
                 $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
-                $this->addMessageError(Controlador::MSJ_ORDEN_CANCELADA);
+                
+               
+                $this->addMessageError(Controlador::MSJ_ORDEN_CANCELADA_AVERIAS);;
+                
+                
+                //Mensaje Gonzalo
+                //$this->addMessageError(Controlador::MSJ_ORDEN_CANCELADA);
+                
                 return Dispatcher::MESSAGES_URL;
             }
             if(strcmp(Controlador::PROVISION_LABEL, $this->isAveriaOProvision($activity))==0){
-                //Se cancela la actividad
-                $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId . '/custom-actions/cancel', 'POST');
+                $params=array("setDate"=>array("date"=>NULL));
+                $params=json_encode($params);
+                $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId . '/custom-actions/move', 'POST',$params);
                 
                 $currentDateTime=date('Y-m-d H:i:s');
                 $histroyReply=$activity->XA_HISTORY_REPLY . " | " . Controlador::SUB_STATUS_CANCELADA . ", " . Controlador::CHANEL_LABEL . ", " .  $currentDateTime;
                 $params=array();
-                array_push($params, array('XA_CANCEL_REASON'=>Controlador::CANCEL_REASON));
-                array_push($params, array('XA_REMINDER_REPLY'=>Controlador::SUB_STATUS_CANCELADA));
-                array_push($params, array('XA_CONFIRMATIONCHANNEL'=>Controlador::CHANEL_LABEL));
-                array_push($params, array('XA_DATETIME_REPLY'=>$currentDateTime));
-                array_push($params, array('XA_HISTORY_REPLY'=>$histroyReply));
+                
+                $params=array("setDate"=>array("date"=>NULL));
+                $params['XA_REMINDER_REPLY']= Controlador::SUB_STATUS_SIN_FECHA;
+                $params['XA_CONFIRMATIONCHANNEL']= Controlador::CHANEL_LABEL;
+                $params['XA_PENDING_EXTERNAL_ACTION']="RESCHEDULE";
+                $params['XA_DATETIME_REPLY']= $currentDateTime;
+                $params['XA_HISTORY_REPLY']= $histroyReply;
+
+                // Array push Gonzalo
+                // array_push($params, array('XA_CANCEL_REASON'=>Controlador::CANCEL_REASON));
+                // array_push($params, array('XA_REMINDER_REPLY'=>Controlador::SUB_STATUS_CANCELADA));
+                // array_push($params, array('XA_CONFIRMATIONCHANNEL'=>Controlador::CHANEL_LABEL));
+                // array_push($params, array('XA_DATETIME_REPLY'=>$currentDateTime));
+                // array_push($params, array('XA_HISTORY_REPLY'=>$histroyReply));
+                
                 $params=json_encode($params);
+                
                 $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
                 
-                $this->addMessageError(Controlador::MSJ_ORDEN_CANCELADA);
+                $this->addMessageError(Controlador::MSJ_ORDEN_CANCELADA_PROVISION);
                 return Dispatcher::MESSAGES_URL;
             }
             
@@ -399,7 +455,7 @@ class Controlador {
             return Dispatcher::MESSAGES_URL;
         } catch (Exception $e) {
             Utils::logDebug('Hubo un error al cancelar la cita', $e);
-            $this->addMessageError(Controlador::MSJ_ORDEN_NO_CANCELADA);
+           $this->addMessageError(Controlador::MSJ_ORDEN_NO_CANCELADA);
             return Dispatcher::MESSAGES_URL;
         }
     }
@@ -413,13 +469,26 @@ class Controlador {
            
             $params=array("setDate"=>array("date"=>NULL));
             $params=json_encode($params);
+            $currentDateTime=date('Y-m-d H:i:s');
+            $histroyReply=$activity->XA_HISTORY_REPLY . " | " . Controlador::SUB_STATUS_SIN_FECHA . ", " . Controlador::CHANEL_LABEL . ", " .  $currentDateTime;
             //Se actualiza el dia = null
             $this->service->request('/rest/ofscCore/v1/activities/' . $activityID . '/custom-actions/move', 'POST', $params);
             
             $params=array();
-            array_push($params, array('timeSlot'=>NULL));
-            array_push($params, array('XA_REMINDER_REPLY'=>Controlador::SUB_STATUS_SIN_FECHA));
-            array_push($params, array('XA_EXTERNAL_ACTION'=>""));
+            
+            $params['timeSlot']= NULL;
+            $params['XA_REMINDER_REPLY']= Controlador::SUB_STATUS_SIN_FECHA;
+            $params['XA_EXTERNAL_ACTION']= "";
+            $params['XA_PENDING_EXTERNAL_ACTION']="RESCHEDULE";
+            $params['XA_DATETIME_REPLY']= $currentDateTime;
+            $params['XA_HISTORY_REPLY']=$histroyReply;
+            $params['XA_REMINDER_REPLY']="RESCHEDULE";
+
+
+            // Array push gonzalo
+            // array_push($params, array('timeSlot'=>NULL));
+            // array_push($params, array('XA_REMINDER_REPLY'=>Controlador::SUB_STATUS_SIN_FECHA));
+            // array_push($params, array('XA_EXTERNAL_ACTION'=>""));
             
             $params=json_encode($params);
             //Se actualiza el timeslot y el estado XA_REMINDER_REPLY
@@ -447,11 +516,24 @@ class Controlador {
             $params=array();
             array_push($params, array('activity_id'=>$activityID));
             array_push($params, array('position_in_route'=>'unchanged'));
+            
+            // array_push($params, 'XA_REMINDER_REPLY', Controlador::SUB_STATUS_MODIFICADA);
+            // array_push($params, 'XA_CONFIRMATIONCHANNEL', Controlador::CHANEL_LABEL);
+            // array_push($params, 'XA_DATETIME_REPLY', $currentDateTime);
+            // array_push($params, 'time_slot', $scheduleTimeslot);
+            // array_push($params, 'date', $scheduleDate);
+
+            // Array push gonzalo
             array_push($params, array('properties'=>array('name'=>'XA_REMINDER_REPLY', 'value'=>Controlador::SUB_STATUS_MODIFICADA)));
             array_push($params, array('properties'=>array('name'=>'XA_CONFIRMATIONCHANNEL', 'value'=>Controlador::CHANEL_LABEL)));
             array_push($params, array('properties'=>array('name'=>'XA_DATETIME_REPLY', 'value'=>$currentDateTime)));
             array_push($params, array('properties'=>array('name'=>'time_slot', 'value'=>$scheduleTimeslot)));
             array_push($params, array('properties'=>array('name'=>'date', 'value'=>$scheduleDate)));
+            
+            // LOG
+            // $log = new RNCPHP\CO\LOG();
+            // $log->LOG = json_encode($params);
+            // $log->save();
             
             $response=$this->serviceSoap->request('/soap/activity/v3/',"urn:toa:activity", "update_activity", $params);
             $response=$response['SOAP-ENV:ENVELOPE']['SOAP-ENV:BODY']['NS1:UPDATE_ACTIVITY_RESPONSE'];
@@ -499,15 +581,31 @@ class Controlador {
             
             $scheduleTimeslot=substr($rawTimeslot, strrpos($rawTimeslot, '|') + 1);
             $currentDateTime=date('Y-m-d H:i:s');
-            $histroyReply=$activity->XA_HISTORY_REPLY . " | " . Controlador::SUB_STATUS_CANCELADA . ", " . Controlador::CHANEL_LABEL . ", " .  $currentDateTime;
+            $histroyReply=$activity->XA_HISTORY_REPLY . " | " . Controlador::SUB_STATUS_MODIFICADA . ", " . Controlador::CHANEL_LABEL . ", " .  $currentDateTime;
             
             $params=array();
-            array_push($params, array("timeSlot"=>$scheduleTimeslot));
-            array_push($params, array("XA_REMINDER_REPLY"=>Controlador::SUB_STATUS_MODIFICADA));
-            array_push($params, array("XA_HISTORY_REPLY"=>$histroyReply));
-            array_push($params, array("XA_CONFIRMATIONCHANNEL"=>Controlador::CHANEL_LABEL));
-            array_push($params, array("XA_DATETIME_REPLY"=>$currentDateTime));
+            
+            $params["timeSlot"]= $scheduleTimeslot;
+            $params["XA_REMINDER_REPLY"]= Controlador::SUB_STATUS_MODIFICADA;
+            $params["XA_HISTORY_REPLY"]= $histroyReply;
+            $params["XA_CONFIRMATIONCHANNEL"]= Controlador::CHANEL_LABEL;
+            $params["XA_DATETIME_REPLY"]= $currentDateTime;
+            $params["XA_PENDING_EXTERNAL_ACTION"]= "RESCHEDULE";
+
+            //array push gonzalo
+            // array_push($params, array("timeSlot", $scheduleTimeslot));
+            // array_push($params, array("XA_REMINDER_REPLY"=>Controlador::SUB_STATUS_MODIFICADA));
+            // array_push($params, array("XA_HISTORY_REPLY"=>$histroyReply));
+            // array_push($params, array("XA_CONFIRMATIONCHANNEL"=>Controlador::CHANEL_LABEL));
+            // array_push($params, array("XA_DATETIME_REPLY"=>$currentDateTime));
+            
             $params=json_encode($params);
+        
+            // LOG
+            // $log = new RNCPHP\CO\LOG();
+            // $log->LOG = $params;
+            // $log->save();
+            
             //Se actualiza el timeslot y el estado XA_REMINDER_REPLY
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
 
@@ -542,15 +640,28 @@ class Controlador {
             $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
             $activity=$this->findActivityData($activityID);
             $currentDateTime=date('Y-m-d H:i:s');
-            $histroyReply=$activity->XA_HISTORY_REPLY . " | " . Controlador::SUB_STATUS_CANCELADA . ", " . Controlador::CHANEL_LABEL . ", " .  $currentDateTime;
+            $histroyReply=$activity->XA_HISTORY_REPLY . " | " . Controlador::SUB_STATUS_CONFIRMADA . ", " . Controlador::CHANEL_LABEL . ", " .  $currentDateTime;
             
             $params=array();
-            array_push($params, array("XA_REMINDER_REPLY"=>Controlador::SUB_STATUS_CONFIRMADA));
-            array_push($params, array("XA_CONFIRMATIONCHANNEL"=>Controlador::CHANEL_LABEL));
-            array_push($params, array("XA_DATETIME_REPLY"=>$currentDateTime));
-            array_push($params, array("XA_HISTORY_REPLY"=>$histroyReply));
+
+            $params["XA_REMINDER_REPLY"]= Controlador::SUB_STATUS_CONFIRMADA;
+            $params["XA_CONFIRMATIONCHANNEL"]= Controlador::CHANEL_LABEL;
+            $params["XA_DATETIME_REPLY"]= $currentDateTime;
+            $params["XA_HISTORY_REPLY"]= $histroyReply;
+
+            // array push gonzalo
+            // array_push($params, array("XA_REMINDER_REPLY"=>Controlador::SUB_STATUS_CONFIRMADA));
+            // array_push($params, array("XA_CONFIRMATIONCHANNEL"=>Controlador::CHANEL_LABEL));
+            // array_push($params, array("XA_DATETIME_REPLY"=>$currentDateTime));
+            // array_push($params, array("XA_HISTORY_REPLY"=>$histroyReply));
             
             $params=json_encode($params);
+            
+            // LOG
+            // $log = new RNCPHP\CO\LOG();
+            // $log->LOG = $params;
+            // $log->save();
+
             //Se actualiza el estado XA_REMINDER_REPLY
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
             
@@ -611,6 +722,7 @@ class Controlador {
             return false;
         }
     }
+
     function isValidActivity(){
         try{
             $activityID=$this->getActivityIdFromContext();
@@ -650,9 +762,6 @@ class Controlador {
         }
     }
     function showConfirm(){
-        return $this->showCancel();
-    }
-    function showCancel(){
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
         $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date);
@@ -660,8 +769,16 @@ class Controlador {
  
         return ($activity->status == Controlador::STATUS_PENDING) && ($activityDate > $currentDate);
     }
+    function showCancel(){
+        $activityID=$this->getActivityIdFromContext();
+        $activity=$this->findActivityData($activityID);
+        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date);
+        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
+ 
+        return ($activity->status == Controlador::STATUS_PENDING) && ($activityDate >= $currentDate);
+    }
     function showSchedule(){
-        return $this->showCancel();
+        return $this->showConfirm();
     }
     function showTechnicanLocation(){
         $activityID=$this->getActivityIdFromContext();
@@ -689,7 +806,14 @@ class Controlador {
             Utils::logDebug('Se va a desencriptar');
             Utils::logDebug($key);
             
+            //$activityID=$this->desencriptar_AES(str_replace("_","+",$key));
+            
+            //STR REPLACE PABLO
+            //var_dump($key);
+            //var_dump(str_replace("_","+",$key));
             $activityID=$this->desencriptar_AES($key);
+            // $activityID=$this->desencriptar_AES($key);
+            
             break;
         }
         if (!isset($activityID)){
@@ -713,21 +837,39 @@ class Controlador {
             $decrypted_text = $cipher->Text;
             Utils::logDebug('id actividad desencriptado: ');
             Utils::logDebug($decrypted_text);
+            // LOG
+            // $log = new RNCPHP\CO\LOG();
+            // $log->LOG = $decrypted_text;
+            // $log->save();
             return $decrypted_text;
         }catch (Exception $err ) {
             Utils::logDebug('Hubo un error al desencriptar la actividad');
+            // $log = new RNCPHP\CO\LOG();
+            // $log->LOG = json_encode($err);
+            // $log->save();
             Utils::logDebug($encrypted_data_hex, $err);
             return null;
         }
     }
     function isAveriaOProvision($activity){
-        if(in_array($activity->XA_WORK_TYPE, Controlador::WORKTYPE_AVERIAS)){
+        // if(in_array($activity->XA_WORK_TYPE, Controlador::WORKTYPE_AVERIAS)){
+        //     return Controlador::AVERIA_LABEL;
+        // }
+        // if(in_array($activity->XA_WORK_TYPE, Controlador::WORKTYPE_PROVISION)){
+        //     return Controlador::PROVISION_LABEL;
+        // }
+        if(strpos($activity->activityType, 'PRO')===0){
+            return Controlador::PROVISION_LABEL;
+        }else if(strpos($activity->activityType, 'REP')===0){
             return Controlador::AVERIA_LABEL;
         }
-        if(in_array($activity->XA_WORK_TYPE, Controlador::WORKTYPE_PROVISION)){
-            return Controlador::PROVISION_LABEL;
-        }
         return NULL;
+    }
+
+    function getActivityType(){
+        $activityID=$this->getActivityIdFromContext();
+        $activity=$this->findActivityData($activityID);
+        return $activity->activityType;
     }
 }
 ?>

@@ -14,9 +14,14 @@
                         
                         <?php echo $_REQUEST[Controlador::MESSAGE_PARAM]; ?>
                         
-                        <?php 
+						<?php
+						 	if(strpos($activity->activityType, 'PRO')===0){
+								$ordenNoVigente= Controlador::ERROR_ORDEN_NO_VIGENTE_PROVISION;
+							}else if(strpos($activity->activityType, 'REP')===0){
+								$ordenNoVigente= Controlador::ERROR_ORDEN_NO_VIGENTE_AVERIAS;
+							}
 							if(strcmp(Controlador::ERROR_ORDEN_INEXISTENTE, $_REQUEST[Controlador::MESSAGE_PARAM])!=0
-							    && strcmp(Controlador::ERROR_ORDEN_NO_VIGENTE, $_REQUEST[Controlador::MESSAGE_PARAM])!=0) {
+							    && strcmp($ordenNoVigente, $_REQUEST[Controlador::MESSAGE_PARAM])!=0) {
 							    
 						        if(!isset($_REQUEST[Dispatcher::NO_VOLVER])) { ?>
 			                        

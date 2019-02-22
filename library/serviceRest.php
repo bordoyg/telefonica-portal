@@ -1,5 +1,7 @@
 <?php
 
+use RightNow\Connect\v1_3 as RNCPHP;
+
 class ServiceRest {
     private $userOFSC= 'test.oracle';
     private $passOFSC='ora.2018';
@@ -26,6 +28,14 @@ class ServiceRest {
     
     function request($path, $method, $params='' ){
         $this->process = curl_init();
+
+// $log = new RNCPHP\CO\LOG();
+        // $log->LOG = $url;
+        // $log->save();
+        // $log = new RNCPHP\CO\LOG();
+        // $log->LOG = $xmlRequest;
+        // $log->save();
+
         curl_setopt($this->process, CURLOPT_HTTPHEADER, array('Accept:application/json','Authorization: Basic ' . $this->encodeCredential));
         curl_setopt($this->process, CURLOPT_HEADER, false);
         

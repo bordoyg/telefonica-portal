@@ -1,5 +1,7 @@
 <?php
 
+use RightNow\Connect\v1_3 as RNCPHP;
+
 class ServiceSoap {
     private $login= 'test.oracle';
     private $passOFSC='ora.2018';
@@ -23,7 +25,13 @@ class ServiceSoap {
     function request($path, $soapNamespace, $soapMethod, $params='' ){
         $url = $this->protocol . '://'. $this->host . ':' . $this->port . $path . "?wsdl";
         $xmlRequest=$this->generarXMLSoapRequest($soapNamespace, $soapMethod, $params);
-        
+        // $log = new RNCPHP\CO\LOG();
+        // $log->LOG = $url;
+        // $log->save();
+        // $log = new RNCPHP\CO\LOG();
+        // $log->LOG = $xmlRequest;
+        // $log->save();
+            
         $this->process = curl_init();
         curl_setopt($this->process, CURLOPT_HEADER, false);
         
@@ -40,6 +48,13 @@ class ServiceSoap {
         //Utils::logDebug("Se va a invocar al servicio: " . $url);
         //Utils::logDebug("XMLRequest: " . $xmlRequest);
         $return = curl_exec($this->process);
+        $error = curl_error($this->process);
+        // $log = new RNCPHP\CO\LOG();
+        //     $log->LOG = $return;
+        //     $log->save();
+        //     $log = new RNCPHP\CO\LOG();
+        //     $log->LOG = $error;
+        //     $log->save();
         $httpcode = curl_getinfo($this->process, CURLINFO_HTTP_CODE);
         //Utils::logDebug("La respuesta del servicio fue: " . $httpcode);
         //Utils::logDebug("XMLResponse: " . $return);
@@ -71,9 +86,13 @@ class ServiceSoap {
                     if(is_array($v)){
                         $xml=$xml . '<' . $c .'>';
                         foreach ($v as $clave => $valor) {
-                            //if(isset($valor)){
+                            //Isset valor pablo
+                            if(isset($valor)){
                                 $xml=$xml . '<' . $clave .'>'. $valor . '</' . $clave . '>';
-                            //}
+                            }
+                            else{
+                                $xml=$xml.'<'. $clave . '/>';
+                            }
                         }
                         $xml=$xml . '</' . $c . '>';
                     }else{

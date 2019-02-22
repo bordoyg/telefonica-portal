@@ -1,7 +1,6 @@
 <?php
 try{
     require_once(APPPATH . 'widgets/custom/library/utils.php');
-    
     $translateMonth=array();
     $translateMonth['January']='Enero';
     $translateMonth['February']='Febrero';
@@ -29,7 +28,12 @@ try{
         if($dispatcher->getControlador()->isValidActivity()){
             $htmlFile=$dispatcher->resolveAction();
         }else{
-            $dispatcher->getControlador()->addMessageError(Controlador::ERROR_ORDEN_NO_VIGENTE);
+            $activityType=$dispatcher->getControlador()->getActivityType();
+            if(strpos($activityType, 'PRO')===0){
+                $dispatcher->getControlador()->addMessageError(Controlador::ERROR_ORDEN_NO_VIGENTE_PROVISION);
+            }elseif(strpos($activityType, 'REP')===0){
+                $dispatcher->getControlador()->addMessageError(Controlador::ERROR_ORDEN_NO_VIGENTE_AVERIAS);
+            }
             $htmlFile= Dispatcher::MESSAGES_URL;
         }
     }else{

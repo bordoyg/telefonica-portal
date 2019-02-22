@@ -16,7 +16,6 @@ function dateSelected(event) {
     var dayId = element.getAttribute('data-day');
     var dayTimeslotElem = document.getElementById(dayId);
     dayTimeslotElem.classList.remove('is-hidden');
-    document.querySelector('.separator.hide').classList.remove('hide');
 
     var radios = document.getElementsByName("timeslot");
     for (var i = 0; i < radios.length; i++) {

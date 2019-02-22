@@ -24,7 +24,7 @@
                         </p>
                     </div>
                     <div id="appointment-calendar" class="container-fluid">
-						<form action="" method="post">
+						<form id="myForm" action="" method="post">
 							<div class="wrap_calendar">
 								<div class="calendar">
 									<header>
@@ -43,7 +43,6 @@
 										<tbody>
 										<?php 
 											try{
-											    
 											    $Controlador = $GLOBALS['Controlador'];
 											    $action=$_REQUEST[Dispatcher::OPTION_PARAM];
 											    $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
@@ -53,15 +52,15 @@
 											    $daysTo=$GLOBALS['config']['calendar-to'];
 											    $daysMore=$GLOBALS['config']['calendar-more'];
 											    if(strcmp(Controlador::AVERIA_LABEL, $Controlador->isAveriaOProvision($activity))==0){
-											        $tmpDaysFrom=$GLOBALS['config']['calendar-averias-from' . $activity->CUSTOMER_TYPE];
+											        $tmpDaysFrom=$GLOBALS['config']['calendar-averias-from-' . $activity->XA_CUSTOMER_TYPE];
 											        if(isset($tmpDaysFrom)&& $tmpDaysFrom>=0){
 											            $daysFrom=$tmpDaysFrom;
 											        }
-											        $tmpDaysTo=$GLOBALS['config']['calendar-averias-to' . $activity->CUSTOMER_TYPE];
+											        $tmpDaysTo=$GLOBALS['config']['calendar-averias-to-' . $activity->XA_CUSTOMER_TYPE];
 											        if(isset($tmpDaysTo)&& $tmpDaysTo>0){
 											            $daysTo=$tmpDaysTo;
 											        }
-											        $tmpDaysMore=$GLOBALS['config']['calendar-averias-more' . $activity->CUSTOMER_TYPE];
+											        $tmpDaysMore=$GLOBALS['config']['calendar-averias-more-' . $activity->XA_CUSTOMER_TYPE];
 											        if(isset($tmpDaysMore)&& $tmpDaysMore>0){
 											            $daysMore=$tmpDaysMore;
 											        }
@@ -71,17 +70,17 @@
 											        if(isset($tmpDaysFrom)&& $tmpDaysFrom>=0){
 											            $daysFrom=$tmpDaysFrom;
 											        }
-											        $tmpDaysTo=$GLOBALS['config']['calendar-averias-to'];
+											        $tmpDaysTo=$GLOBALS['config']['calendar-provision-to'];
 											        if(isset($tmpDaysTo)&& $tmpDaysTo>0){
 											            $daysTo=$tmpDaysTo;
 											        }
-											        $tmpDaysMore=$GLOBALS['config']['calendar-averias-more'];
+											        $tmpDaysMore=$GLOBALS['config']['calendar-provision-more'];
 											        if(isset($tmpDaysMore)&& $tmpDaysMore>0){
 											            $daysMore=$tmpDaysMore;
 											        }
 											    }
 											    
-											    $cantSemanas=5;
+												$cantSemanas=5;
 											    if (strcmp(Dispatcher::SCHEDULE_MORE_DATES, $action) === 0){
 											        $daysTo=$daysMore;
 											        echo '<input type="hidden" name="' . Dispatcher::SCHEDULE_NO_MORE_DATES . '" value"true"/>';
@@ -98,7 +97,6 @@
 											    if($endConsultedDay->format("Y-m-d") > $lastDayOfMonth->format("Y-m-d")){
 											        $cantSemanas=6;
 											    }
-											    
 											    $calendar=$Controlador->createCalendar($daysFrom, $daysTo);
 											    
 											    $currentStrDate=date('Y-m-d');
@@ -232,17 +230,25 @@
 				 						    class="btn btn-lg btn-block btn-blue" onclick="onSubmitButton(this);">Ver m&aacute;s fechas</button>
 				 					</div>
 								</div>
-			 				<?php } else { ?>
+			 				<?php } else { 
+								 ?>
 			 					<div class="row action-modify">
 									<div class="col-xs-6 col-sm-6 padding-right-8px">
 										<button type="submit" id="confirm" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_CONFIRM_LABEL ?>"
 											class="btn btn-lg btn-block btn-primary" onclick="onSubmitButton(this);" disabled>Reagendar Cita</button>
 									</div>
 				 					<div class="col-xs-6 col-sm-6 padding-left-8px">
+										<input type="button"
+				 						 	name="<?php echo Dispatcher::OPTION_PARAM ?>" value="Contactar al callcenter"
+											 class="btn btn-lg btn-block btn-secondary" 
+											 onclick='
+											 	var event = new CustomEvent("callCallCenterShown", { "detail": "Example of an event" });
+												document.dispatchEvent(event);'
+				 							style="font-size: 14px;padding: 8px 5px;">
 				 						<button type="submit"
 				 						 	name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_CALLCENTER_CONTACT ?>"
 				 							class="btn btn-lg btn-block btn-secondary" onclick="onSubmitButton(this);"
-				 							style="font-size: 14px;padding: 8px 5px;">Contactar al callcenter</button>
+				 							style="font-size: 14px;padding: 8px 5px;display:none;">Contactar al callcenter</button>
 				 					</div>
 								</div>
 			 				<?php } ?>
