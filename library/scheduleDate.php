@@ -239,7 +239,7 @@
 									</div>
 				 					<div class="col-xs-6 col-sm-6 padding-left-8px">
 										<input type="button"
-				 						 	name="<?php echo Dispatcher::OPTION_PARAM ?>" value="Contactar al callcenter"
+				 						 	name="<?php echo Dispatcher::OPTION_PARAM ?>" value="Cancelar Cita"
 											 class="btn btn-lg btn-block btn-secondary" 
 											 onclick='
 											 	var event = new CustomEvent("callCallCenterShown", { "detail": "Example of an event" });
