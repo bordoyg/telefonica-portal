@@ -31,9 +31,12 @@ class Controlador {
 	const MSJ_CALLCENTER_CONTACT='<div class="row appointment-info"> <p> <span>Gracias por tu mensaje</span></p><p><span>Un representante se va a contactar con usted.</span></p></div>';
 	
     const SUB_STATUS_SIN_FECHA="SINFECHASELECCIONADA";
-	const SUB_STATUS_CANCELADA="El cliente respondio Cancelada";
-	const SUB_STATUS_CONFIRMADA="El cliente respondio Confirmada";
-	const SUB_STATUS_MODIFICADA="El cliente respondio Reagendada";
+	const SUB_STATUS_CANCELADA_LABEL="El cliente respondio Cancelada";
+	const SUB_STATUS_CONFIRMADA_LABEL="El cliente respondio Confirmada";
+	const SUB_STATUS_MODIFICADA_LABEL="El cliente respondio Reagendada";
+	const SUB_STATUS_CANCELADA="CANCELADA";
+	const SUB_STATUS_CONFIRMADA="CONFIRMADA";
+	const SUB_STATUS_MODIFICADA="MODIFICADA";
 	const CHANEL_LABEL="WEBREAGENDAMIENTO";
 	const CANCEL_REASON="OKCONFIRMACLIENTEWEB";
 	
@@ -384,7 +387,7 @@ class Controlador {
                 $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId . '/custom-actions/cancel', 'POST', $params);
                 
                 $currentDateTime=date('Y-m-d H:i:s');
-                $histroyReply=$activity->XA_HISTORY_REPLY . " | " . Controlador::SUB_STATUS_CANCELADA . ", " . Controlador::CHANEL_LABEL . ", " .  $currentDateTime;
+                $histroyReply=$activity->XA_HISTORY_REPLY . " | " . Controlador::SUB_STATUS_CANCELADA_LABEL . ", " . Controlador::CHANEL_LABEL . ", " .  $currentDateTime;
                 $params=array();
                 
                 $params['timeSlot']=NULL;
@@ -426,7 +429,7 @@ class Controlador {
                 $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId . '/custom-actions/move', 'POST',$params);
                 
                 $currentDateTime=date('Y-m-d H:i:s');
-                $histroyReply=$activity->XA_HISTORY_REPLY . " | " . Controlador::SUB_STATUS_CANCELADA . ", " . Controlador::CHANEL_LABEL . ", " .  $currentDateTime;
+                $histroyReply=$activity->XA_HISTORY_REPLY . " | " . Controlador::SUB_STATUS_CANCELADA_LABEL . ", " . Controlador::CHANEL_LABEL . ", " .  $currentDateTime;
                 $params=array();
                 
                 $params=array("setDate"=>array("date"=>NULL));
@@ -581,7 +584,7 @@ class Controlador {
             
             $scheduleTimeslot=substr($rawTimeslot, strrpos($rawTimeslot, '|') + 1);
             $currentDateTime=date('Y-m-d H:i:s');
-            $histroyReply=$activity->XA_HISTORY_REPLY . " | " . Controlador::SUB_STATUS_MODIFICADA . ", " . Controlador::CHANEL_LABEL . ", " .  $currentDateTime;
+            $histroyReply=$activity->XA_HISTORY_REPLY . " | " . Controlador::SUB_STATUS_MODIFICADA_LABEL . ", " . Controlador::CHANEL_LABEL . ", " .  $currentDateTime;
             
             $params=array();
             
@@ -640,7 +643,7 @@ class Controlador {
             $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
             $activity=$this->findActivityData($activityID);
             $currentDateTime=date('Y-m-d H:i:s');
-            $histroyReply=$activity->XA_HISTORY_REPLY . " | " . Controlador::SUB_STATUS_CONFIRMADA . ", " . Controlador::CHANEL_LABEL . ", " .  $currentDateTime;
+            $histroyReply=$activity->XA_HISTORY_REPLY . " | " . Controlador::SUB_STATUS_CONFIRMADA_LABEL . ", " . Controlador::CHANEL_LABEL . ", " .  $currentDateTime;
             
             $params=array();
 
