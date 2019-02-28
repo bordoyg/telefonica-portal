@@ -16,14 +16,14 @@ class Controlador {
 	
 	const ERROR_GENERIC_MSJ="<h1 class=\"resalt\">ERROR</h1> <p>No fue posible procesar tu solicitud, por favor int&eacute;ntalo m&aacute;s tarde.</p> ";
 	const ERROR_ORDEN_INEXISTENTE="La orden no existe";
-	const ERROR_ORDEN_NO_VIGENTE="Tu cita no puede ser confirmada o modificada debido a que no se encuentra vigente en este momento. ";
+	const ERROR_ORDEN_NO_VIGENTE="La fecha de tu cita con ETB ha expirado. Para volver agendar tu cita comun&iacute;cate al 3777777";
 	const ERROR_REAGENDAR_MSJ="<h1 class=\"resalt\">ERROR DE AGENDAMIENTO</h1> <p>No fue posible reagendar tu cita. Por favor inténtelo más tarde.</p>";
 	
-	const MSJ_ORDEN_CONFIRMADA="<h1>Cita Confirmada</h1><p>Tu cita fue confirmada para el</p>@diaCita@<h3>Recuerda: tiene que haber alguien en el domicilio y te vamos a avisar por SMS cuando el t&eacute;cnico este en camino.</h3><p>¡MUCHAS GRACIAS!</p>";
-	const MSJ_ORDEN_MODIFICADA="<h1>Cita Confirmada</h1><p>Tu cita fue confirmada para el</p>@diaCita@<h3>Recuerda: tiene que haber alguien en el domicilio y te vamos a avisar por SMS cuando el t&eacute;cnico este en camino.</h3><p>¡MUCHAS GRACIAS!</p>";
-	const MSJ_ORDEN_CANCELADA="<h1>Cita Cancelada</h1><p>Tu cita programada para el</p><h2>@diaCita@</h2><p>con el fin de Instalaci&oacute;n/reparaci&oacute;n ha sido CANCELADA correctamente.</p>";
+	const MSJ_ORDEN_CONFIRMADA="<h1>Cita Confirmada</h1><p>Tu cita fue confirmada para el dia </p>@diaCita@<h3>¡Gracias!</h3><p>¡MUCHAS GRACIAS!</p>";
+	const MSJ_ORDEN_MODIFICADA="<h1>Cita Reagendada</h1><p>La nueva fecha para tu cita es</p>@diaCita@<h3>¡Gracias!</h3><p>¡MUCHAS GRACIAS!</p>";
+	const MSJ_ORDEN_CANCELADA="<h1>Cita Cancelada</h1><p>Su cita fue Cancelada</p><h2>@diaCita@</h2><p> s&iacute; requiere agendar una nueva cita por favor comun&iacute;quese a nuestra l&iacute;nea de atenci&oacute;n 3777777</p>";
 	
-	const SUB_STATUS_CANCELADA="CANCELADA";
+	const SUB_STATUS_CANCELADA="DESPROGRAMADA";
 	const SUB_STATUS_CONFIRMADA="CONFIRMADA";
 	const SUB_STATUS_MODIFICADA="MODIFICADA";
 	
@@ -488,8 +488,7 @@ class Controlador {
             if(!isset($activity)
                 || !isset($activity->date)
                 || !isset($activity->startTime)
-                || !isset($activity->status)
-                || !isset($activity->XA_ROUTE)){
+                || !isset($activity->status)){
                     return false;
             }
 //             $dtCurrent= new DateTime("now");
@@ -507,8 +506,8 @@ class Controlador {
 //             Utils::logDebug('Estado localizable: ' . in_array($activity->status, Controlador::STATUS_VIGENTE));
 //             Utils::logDebug('XA_ROUTE: ' . (strcmp($activity->XA_ROUTE,"1")==0));
 //             Utils::logDebug('interval mayor a 20: ' . ($intervalInMinutes>=20));
-            
-            $isVigente= ($this->showTechnicanLocation() || $this->showCancel()) && (strcmp($activity->XA_ROUTE, "1")==0) /*&& $intervalInMinutes>=0*/;
+
+            $isVigente= ($this->showTechnicanLocation() || $this->showCancel());
             Utils::logDebug('isVigente: ' . ($isVigente));
             if($isVigente){
                 //Guardamos la url de acceso en el campo XA_PROJECT_CODE
@@ -536,10 +535,10 @@ class Controlador {
     function showCancel(){
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
-        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date, new DateTimeZone($activity->timeZone));
-        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'), new DateTimeZone($activity->timeZone));
+        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date, new DateTimeZone($activity->timeZoneIANA));
+        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'), new DateTimeZone($activity->timeZoneIANA));
  
-        return ($activity->status == Controlador::STATUS_PENDING) && ($activityDate > $currentDate);
+        return ($activity->status == Controlador::STATUS_PENDING) && ($activityDate >= $currentDate) && !$this->showTechnicanLocation();
     }
     function showSchedule(){
         return $this->showCancel();
@@ -548,11 +547,11 @@ class Controlador {
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
         $locationData=$this->findTechnicanLocation($activity);
-        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date, new DateTimeZone($activity->timeZone));
-        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'), new DateTimeZone($activity->timeZone));
+        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date, new DateTimeZone($activity->timeZoneIANA));
+        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'), new DateTimeZone($activity->timeZoneIANA));
         $currentDate=$currentDate->format("Y-m-d");
         $activityDate=$activityDate->format("Y-m-d");
-        Utils::logDebug("SHOWTECHNICANLOCATION: " . in_array($activity->status, Controlador::STATUS_LOCALIZABLE) . " - " . $activityDate == $currentDate);
+        Utils::logDebug("SHOWTECHNICANLOCATION: " . in_array($locationData->status, Controlador::STATUS_LOCALIZABLE) . " - " . $activityDate == $currentDate);
         return in_array($locationData->status, Controlador::STATUS_LOCALIZABLE) && $activityDate == $currentDate;
     }
     function addMessageError($msj){
