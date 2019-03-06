@@ -82,7 +82,7 @@ class Controlador {
         return $locationData;
     }
     function findAvailabilitySOAP($daysFrom, $daysTo) {
-        $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+        $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
         
         //Genero los dias para solicitar disponibilidad
@@ -206,7 +206,7 @@ class Controlador {
     }
     //@Deprecated
     function findAvailability($days) {
-        $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+        $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
         
         //Genero los dias para solicitar disponibilidad
@@ -316,7 +316,7 @@ class Controlador {
             }catch(Exception $e){
                 Utils::logDebug('Hubo un error al buscar los dias habilitados', $e);
                 try{
-                    $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+                    $activityID=$this->getActivityIdFromContext();
                     $params=array();
                     $params['XA_GETCAPACITYERROR']= "FALLA_CONSULTA_CAPACIDAD";
                     $params=json_encode($params);
@@ -355,7 +355,7 @@ class Controlador {
             Utils::logDebug('Hubo un error al crear el calendario', $e);
             $this->addMessageError(Controlador::ERROR_GENERIC_MSJ);
             try{
-                $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+                $activityID=$this->getActivityIdFromContext();
                 $params=array();
                 $params['XA_GETCAPACITYERROR']= "FALLA_MOSTRAR_CAPACIDAD";
                 $params=json_encode($params);
@@ -373,7 +373,7 @@ class Controlador {
     
     function excecuteCancelConfirm(){
         try {
-            $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+            $activityID=$this->getActivityIdFromContext();
             $activity=$this->findActivityData($activityID);
           
             if(strcmp(Controlador::AVERIA_LABEL, $this->isAveriaOProvision($activity))==0){
@@ -468,7 +468,8 @@ class Controlador {
     }
     function excecuteCallCenterContact(){
         try{
-            $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+            $activityID=$this->getActivityIdFromContext();
+            $activity=$this->findActivityData($activityID);
            
             $params=array("setDate"=>array("date"=>NULL));
             $params=json_encode($params);
@@ -508,7 +509,7 @@ class Controlador {
     
     function excecuteScheduleConfirmSOAP(){
         try{
-            $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+            $activityID=$this->getActivityIdFromContext();
             $activity=$this->findActivityData($activityID);
             //rawTimeslot Ej: 2018-08-01|AM
             $rawTimeslot=$_REQUEST[Controlador::SCHUEDULE_DATE_PARAM];
@@ -571,7 +572,7 @@ class Controlador {
     }
     function excecuteScheduleConfirm(){
         try{
-            $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+            $activityID=$this->getActivityIdFromContext();
             $activity=$this->findActivityData($activityID);
             //rawTimeslot Ej: 2018-08-01|AM
             $rawTimeslot=$_REQUEST[Controlador::SCHUEDULE_DATE_PARAM];
@@ -640,7 +641,7 @@ class Controlador {
 
     function excecuteConfirmConfirm(){
         try{
-            $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+            $activityID=$this->getActivityIdFromContext();
             $activity=$this->findActivityData($activityID);
             $currentDateTime=date('Y-m-d H:i:s');
             $histroyReply=$activity->XA_HISTORY_REPLY . " | " . Controlador::SUB_STATUS_CONFIRMADA_LABEL . ", " . Controlador::CHANEL_LABEL . ", " .  $currentDateTime;
@@ -704,7 +705,7 @@ class Controlador {
                 break;
             }
             if (!isset($activityID)){
-                $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+                $activityID=$this->getActivityIdFromContext();
             }
             if (!isset($activityID)){
                 //Expiramos la cookie

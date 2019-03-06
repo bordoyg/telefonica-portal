@@ -29,7 +29,7 @@ class ServiceRest {
     function request($path, $method, $params='' ){
         $this->process = curl_init();
 
-// $log = new RNCPHP\CO\LOG();
+        // $log = new RNCPHP\CO\LOG();
         // $log->LOG = $url;
         // $log->save();
         // $log = new RNCPHP\CO\LOG();

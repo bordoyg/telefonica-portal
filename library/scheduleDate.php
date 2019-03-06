@@ -45,7 +45,7 @@
 											try{
 											    $Controlador = $GLOBALS['Controlador'];
 											    $action=$_REQUEST[Dispatcher::OPTION_PARAM];
-											    $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+											    $activityID=$Controlador->getActivityIdFromContext();
 											    $activity=$Controlador->findActivityData($activityID);
 											    
 											    $daysFrom=$GLOBALS['config']['calendar-from'];
