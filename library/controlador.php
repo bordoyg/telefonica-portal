@@ -19,11 +19,11 @@ class Controlador {
 	const ERROR_ORDEN_NO_VIGENTE="La fecha de tu cita con ETB ha expirado. Para volver agendar tu cita comun&iacute;cate al 3777777";
 	const ERROR_REAGENDAR_MSJ="<h1 class=\"resalt\">ERROR DE AGENDAMIENTO</h1> <p>No fue posible reagendar tu cita. Por favor inténtelo más tarde.</p>";
 	
-	const MSJ_ORDEN_CONFIRMADA="<h1>Cita Confirmada</h1><p>Tu cita fue confirmada para el dia </p>@diaCita@<h3>¡Gracias!</h3><p>¡MUCHAS GRACIAS!</p>";
-	const MSJ_ORDEN_MODIFICADA="<h1>Cita Reagendada</h1><p>La nueva fecha para tu cita es</p>@diaCita@<h3>¡Gracias!</h3><p>¡MUCHAS GRACIAS!</p>";
+	const MSJ_ORDEN_CONFIRMADA="<h1>Cita Confirmada</h1><p>Tu cita fue confirmada para el dia </p>@diaCita@<p>¡MUCHAS GRACIAS!</p>";
+	const MSJ_ORDEN_MODIFICADA="<h1>Cita Reagendada</h1><p>La nueva fecha para tu cita es</p>@diaCita@<p>¡MUCHAS GRACIAS!</p>";
 	const MSJ_ORDEN_CANCELADA="<h1>Cita Cancelada</h1><p>Su cita fue Cancelada</p><h2>@diaCita@</h2><p> s&iacute; requiere agendar una nueva cita por favor comun&iacute;quese a nuestra l&iacute;nea de atenci&oacute;n 3777777</p>";
 	
-	const SUB_STATUS_CANCELADA="DESPROGRAMADA";
+	const SUB_STATUS_CANCELADA="CANCELADA";
 	const SUB_STATUS_CONFIRMADA="CONFIRMADA";
 	const SUB_STATUS_MODIFICADA="MODIFICADA";
 	
@@ -64,7 +64,7 @@ class Controlador {
          return $locationData;
     }
     function findAvailabilitySOAP($days) {
-        $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+        $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
         
         //Genero los dias para solicitar disponibilidad
@@ -168,7 +168,7 @@ class Controlador {
         return $dates;
     }
     function findAvailability($days) {
-        $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+        $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
         
         //Genero los dias para solicitar disponibilidad
@@ -315,9 +315,9 @@ class Controlador {
     
     function excecuteCancelConfirm(){
         try {
-            $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+            $activityID=$this->getActivityIdFromContext();
             $activity=$this->findActivityData($activityID);
-          
+            
             $params=array("setDate"=>array("date"=>NULL));
             $params=json_encode($params);
             //Se actualiza el dia = null
@@ -347,7 +347,7 @@ class Controlador {
     }
     function excecuteScheduleConfirmSOAP(){
         try{
-            $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+            $activityID=$this->getActivityIdFromContext();
             $activity=$this->findActivityData($activityID);
             //rawTimeslot Ej: 2018-08-01|AM
             $rawTimeslot=$_REQUEST[Controlador::SCHUEDULE_DATE_PARAM];
@@ -385,7 +385,7 @@ class Controlador {
     }
     function excecuteScheduleConfirm(){
         try{
-            $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+            $activityID=$this->getActivityIdFromContext();
             $activity=$this->findActivityData($activityID);
             //rawTimeslot Ej: 2018-08-01|AM
             $rawTimeslot=$_REQUEST[Controlador::SCHUEDULE_DATE_PARAM];
@@ -420,7 +420,7 @@ class Controlador {
 
     function excecuteConfirmConfirm(){
         try{
-            $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+            $activityID=$this->getActivityIdFromContext();
             $activity=$this->findActivityData($activityID);
             $params=array("XA_CONFIRMACITA"=>Controlador::SUB_STATUS_CONFIRMADA);
             $params=json_encode($params);
@@ -453,15 +453,8 @@ class Controlador {
     }
     function existActivity(){
         try{
-            Utils::logDebug('INICIO existActivity');
-            foreach($_GET as $key=>$val) {
-                $activityID=$this->desencriptar_AES($key);
-                break;
-            }
-            Utils::logDebug('existActivity: ' . $activityID);
-            if (!isset($activityID)){
-                $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
-            }
+            $activityID=$this->getActivityIdFromContext();
+            
             if (!isset($activityID)){
                 //Expiramos la cookie
                 setcookie(Controlador::ACTIVITY_PARAM, $activityID,time()-3600);
@@ -560,10 +553,13 @@ class Controlador {
     function getActivityIdFromContext(){
         Utils::logDebug('INICIO getActivityIdFromContext');
         foreach($_GET as $key=>$val) {
-            Utils::logDebug('Se va a desencriptar');
-            Utils::logDebug($key);
-            
-            $activityID=$this->desencriptar_AES($key);
+            Utils::logDebug('Primer parametro en url: ' . $key);
+            if(isset($key)){
+                Utils::logDebug('Se va a desencriptar');
+                Utils::logDebug($key);
+                
+                $activityID=$this->desencriptar_AES($key);
+            }
             break;
         }
         if (!isset($activityID)){
