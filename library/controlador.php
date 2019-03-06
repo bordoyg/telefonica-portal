@@ -576,8 +576,8 @@ class Controlador {
             $cipher->Mode->ID =1;
             $cipher->IV->Value = 'p0r7417313f0n1c4';
             $cipher->KeySize->LookupName = "128_bits";
-            $cipher->Key = 'p0r7417313f0n1c4';
-            $cipher->EncryptedText =base64_decode($encrypted_data_hex.'==');
+            $cipher->Key = 'p0r7417313f0n1c4';    
+            $cipher->EncryptedText =$this->base64url_decode($encrypted_data_hex.'==');
             
             $cipher->decrypt();
             $decrypted_text = $cipher->Text;
@@ -590,6 +590,13 @@ class Controlador {
             Utils::logDebug($encrypted_data_hex, $err);
             return null;
         }
+    }
+    function base64url_encode( $data ){
+        return rtrim( strtr( base64_encode( $data ), '+/', '-_'), '=');
+    }
+    
+    function base64url_decode( $data ){
+        return base64_decode( strtr( $data, '-_', '+/') . str_repeat('=', 3 - ( 3 + strlen( $data )) % 4 ));
     }
 }
 ?>
