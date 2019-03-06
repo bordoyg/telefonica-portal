@@ -14,7 +14,7 @@
         </div>
     </header>
 
-    <div class="content">
+    <div class="content" style="min-height: 561px;">
         <div class="wrap">
             <section class="type1-cont">
                 <h1>En Camino</h1>

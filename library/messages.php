@@ -12,10 +12,12 @@
         </div>
     </header>
 
-    <div class="content">
+    <div class="content" style="min-height: 561px;">
         <div class="wrap">
             <section class="type1-cont">
+            	<p>
                 <?php echo $_REQUEST[Controlador::MESSAGE_PARAM]; ?>
+                </p>
                 <?php 
 				if(strcmp(Controlador::ERROR_ORDEN_INEXISTENTE, $_REQUEST[Controlador::MESSAGE_PARAM])!=0
 				    && strcmp(Controlador::ERROR_ORDEN_NO_VIGENTE, $_REQUEST[Controlador::MESSAGE_PARAM])!=0){
