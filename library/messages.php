@@ -12,7 +12,7 @@
         </div>
     </header>
 
-    <div class="content" style="min-height: 561px;">
+    <div class="content">
         <div class="wrap">
             <section class="type1-cont">
             	<p>
