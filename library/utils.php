@@ -1,7 +1,7 @@
 <?php 
 class Utils{
     static function logDebug($msj, Exception $e=null){
-        if(strcmp($GLOBALS['config']['logDebug'],"1")!=0){
+        if(strcmp($GLOBALS['config']['logDebug'],"1")!=0 && strcmp($GLOBALS['config']['logDebug'],"true")!=0){
             return;
         }
         if($e!=null){
