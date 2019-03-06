@@ -24,7 +24,6 @@ $Controlador = $dispatcher->getControlador();
 					    echo '<div class="box_cont text_center">';
 						echo '<h3>';
 						$activityID=$dispatcher->getControlador()->getActivityIdFromContext();
-					    //$activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
 						$activity=$dispatcher->getControlador()->findActivityData($activityID);
 						 // LOG
             // $log = new RNCPHP\CO\LOG();

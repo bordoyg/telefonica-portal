@@ -63,7 +63,7 @@ class Controlador {
          return $locationData;
     }
     function findAvailabilitySOAP($days) {
-        $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+        $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
         
         //Genero los dias para solicitar disponibilidad
@@ -170,7 +170,7 @@ class Controlador {
         return $dates;
     }
     function findAvailability($days) {
-        $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+        $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
         
         //Genero los dias para solicitar disponibilidad
@@ -317,7 +317,7 @@ class Controlador {
     
     function excecuteCancelConfirm(){
         try {
-            $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+            $activityID=$this->getActivityIdFromContext();
             $activity=$this->findActivityData($activityID);
           
             $params=array("setDate"=>array("date"=>NULL));
@@ -346,7 +346,7 @@ class Controlador {
 
     function excecuteScheduleConfirmSOAP(){
         try{
-            $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+            $activityID=$this->getActivityIdFromContext();
             $activity=$this->findActivityData($activityID);
             //rawTimeslot Ej: 2018-08-01|AM
             $rawTimeslot=$_REQUEST[Controlador::SCHUEDULE_DATE_PARAM];
@@ -385,7 +385,7 @@ class Controlador {
 
     function excecuteScheduleConfirm(){
         try{
-            $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+            $activityID=$this->getActivityIdFromContext();
             $activity=$this->findActivityData($activityID);
             //rawTimeslot Ej: 2018-08-01|AM
             $rawTimeslot=$_REQUEST[Controlador::SCHUEDULE_DATE_PARAM];
@@ -420,7 +420,7 @@ class Controlador {
 
     function excecuteConfirmConfirm(){
         try{
-            $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+            $activityID=$this->getActivityIdFromContext();
             $activity=$this->findActivityData($activityID);
             $params=array("XA_CONFIRMACITA"=>Controlador::SUB_STATUS_CONFIRMADA);
             $params=json_encode($params);
@@ -456,7 +456,7 @@ class Controlador {
                 break;
             }
             if (!isset($activityID)){
-                $activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
+                $activityID=$this->getActivityIdFromContext();
             }
             if (!isset($activityID)){
                 //Expiramos la cookie
