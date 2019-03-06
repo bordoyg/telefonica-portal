@@ -19,39 +19,39 @@ $Controlador = $dispatcher->getControlador();
                             $dispatcher = $GLOBALS['dispatcher'];
                             $Controlador = $dispatcher->getControlador();
                             if($Controlador->showCancel() && !$Controlador->showTechnicanLocation()) {
-                            //$activityID=$_COOKIE[Controlador::ACTIVITY_PARAM];
-                            $activityID=$dispatcher->getControlador()->getActivityIdFromContext();
-                            $activity=$dispatcher->getControlador()->findActivityData($activityID);
-                            $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
-                            $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
+                                
+                                $activityID=$dispatcher->getControlador()->getActivityIdFromContext();
+                                $activity=$dispatcher->getControlador()->findActivityData($activityID);
+                                $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
+                                $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
                             
                         ?>
-                        <div class="row appointment-info">
-                            <p>
-                                <span>Tu cita para </span>
-                                <?
-                                    if(strpos($activity->activityType, 'PRO')===0){
-                                        echo "<span>instalación</span>";
-                                    }else if(strpos($activity->activityType, 'REP')===0){
-                                        echo "<span>reparación</span>";
-                                    }
-                                ?>
-                            </p>
-                            <!-- <p>
-                                
-                                <span>Instalación/Reparación </span>
-                            </p> -->
-                            <p>
-                                <span>est&aacute; progamada para el </span>
-                            </p>
-                            <p>
-                                <span class="appointment-date-formatted"><?php echo $dateStart->format('d-M-Y'); ?></span>
-                                <span> </span>
-                            </p>
-                            <p>
-                                <span>entre las <?php echo $dateStart->format('H'); ?> y las <?php echo $dateEnd->format('H\h\s'); ?>.</span>
-                            </p>
-                        </div>
+                                <div class="row appointment-info">
+                                    <p>
+                                        <span>Tu cita para </span>
+                                        <?
+                                            if(strpos($activity->activityType, 'PRO')===0){
+                                                echo "<span>instalación</span>";
+                                            }else if(strpos($activity->activityType, 'REP')===0){
+                                                echo "<span>reparación</span>";
+                                            }
+                                        ?>
+                                    </p>
+                                    <!-- <p>
+                                        
+                                        <span>Instalación/Reparación </span>
+                                    </p> -->
+                                    <p>
+                                        <span>est&aacute; progamada para el </span>
+                                    </p>
+                                    <p>
+                                        <span class="appointment-date-formatted"><?php echo $dateStart->format('d-M-Y'); ?></span>
+                                        <span> </span>
+                                    </p>
+                                    <p>
+                                        <span>entre las <?php echo $dateStart->format('H'); ?> y las <?php echo $dateEnd->format('H\h\s'); ?>.</span>
+                                    </p>
+                                </div>
                         <?php } ?>
                         <?php if($Controlador->showConfirm() && !$Controlador->showTechnicanLocation()) { ?>
                         <div class="row action-confirm">
