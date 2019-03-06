@@ -1,6 +1,8 @@
 <?php
 try{
     require_once(APPPATH . 'widgets/custom/library/utils.php');
+    
+    
     $translateMonth=array();
     $translateMonth['January']='Enero';
     $translateMonth['February']='Febrero';
@@ -22,6 +24,7 @@ try{
     }
     $dispatcher = $GLOBALS['dispatcher'];
 
+    Utils::logDebug('INICIO basicInit');
     //validacion de existencia
     if($dispatcher->getControlador()->existActivity()){
         //Validacion vigencia

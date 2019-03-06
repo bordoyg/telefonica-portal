@@ -40,7 +40,7 @@ class Dispatcher {
                 try{
                     $GLOBALS['config'][$key] = RNCPHP\MessageBase::fetch( $val )->Value;
                 }catch(\Exception $e){
-
+                    echo '<div key="logDebug" time="' . time() . '" style="display:none;"><pre>Hubo un error al levantar la configuracion ' . $key . ' </pre></div>';
                 }
                 
             }
