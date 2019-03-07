@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-<head></head>
 <?php require_once(APPPATH . 'widgets/custom/library/header.php'); ?>
 <body>
     <header>

@@ -3,6 +3,7 @@
 <head></head>
 <?php 
 require_once(APPPATH . 'widgets/custom/library/header.php'); 
+
 $dispatcher = $GLOBALS['dispatcher'];
 $Controlador = $dispatcher->getControlador();
 ?>
