@@ -853,11 +853,11 @@ class Controlador {
         }
     }
     function base64url_encode( $data ){
-        return rtrim( strtr( base64_encode( $data ), ':/', '-_'), '=');
+        return rtrim( strtr( base64_encode( $data ), '+/', ':_'), '=');
     }
     
     function base64url_decode( $data ){
-        return base64_decode( strtr( $data, '-_', ':/') . str_repeat('=', 3 - ( 3 + strlen( $data )) % 4 ));
+        return base64_decode( strtr( $data, ':_', '+/') . str_repeat('=', 3 - ( 3 + strlen( $data )) % 4 ));
     }
     function isAveriaOProvision($activity){
         // if(in_array($activity->XA_WORK_TYPE, Controlador::WORKTYPE_AVERIAS)){
