@@ -6,8 +6,10 @@ class Controlador {
     const MESSAGE_PARAM = 'errorMessage';
     const MESSAGES_MODAL_URL = 'messagesModal.php';
 	const ACTIVITY_PARAM = 'activity';
-	const LOCATION_TECHNICAN_PARAM='locationTechnican';
-	const LOCATION_CUSTOMER_PARAM='locationCustomer';
+	const LOCATION_TECHNICAN_LON_PARAM='locationTechnicanLon';
+	const LOCATION_TECHNICAN_LAT_PARAM='locationTechnicanLat';
+	const LOCATION_CUSTOMER_LON_PARAM='locationCustomerLon';
+	const LOCATION_CUSTOMER_LAT_PARAM='locationCustomerLat';
 	const LOCATION_TECHNICAN="technicanLocation";
 	const SCHUEDULE_DATE_PARAM='timeSlot';
 	const STATUS_LOCALIZABLE=array("onTheWay", "started");
@@ -45,7 +47,8 @@ class Controlador {
     function findTechnicanLocation($activity){
         //Obtenemos la posicion del domicilio
         if(isset($activity->latitude) && isset($activity->longitude)){
-            $_REQUEST[Controlador::LOCATION_CUSTOMER_PARAM]=$activity->longitude.','.$activity->latitude;
+            $_REQUEST[Controlador::LOCATION_CUSTOMER_LON_PARAM]=$activity->longitude;
+            $_REQUEST[Controlador::LOCATION_CUSTOMER_LAT_PARAM]=$activity->latitude;
         }
         
         //Obtenemos la posicion del tecnico
@@ -54,9 +57,8 @@ class Controlador {
          
 
          if(isset($locationData->coordinates) && isset($locationData->coordinates->latitude) && isset($locationData->coordinates->longitude)){
-             $lat=$locationData->coordinates->latitude;
-             $lng=$locationData->coordinates->longitude;
-             $_REQUEST[Controlador::LOCATION_TECHNICAN_PARAM]=  $lng. ',' . $lat ;
+             $_REQUEST[Controlador::LOCATION_TECHNICAN_LON_PARAM]= $locationData->coordinates->longitude;
+             $_REQUEST[Controlador::LOCATION_TECHNICAN_LAT_PARAM]= $locationData->coordinates->latitude;
          }else{
              $this->addMessageError("No se puedo establecer la ubicacion del t&eacute;cnico, intenta mas tarde");
          }
