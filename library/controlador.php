@@ -19,8 +19,8 @@ class Controlador {
 	const ERROR_GENERIC_MSJ='<div class="row appointment-info"> <p> <span>No fue posible procesar tu </span></p><p><span>solicitud.</span></p><p><span>Por favor intentalo m&aacute;s</span></p><p><span>tarde.</span></p></div>';
     const ERROR_ORDEN_INEXISTENTE='<div class="row appointment-info"><p><span class="text-bold">La orden no existe </span></p></div>';
     
-	const ERROR_ORDEN_NO_VIGENTE_AVERIAS='<div class="row appointment-info"><p><span>Tu cita no puede ser confirmada</span></p><p><span>o modificada debido a que no se</span></p><p><span>encuentra vigente en este</span></p><p><span>momento.</span></p><p><span>Si tienes alguna inquietud puedes</span></p><p><span>comunicarte a la l&iacute;nea</span></p><p><span class="contact-number text-underline">0800-222-8114</span><span></span></p></div>';
-	const ERROR_ORDEN_NO_VIGENTE_PROVISION='<div class="row appointment-info"><p><span>Tu cita no puede ser confirmada</span></p><p><span>o modificada debido a que no se</span></p><p><span>encuentra vigente en este</span></p><p><span>momento.</span></p><p><span>Si tienes alguna inquietud puedes</span></p><p><span>comunicarte a la l&iacute;nea</span></p><p><span class="contact-number text-underline">0800-222-8112</span><span></span></p></div>';
+	const ERROR_ORDEN_NO_VIGENTE_AVERIAS='<div class="row appointment-info"><p><span>Tu cita no puede ser confirmada</span></p><p><span>o modificada debido a que no se</span></p><p><span>encuentra vigente en este</span></p><p><span>momento.</span></p><p><span>Si ten&eacute;s alguna inquietud pod&eacute;s</span></p><p><span>comunicarte al</span></p><p><span class="contact-number text-underline">0800-222-8114</span><span></span></p></div>';
+	const ERROR_ORDEN_NO_VIGENTE_PROVISION='<div class="row appointment-info"><p><span>Tu cita no puede ser confirmada</span></p><p><span>o modificada debido a que no se</span></p><p><span>encuentra vigente en este</span></p><p><span>momento.</span></p><p><span>Si ten&eacute;s alguna inquietud pod&eacute;s</span></p><p><span>comunicarte al</span></p><p><span class="contact-number text-underline">0800-222-8112</span><span></span></p></div>';
 	
 	const MSJ_ORDEN_CONFIRMADA='<div class="row appointment-info"><p><span>Tu cita fue confirmada </span></p><p><span>para el </span></p><p><span class="appointment-date-formatted">@@$dateFormatted@@</span><span> </span></p><p><span>entre las @@$dateStartHours@@ y las @@$dateEndHours@@.</span></p></div><div class="row appointment-remember-ad text-left"><p><span class="text-bold">Recordá:</span><span>&nbsp; tiene que haber alguien en el domicilio y te vamos a avisar por SMS cuando el t&eacute;cnico est&eacute; en camino.</span></p></div>';
 	const MSJ_ORDEN_MODIFICADA='<div class="row appointment-info"><p><span>Tu cita fue </span></p><p><span>reagendada para el</span></p><p><span class="appointment-date-formatted">@@$dateFormatted@@</span><span> </span></p><p><span>entre las @@$dateStartHours@@ y las @@$dateEndHours@@.</span></p></div><div class="row appointment-remember-ad text-left"><p><span class="text-bold">Recordá:</span></p><p><span>&#149;Tiene que haber alguien en el domicilio</span></p><p><span>&#149;Te vamos a avisar por SMS cuando el t&eacute;cnico </span></p><p><span>est&eacute; en camino.</span></p></div>';
@@ -31,6 +31,7 @@ class Controlador {
 	const MSJ_CALLCENTER_CONTACT='<div class="row appointment-info"> <p> <span>Gracias por tu mensaje</span></p><p><span>Un representante se va a contactar con usted.</span></p></div>';
 	
     const SUB_STATUS_SIN_FECHA="SINFECHASELECCIONADA";
+    const SUB_STATUS_CANCELA_CLIENTE="CANCELA_CLIENTEWEB";
 	const SUB_STATUS_CANCELADA_LABEL="El cliente respondio Cancelada";
 	const SUB_STATUS_CONFIRMADA_LABEL="El cliente respondio Confirmada";
 	const SUB_STATUS_MODIFICADA_LABEL="El cliente respondio Reagendada";
@@ -39,6 +40,7 @@ class Controlador {
 	const SUB_STATUS_MODIFICADA="MODIFICADA";
 	const CHANEL_LABEL="WEBREAGENDAMIENTO";
 	const CANCEL_REASON="OKCONFIRMACLIENTEWEB";
+	const EXTERNAL_ACTION_RESCHEDULE="RESCHEDULE";
 	
 	const WORKTYPE_AVERIAS=array("REP_ADSL","REP_FTTH","REP_FTTN","REP_NO_IMP","REP_MATERIAL","REP_ADSL_INEST","REP_OTT","REP_IPTV","REP_RISK","REP_STB","REP_STB_2","REP_SUPERVISION");
 	const WORKTYPE_PROVISION=array("PRO_CHANGE_EQUIPMENT","PRO_CHANGE_TECHNOLOGY","PRO_MOVE","PRO_CLOSET_FTTN","PRO_CLOSET_FTTN_KIT","PRO_UNINSTALL","PRO_INSTALL","PRO_REVCLOSET_FTTN","PRO_INSTALL_IPTV","PRO_INSTALL_KIT","PRO_INSTALL_2","PRO_SUPERV_FTTH","PRO_FALTA_MAT","PRO_QUALITY_INST");
@@ -435,7 +437,7 @@ class Controlador {
                 $params=array("setDate"=>array("date"=>NULL));
                 $params['XA_REMINDER_REPLY']= Controlador::SUB_STATUS_SIN_FECHA;
                 $params['XA_CONFIRMATIONCHANNEL']= Controlador::CHANEL_LABEL;
-                $params['XA_PENDING_EXTERNAL_ACTION']="RESCHEDULE";
+                $params['XA_PENDING_EXTERNAL_ACTION']=Controlador::EXTERNAL_ACTION_RESCHEDULE;
                 $params['XA_DATETIME_REPLY']= $currentDateTime;
                 $params['XA_HISTORY_REPLY']= $histroyReply;
 
@@ -470,7 +472,7 @@ class Controlador {
         try{
             $activityID=$this->getActivityIdFromContext();
             $activity=$this->findActivityData($activityID);
-           
+            
             $params=array("setDate"=>array("date"=>NULL));
             $params=json_encode($params);
             $currentDateTime=date('Y-m-d H:i:s');
@@ -478,22 +480,23 @@ class Controlador {
             //Se actualiza el dia = null
             $this->service->request('/rest/ofscCore/v1/activities/' . $activityID . '/custom-actions/move', 'POST', $params);
             
+            
             $params=array();
+            if(strcmp(Controlador::AVERIA_LABEL, $this->isAveriaOProvision($activity))==0){
+                $params['XA_REMINDER_REPLY']= Controlador::SUB_STATUS_SIN_FECHA;
+                
+            }
+            if(strcmp(Controlador::PROVISION_LABEL, $this->isAveriaOProvision($activity))==0){
+                $params['XA_REMINDER_REPLY']= Controlador::SUB_STATUS_CANCELA_CLIENTE;
+            }
             
             $params['timeSlot']= NULL;
-            $params['XA_REMINDER_REPLY']= Controlador::SUB_STATUS_SIN_FECHA;
             $params['XA_EXTERNAL_ACTION']= "";
-            $params['XA_PENDING_EXTERNAL_ACTION']="RESCHEDULE";
+            $params['XA_PENDING_EXTERNAL_ACTION']=Controlador::EXTERNAL_ACTION_RESCHEDULE;
             $params['XA_DATETIME_REPLY']= $currentDateTime;
             $params['XA_HISTORY_REPLY']=$histroyReply;
-            $params['XA_REMINDER_REPLY']="RESCHEDULE";
+            $params['XA_REMINDER_REPLY']=Controlador::EXTERNAL_ACTION_RESCHEDULE;
 
-
-            // Array push gonzalo
-            // array_push($params, array('timeSlot'=>NULL));
-            // array_push($params, array('XA_REMINDER_REPLY'=>Controlador::SUB_STATUS_SIN_FECHA));
-            // array_push($params, array('XA_EXTERNAL_ACTION'=>""));
-            
             $params=json_encode($params);
             //Se actualiza el timeslot y el estado XA_REMINDER_REPLY
             $this->service->request('/rest/ofscCore/v1/activities/' . $activityID, 'PATCH', $params);
@@ -594,7 +597,7 @@ class Controlador {
             $params["XA_HISTORY_REPLY"]= $histroyReply;
             $params["XA_CONFIRMATIONCHANNEL"]= Controlador::CHANEL_LABEL;
             $params["XA_DATETIME_REPLY"]= $currentDateTime;
-            $params["XA_PENDING_EXTERNAL_ACTION"]= "RESCHEDULE";
+            $params["XA_PENDING_EXTERNAL_ACTION"]= Controlador::EXTERNAL_ACTION_RESCHEDULE;
 
             //array push gonzalo
             // array_push($params, array("timeSlot", $scheduleTimeslot));
@@ -728,6 +731,7 @@ class Controlador {
     }
 
     function isValidActivity(){
+        return true;
         try{
             $activityID=$this->getActivityIdFromContext();
             $activity=$this->findActivityData($activityID);
@@ -782,6 +786,7 @@ class Controlador {
         return ($activity->status == Controlador::STATUS_PENDING) && ($activityDate >= $currentDate);
     }
     function showSchedule(){
+        return true;
         return $this->showConfirm();
     }
     function showTechnicanLocation(){
