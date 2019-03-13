@@ -70,11 +70,11 @@
 				      $noMoreDates=$_REQUEST[Dispatcher::OPTION_PARAM ];
  					  $noMoreDatesBool=strcmp($noMoreDates, Dispatcher::SCHEDULE_MORE_DATES)==0;
  					  if($noMoreDatesBool){
- 					      ?>
- 					      	<a class="bigbtn" href="#">Reagendar Cita</a>
-                            <a class="smallbtn sl" href="#">Confirmar<br>Cita Original</a>
-                            <a class="smallbtn sr" href="#">Cancelar<br>Cita Original</a>
- 					      <?php 
+ 					      echo '<a class="bigbtn" href="#">Reagendar Cita</a>';
+ 					      echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CONFIRMAR_LABEL . '"';
+ 					      echo 'class="smallbtn sl" >Confirmar<br>Cita Original</button>';
+ 					      echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CANCELAR_LABEL . '"';
+ 					      echo 'class="smallbtn sr" >Cancelar<br>Cita Original</button>';
  					  }else{
  					      ?>
  					      	<a class="smallbtn sl actl" href="#">Reagendar Cita</a>
