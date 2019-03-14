@@ -32,7 +32,6 @@
             	        for($j=0; $j<count($availability); $j++){
             	            if(isset($availability[$j]->timeSlots)){
             	                for($k=0; $k<count($availability[$j]->timeSlots); $k++){
-            	                    echo 'LLEGOACA4';
             	                    echo '<input type="hidden" id="' . $availability[$j]->date->format('Ymd') . '"';
             	                    echo ' data-name="' . $availability[$j]->timeSlots[$k]->name . '"';
             	                    echo ' data-label="' . $availability[$j]->timeSlots[$k]->label . '"';
