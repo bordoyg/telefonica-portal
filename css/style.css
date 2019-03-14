@@ -189,7 +189,8 @@ section h2 {
 .bigbtn {
     position: relative;
     float: left;
-    width: calc(100% - 26px);
+    /*width: calc(100% - 26px);*/
+    width: 100%;
     padding: 10px;
     text-align: center;
     line-height: 100%;
@@ -199,6 +200,7 @@ section h2 {
     background: #009bcf;
     border: 3px solid #009bcf;
     border-radius: 30px;
+    display: inline-block; /* Modified */
 }
 
 .bigbtn:hover,
@@ -212,7 +214,7 @@ section h2 {
 .smallbtn {
     position: relative;
     float: left;
-    width: calc(50% - 31px);
+    width: 45%;
     padding: 10px;
     text-align: center;
     line-height: 100%;
@@ -222,6 +224,7 @@ section h2 {
     background: #fff;
     border: 3px solid #009bcf;
     border-radius: 30px;
+    display: inline-block; /* Modified */
 }
 .smallbtnselect{
 	margin: 0px 50% 10px 29%;

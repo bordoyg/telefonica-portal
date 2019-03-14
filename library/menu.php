@@ -41,11 +41,11 @@ $Controlador = $dispatcher->getControlador();
 
 				    if($Controlador->showSchedule()){
 					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::SCHEDULE_DATE_LABEL . '"';
-					    echo 'class="smallbtn sl" >Reagendar</button>';
+					    echo 'class="smallbtn sl col-md-6 style="margin: auto 10px 20px 3%;" >Reagendar</button>';
 					}
 					if($Controlador->showCancel()){
 					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CANCELAR_LABEL . '"';
-					    echo 'class="smallbtn sl" >Cancelarla</button>';
+					    echo 'class="smallbtn sr col-md-6" style="margin: auto 3% 15px 0px;">Cancelarla</button>';
 					}
 					if($Controlador->showTechnicanLocation()){
 					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::UBICACION_LABEL . '"';
