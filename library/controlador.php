@@ -29,6 +29,14 @@ class Controlador {
 	const SUB_STATUS_CONFIRMADA="CONFIRMADA";
 	const SUB_STATUS_MODIFICADA="MODIFICADA";
 	
+	const APROVISIONAMIENTO="APROV";
+	const ASEGURAMIENTO="ASEG";
+	const RECUPERO="REC";
+	
+	const APROVISIONAMIENTO_VALUES=array('INS','COB_INS', 'FTTC_INS');
+	const ASEGURAMIENTO_VALUES=array('MOD','COB_MOD');
+	const RECUPERO_VALUES=array('RET','FTTC_RET');
+	
     private $service=NULL;
     private $serviceSoap=NULL;
     
@@ -79,23 +87,11 @@ class Controlador {
             array_push($params, array('date'=>$date));
         }
         
-        array_push($params, array('calculate_duration'=>true));
-        array_push($params, array('calculate_travel_time'=>true));
+        array_push($params, array('calculate_duration'=>false));
+        array_push($params, array('calculate_travel_time'=>false));
         array_push($params, array('calculate_work_skill'=>true));
-        array_push($params, array('return_time_slot_info'=>true));
-        array_push($params, array('determine_location_by_work_zone'=>true));
-        array_push($params, array('dont_aggregate_results'=>true));
-        array_push($params, array('min_time_to_end_of_time_slot'=>0));
-        array_push($params, array('activity_field'=>array('name'=>'XA_WORK_ZONE_KEY', 'value'=>$activity->XA_WORK_ZONE_KEY)));
-        array_push($params, array('activity_field'=>array('name'=>'XA_QUADRANT', 'value'=>$activity->XA_QUADRANT)));
-        array_push($params, array('activity_field'=>array('name'=>'XA_ACCESS_TECHNOLOGY', 'value'=>$activity->XA_ACCESS_TECHNOLOGY)));
-        array_push($params, array('activity_field'=>array('name'=>'worktype_label', 'value'=>$activity->activityType)));
-        array_push($params, array('activity_field'=>array('name'=>'XA_WORK_TYPE', 'value'=>$activity->XA_WORK_TYPE)));
-        array_push($params, array('activity_field'=>array('name'=>'XA_NUMBER_DECODERS', 'value'=>0)));
-        array_push($params, array('activity_field'=>array('name'=>'XA_CUSTOMER_SEGMENT', 'value'=>$activity->XA_CUSTOMER_SEGMENT)));
-        array_push($params, array('activity_field'=>array('name'=>'XA_ESTRATO', 'value'=>$activity->XA_ESTRATO)));
-        array_push($params, array('activity_field'=>array('name'=>'XA_VELOCIDAD', 'value'=>$activity->XA_VELOCIDAD)));
-        array_push($params, array('activity_field'=>array('name'=>'XA_NOT_ACCOMPLISHED', 'value'=>0)));
+        array_push($params, array('activity_field'=>array('name'=>'work_skill', 'value'=>$activity->XA_ACT_WORKSILL)));
+        array_push($params, array('activity_field'=>array('name'=>'location', 'value'=>$activity->XA_Zone)));
         
         $response=$this->serviceSoap->request("/soap/capacity/", "urn:toa:capacity", "get_capacity", $params);
         $response=$response['SOAP-ENV:ENVELOPE']['SOAP-ENV:BODY']['URN:GET_CAPACITY_RESPONSE'];
@@ -169,91 +165,7 @@ class Controlador {
 
         return $dates;
     }
-    function findAvailability($days) {
-        $activityID=$this->getActivityIdFromContext();
-        $activity=$this->findActivityData($activityID);
-        
-        //Genero los dias para solicitar disponibilidad
-        $queryString='dates=';
-        $date = date("Y-m-d");
-        $queryString=$queryString . $date;
-        
-        for($i=0; $i<$days - 1; $i++){
-            $newDate = strtotime($date."+ 1 days");
-            $date = date("Y-m-d",$newDate);
-            
-            $queryString=$queryString . ',' . $date;
-        }
-        
-        $queryString=$queryString . '&activityType=' . $activity->activityType;
-        $queryString=$queryString . '&XA_WORK_ZONE_KEY=' . $activity->XA_WORK_ZONE_KEY;
-        $queryString=$queryString . '&XA_WORK_TYPE=' . $activity->XA_WORK_TYPE;
-        $queryString=$queryString . '&XA_ACCESS_TECHNOLOGY=' . $activity->XA_ACCESS_TECHNOLOGY;
-        $queryString=$queryString . '&XA_QUADRANT=' . $activity->XA_QUADRANT;
-        $queryString=$queryString . '&XA_NUMBER_DECODERS=0';//No viene en la actividad, segun ejemplo va con 0
-        $queryString=$queryString . '&determineAreaByWorkZone=true';
-        $queryString=$queryString . '&XA_NOT_ACCOMPLISHED=' . $activity->XA_NOT_ACCOMPLISHED;
-        $queryString=$queryString . '&XA_CUSTOMER_SEGMENT=' . $activity->XA_CUSTOMER_SEGMENT;
-        $queryString=$queryString . '&XA_ESTRATO=' . $activity->XA_ESTRATO;
-        $queryString=$queryString . '&XA_VELOCIDAD=' . $activity->XA_VELOCIDAD;
-        $queryString=$queryString . '&XA_NOT_ACCOMPLISHED=' . $activity->XA_NOT_ACCOMPLISHED;
-        
-        Utils::logDebug($queryString);
-        $activityBookingOptions=$this->service->request('/rest/ofscCapacity/v1/activityBookingOptions', 'GET', $queryString);
-        Utils::logDebug(json_encode($activityBookingOptions));
-        $timeSlotsMap=array();
-        if(isset($activityBookingOptions->timeSlotsDictionary)){
-            for($i=0; $i<count($activityBookingOptions->timeSlotsDictionary); $i++){
-                $timeSlotsMap[$activityBookingOptions->timeSlotsDictionary[$i]->label]= $activityBookingOptions->timeSlotsDictionary[$i];
-            }
-        }
-
-        $dates=array();
-        for($i=0; $i<count($activityBookingOptions->dates); $i++){
-            $timeSlots=array();
-            if(isset($activityBookingOptions->dates[$i]->areas)){
-                for($j=0; $j<count($activityBookingOptions->dates[$i]->areas); $j++){
-                    if(isset($activityBookingOptions->dates[$i]->areas[$j]->timeSlots)){
-                        for($k=0; $k<count($activityBookingOptions->dates[$i]->areas[$j]->timeSlots); $k++){
-                            if(isset($activityBookingOptions->dates[$i]->areas[$j]->timeSlots[$k]->remainingQuota)
-                                && $activityBookingOptions->dates[$i]->areas[$j]->timeSlots[$k]->remainingQuota>0){
-                                    
-                                    array_push($timeSlots, $timeSlotsMap[$activityBookingOptions->dates[$i]->areas[$j]->timeSlots[$k]->label]);
-                            }
-                        }
-                    }
-                }
-            }
-            //Ordenamiento Timeslots
-            $sortedTimeSlots=array();
-            $dateTimeConverter=new DateTime();
-            $minTimeSlotFrom='99:99:99';
-            $minTimeSlot=0;
-            for($l=0; $l<count($timeSlots); $l++){
-                for($m=0; $m<count($timeSlots); $m++){
-                    $dateTimeConverter= $dateTimeConverter->createFromFormat('H:i:s', $timeSlots[$m]->timeFrom);
-                    $currentTimeSlotFrom=$dateTimeConverter->format('H:i:s');
-                    $minTimeSlot=$timeSlots[$m];
-                    if(strcmp($currentTimeSlotFrom, $minTimeSlotFrom)<0){
-                        $minTimeSlotFrom=$currentTimeSlotFrom;
-                        $minTimeSlot=$timeSlots[$m];
-                    }
-                }
-                array_push($sortedTimeSlots, $minTimeSlot);
-            }
-
-            if(count($sortedTimeSlots)>0){
-               $date=new stdClass();
-               $d=new DateTime();
-               
-               $date->date=$d->createFromFormat("Y-m-d", $activityBookingOptions->dates[$i]->date);
-               $date->timeSlots=$sortedTimeSlots;
-               array_push($dates, $date);
-            }
-        }
-
-        return $dates;
-    }
+   
     function findActivityData($activityID){
         try {
             //Buscar los datos de la actividad
@@ -599,6 +511,18 @@ class Controlador {
     
     function base64url_decode( $data ){
         return base64_decode( strtr( $data, ':_', '+/') . str_repeat('=', 3 - ( 3 + strlen( $data )) % 4 ));
+    }
+    function isAprovisionamientoAseguramientoRecupero($activity){
+        if(in_array($activity->activityType, Controlador::ASEGURAMIENTO_VALUES)){
+            return Controlador::ASEGURAMIENTO;
+        }
+        if(in_array($activity->activityType, Controlador::APROVISIONAMIENTO_VALUES)){
+            return Controlador::APROVISIONAMIENTO;
+        }
+        if(in_array($activity->activityType, Controlador::RECUPERO_VALUES)){
+            return Controlador::RECUPERO;
+        }
+        return null;
     }
 }
 ?>
