@@ -32,11 +32,12 @@
             	        for($j=0; $j<count($availability); $j++){
             	            if(isset($availability[$j]->timeSlots)){
             	                for($k=0; $k<count($availability[$j]->timeSlots); $k++){
-            	                    echo '<input type="hidden" id="' . $availability[$j]->dayOfMonth->format('Ymd') . '"';
-            	                    echo 'data-name="' . $availability->timeSlots[$k]->name . '"';
-            	                    echo 'data-label="' . $availability->timeSlots[$k]->label . '"';
-            	                    echo 'data-timeFrom="' . $availability->timeSlots[$k]->timeFrom . '"';
-            	                    echo 'data-timeTo="' . $availability->timeSlots[$k]->timeTo . '"/>';
+            	                    echo 'LLEGOACA4';
+            	                    echo '<input type="hidden" id="' . $availability[$j]->date->format('Ymd') . '"';
+            	                    echo ' data-name="' . $availability[$j]->timeSlots[$k]->name . '"';
+            	                    echo ' data-label="' . $availability[$j]->timeSlots[$k]->label . '"';
+            	                    echo ' data-timeFrom="' . $availability[$j]->timeSlots[$k]->timeFrom . '"';
+            	                    echo ' data-timeTo="' . $availability[$j]->timeSlots[$k]->timeTo . '"/>';
             	                }
             	            }
             	        }

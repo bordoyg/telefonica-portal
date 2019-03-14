@@ -90,8 +90,9 @@ class Controlador {
         array_push($params, array('calculate_duration'=>false));
         array_push($params, array('calculate_travel_time'=>false));
         array_push($params, array('calculate_work_skill'=>true));
-        array_push($params, array('activity_field'=>array('name'=>'work_skill', 'value'=>$activity->XA_ACT_WORKSILL)));
-        array_push($params, array('activity_field'=>array('name'=>'location', 'value'=>$activity->XA_Zone)));
+        array_push($params, array('work_skill'=>$activity->XA_ACT_WORKSKILL));
+        array_push($params, array('location'=>$activity->XA_Zone));
+        array_push($params, array('return_time_slot_info'=>true));
         
         $response=$this->serviceSoap->request("/soap/capacity/", "urn:toa:capacity", "get_capacity", $params);
         $response=$response['SOAP-ENV:ENVELOPE']['SOAP-ENV:BODY']['URN:GET_CAPACITY_RESPONSE'];
@@ -180,64 +181,33 @@ class Controlador {
             return null;
         }
     }
-    function createCalendar($days){
-        try{
-            $calendar=array();
-            $firstDay=new DateTime();
-            $firstDay->setDate(date("Y"), date("m"), 1);
-            $dayWeekFirstDay=$firstDay->format("w");
-            $firstDayCalendar=$firstDay->sub(new DateInterval("P" . $dayWeekFirstDay . "D"));
-            try{
-                $availability=$this->findAvailabilitySOAP($days);
-            }catch(Exception $e){
-                Utils::logDebug('Hubo un error al buscar los dias habilitados', $e);
-            }
-            
-            for($i=0;$i<8;$i++){
-                $calendar[$i]=array();
-                for($j=0;$j<7;$j++){
-                    $dayOfMonth=new DateTime();
-                    $dayOfMonth->setTimestamp($firstDayCalendar->getTimestamp());
-                    $dateItem=new stdClass();
-                    $dateItem->dayOfMonth=$dayOfMonth;
-                    
-                    if(isset($availability)){
-                        for($k=0; $k<count($availability); $k++){
-                            $availabilityDate=$availability[$k]->date->format("Ymd");
-                            $dayOfCalendar=$dateItem->dayOfMonth->format("Ymd");
-                            
-                            if(strcmp($availabilityDate,$dayOfCalendar)==0){
-                                $dateItem->timeSlots=$availability[$k]->timeSlots;
-                            }
-                        }
-                    }
-                    
-                    $calendar[$i][$j]=$dateItem;
-                    
-                    $firstDayCalendar->add(new DateInterval("P1D"));
-                }
-            }
-        }catch(Exception $e){
-            Utils::logDebug('Hubo un error al crear el calendario', $e);
-            $this->addMessageError(Controlador::ERROR_GENERIC_MSJ);
-            return Dispatcher::MESSAGES_URL;
-        }
-        
-        
-        return $calendar;
-    }
     
     function excecuteCancelConfirm(){
         try {
             $activityID=$this->getActivityIdFromContext();
             $activity=$this->findActivityData($activityID);
             
+            $detectedAdctivityType = isAprovisionamientoAseguramientoRecupero($activity);
+            $cancelacionesHechas = intval($activity->XA_NUM_MOD_PORTAL);
+            $cancelacionesPermitidas = intval($GLOBALS['config']['cacelacionesPermitidas']);
+            
             $params=array("setDate"=>array("date"=>NULL));
             $params=json_encode($params);
+            
             //Se actualiza el dia = null
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId . '/custom-actions/move', 'POST', $params);
-
             $params=array("timeSlot"=>NULL, "XA_CONFIRMACITA"=>Controlador::SUB_STATUS_CANCELADA);
+            
+            if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::RECUPERO) ){
+                
+                if( $cancelacionesHechas >= $cancelacionesPermitidas ){
+                    $this->addMessageError(Controlador::MSJ_LIMITE_CANCELACIONES);
+                }
+                
+                $cancelacionesHechas++;
+                $params["XA_NUM_MOD_PORTAL"] = strval($cancelacionesHechas);
+                
+            }
             $params=json_encode($params);
             //Se actualiza el timeslot y el estado XA_CONFIRMACITA
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
@@ -249,6 +219,7 @@ class Controlador {
             $msj=str_replace("@diaCita@", $diaCita, $msj);
             $this->addMessageError($msj);
             return Dispatcher::MESSAGES_URL;
+            
         } catch (Exception $e) {
             Utils::logDebug('Hubo un error al cancelar la cita', $e);
             $this->addMessageError(Controlador::ERROR_GENERIC_MSJ);
