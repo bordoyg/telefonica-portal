@@ -399,9 +399,9 @@ class Controlador {
 
             
             $scheduleTimeslot=substr($rawTimeslot, strrpos($rawTimeslot, '|') + 1);
-            $params=array("timeSlot"=>$scheduleTimeslot, "XA_CONFIRMACITA"=>Controlador::SUB_STATUS_MODIFICADA);
+            $params=array("timeSlot"=>$scheduleTimeslot, "XA_CONFIRMACITA"=>Controlador::SUB_STATUS_MODIFICADA, "XA_REAGENDA_PORTAL"=>'S');
             $params=json_encode($params);
-            //Se actualiza el timeslot y el estado XA_CONFIRMACITA
+            //Se actualiza el timeslot y el estado XA_CONFIRMACITA y XA_REAGENDA_PORTAL
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
 
             $activity=$this->findActivityData($activityID);

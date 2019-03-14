@@ -24,11 +24,15 @@
 			        if(!isset($_REQUEST[Dispatcher::NO_VOLVER])){
 			            echo '<form action="" method="post">';
 			            
-			            if(strcmp(Controlador::ERROR_REAGENDAR_MSJ, $_REQUEST[Controlador::MESSAGE_PARAM])!=0){
-			                echo '    <button type="submit" class="smallbtn sl" >Finalizar</button>';
-			                echo '    <button type="submit" class="smallbtn sr"  name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::SCHEDULE_DATE_LABEL . '" >Reintentar</button>';
+			            if(strcmp(Controlador::ERROR_REAGENDAR_MSJ, $_REQUEST[Controlador::MESSAGE_PARAM])!=0
+			                || strcmp(Controlador::ERROR_GENERIC_MSJ, $_REQUEST[Controlador::MESSAGE_PARAM])!=0
+			                || strcmp(Controlador::ERROR_ORDEN_INEXISTENTE, $_REQUEST[Controlador::MESSAGE_PARAM])!=0
+			                || strcmp(Controlador::ERROR_ORDEN_NO_VIGENTE, $_REQUEST[Controlador::MESSAGE_PARAM])!=0){
+			                
+			                echo '<button type="submit" class="smallbtn sl" >Reintentar</button>';
+			                echo '<a class="smallbtn sl" href="https://etb.com/">Finalizar</a>';
 			            }else{
-			                echo '    <button type="submit" class="smallbtnfull" >Finalizar</button>';
+			                echo '<a class="smallbtnfull" href="https://etb.com/">Finalizar</a>';
 			            }
 			            
 			            echo '</form>';
