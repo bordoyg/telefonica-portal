@@ -435,7 +435,7 @@ class Controlador {
                 $params=array();
                 
                 $params=array("setDate"=>array("date"=>NULL));
-                $params['XA_REMINDER_REPLY']= Controlador::SUB_STATUS_SIN_FECHA;
+                $params['XA_REMINDER_REPLY']= Controlador::SUB_STATUS_CANCELADA;
                 $params['XA_CONFIRMATIONCHANNEL']= Controlador::CHANEL_LABEL;
                 $params['XA_PENDING_EXTERNAL_ACTION']=Controlador::EXTERNAL_ACTION_RESCHEDULE;
                 $params['XA_DATETIME_REPLY']= $currentDateTime;
@@ -480,22 +480,12 @@ class Controlador {
             //Se actualiza el dia = null
             $this->service->request('/rest/ofscCore/v1/activities/' . $activityID . '/custom-actions/move', 'POST', $params);
             
-            
             $params=array();
-            if(strcmp(Controlador::AVERIA_LABEL, $this->isAveriaOProvision($activity))==0){
-                $params['XA_REMINDER_REPLY']= Controlador::SUB_STATUS_SIN_FECHA;
-                
-            }
-            if(strcmp(Controlador::PROVISION_LABEL, $this->isAveriaOProvision($activity))==0){
-                $params['XA_REMINDER_REPLY']= Controlador::SUB_STATUS_CANCELA_CLIENTE;
-            }
-            
+            $params['XA_REMINDER_REPLY']= Controlador::SUB_STATUS_SIN_FECHA;
             $params['timeSlot']= NULL;
-            $params['XA_EXTERNAL_ACTION']= "";
             $params['XA_PENDING_EXTERNAL_ACTION']=Controlador::EXTERNAL_ACTION_RESCHEDULE;
             $params['XA_DATETIME_REPLY']= $currentDateTime;
             $params['XA_HISTORY_REPLY']=$histroyReply;
-            $params['XA_REMINDER_REPLY']=Controlador::EXTERNAL_ACTION_RESCHEDULE;
 
             $params=json_encode($params);
             //Se actualiza el timeslot y el estado XA_REMINDER_REPLY
@@ -786,7 +776,6 @@ class Controlador {
         return ($activity->status == Controlador::STATUS_PENDING) && ($activityDate >= $currentDate);
     }
     function showSchedule(){
-        return true;
         return $this->showConfirm();
     }
     function showTechnicanLocation(){
