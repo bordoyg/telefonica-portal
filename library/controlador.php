@@ -28,7 +28,7 @@ class Controlador {
     const MSJ_ORDEN_CANCELADA_PROVISION='<div class="row appointment-info"><p><span>Tu cita fue cancelada.</span></p><p><span>Podrás reagendarla</span></p><p><span>llamando al</span></p><p><span class="contact-number text-underline">0800-222-8112</span></p><p><span>&nbsp;de lunes a viernes de 9 a</span></p><p><span>21hs.</span></p></div>';
 	const MSJ_ORDEN_NO_CANCELADA='<div class="row appointment-info"><p><span>Tu cita no pudo ser cancelada.</span></p><p><span>llamanos al</span></p><p><span class="contact-number text-underline">0800-222-8114 para cancelarla</span></p><p><span>&nbsp;de lunes a viernes de 9 a</span></p><p><span>21hs.</span></p></div>';
 	
-	const MSJ_CALLCENTER_CONTACT='<div class="row appointment-info"> <p> <span>Gracias por tu mensaje</span></p><p><span>Un representante se va a contactar con usted.</span></p></div>';
+	const MSJ_CALLCENTER_CONTACT='<div class="row appointment-info"> <p> <span>Gracias por tu mensaje</span></p><p><span>Un representante se pondr&aacute; en contacto con vos</span></p></div>';
 	
     const SUB_STATUS_SIN_FECHA="SINFECHASELECCIONADA";
     const SUB_STATUS_CANCELA_CLIENTE="CANCELA_CLIENTEWEB";
