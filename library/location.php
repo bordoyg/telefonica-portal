@@ -4,7 +4,14 @@
 <body>
   <link rel="stylesheet" href="https://js.arcgis.com/4.8/esri/css/main.css">
   <script src="https://js.arcgis.com/4.8/"></script>
-
+ <style>
+   #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
     <header>
         <div class="menu-head">
             <div class="logo-head">
@@ -36,8 +43,7 @@
                     </p>
 <!--                <a href="tel:1167876765" class="ccall"><img src="/euf/assets/others/etb/img/tel.png"/></a> -->
                 </div>
-               <div id="viewDiv"></div>
-                  <script type="text/javascript">
+                <script type="text/javascript">
                   
                       	require([
                       	  "esri/Map",
@@ -85,8 +91,8 @@
                       	   symbol: {
                       		 type: "picture-marker",
                       		 url: "/euf/assets/others/etb/images/tech-icon.png",
-                      		 width: "14px",
-                      		 height: "26px"
+                      		 width: "32px",
+                      		 height: "32px"
                       	   }
                       	 });
                       	  var pictureGraphic2 = new Graphic({
@@ -98,8 +104,8 @@
                       	   symbol: {
                       		 type: "picture-marker",
                       		 url: "/euf/assets/others/etb/images/home-icon.png",
-                      		 width: "14px",
-                      		 height: "26px"
+                      		 width: "32px",
+                      		 height: "32px"
                       	   }
                       	 });
                       	 view.graphics.add(pictureGraphic);
@@ -121,6 +127,8 @@
                       	  });
                       	});
                   </script>
+                  <div id="viewDiv"></div>
+                 
                 <a class="smallbtnfull" href="https://etb.com/">Finalizar</a>
             </section>
         </div>
