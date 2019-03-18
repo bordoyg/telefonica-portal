@@ -33,6 +33,9 @@
             	            if(isset($availability[$j]->timeSlots)){
             	                for($k=0; $k<count($availability[$j]->timeSlots); $k++){
             	                    echo '<input type="hidden" id="' . $availability[$j]->date->format('Ymd') . '"';
+            	                    echo ' data-day="' . $availability[$j]->date->format('d') . '"';
+            	                    echo ' data-month="' . $availability[$j]->date->format('m') . '"';
+            	                    echo ' data-year="' . $availability[$j]->date->format('Y') . '"';
             	                    echo ' data-name="' . $availability[$j]->timeSlots[$k]->name . '"';
             	                    echo ' data-label="' . $availability[$j]->timeSlots[$k]->label . '"';
             	                    echo ' data-timeFrom="' . $availability[$j]->timeSlots[$k]->timeFrom . '"';
