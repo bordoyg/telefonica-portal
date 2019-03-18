@@ -64,7 +64,7 @@
                 <p class="tag"><span class="c3"></span> No Disponible</p>
 				
 				<div class="mostrar">
-					<p>Franja Horaria</p>				
+					<p>Franja Horaria</p>
 					<select class="smallbtn smallbtnselect">
 						<option>A.M.</option>
 						<option>P.M.</option>
