@@ -13,7 +13,7 @@
         </div>
 	</header>
 	<script>
-		$( function(){
+		$(document).ready(() => {
 			$("#calendar").datepicker();
 		});
 	</script>
