@@ -8,7 +8,7 @@
         <div class="menu-head">
             <div class="logo-head">
                 <a href="http://etb.com">
-                    <img alt="ETB" src="img/logoetb2.png" /></a>
+                    <img alt="ETB" src="/euf/assets/others/etb/img/logoetb2.png" /></a>
             </div>
         </div>
 	</header>
