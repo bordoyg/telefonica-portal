@@ -22,34 +22,32 @@
                 return attr !== undefined || attr !== false
 			}
 
-
             var inputDays = $("form").children().filter("input").filter( (index) => {
                 return hasAttr(this, "data-timefrom") && hasAttr(this, "data-timeto");
             });
-
-			console.table(inputsDays);
 
             var calendarDays = $(".ui-datepicker-calendar tbody")
                                 .children("tr")
                                 .find("td")
                                 .filter("[data-handler*='selectDay']");
 
-            console.table(calendarDays);
+            inputDays.each( (i, e) => {
 
-            inputDays.each( (i) => {
+                var inputYear = parseInt( $(e).attr("data-day") );
+                var inputMonth = parseInt( $(e).attr("data-month") );
+                var inputDay = parseInt( $(e).attr("data-year") );
 
-                var inputYear = parseInt( $(this).attr("data-day") );
-                var inputMonth = parseInt( $(this).attr("data-month") );
-                var inputDay = parseInt( $(this).attr("data-year") );
-
-                calendarDays.each( (j) => {
+                calendarDays.each( (j, f) => {
                 
-                    var calendarYear = parseInt( $(this).attr("data-year") );
-                    var calendarMonth = parseInt( $(this).attr("data-month") );
-                    var calendarDay = parseInt( $(this).children("a").first().val() );
+                    var calendarYear = parseInt( $(f).attr("data-year") );
+                    var calendarMonth = parseInt( $(f).attr("data-month") );
+                    var calendarDay = parseInt( $(f).children("a").first().text() );
+
+					console.table({ calendarYear, calendarMonth, calendarDay });
+					console.table({ inputYear, inputMonth, inputDay });
 
                     if( inputYear === calendarYear && inputMonth === calendarMonth && inputDay === calendarDay )
-                        $(this).css("background-color", "#00c389");
+                        $(f).css("background-color", "#00c389");
 
                 });  
 
