@@ -11,9 +11,11 @@
 
     <link href='/euf/assets/others/etb/css/style.css' rel='stylesheet' type='text/css' />
     <link href='/euf/assets/others/etb/css/slick.css' rel='stylesheet' type='text/css' />
+    <link href='/euf/assets/others/etb/css/calendar.css' rel='stylesheet' type='text/css' />
 
     <script src="/euf/assets/others/etb/js/jquery-3.2.0.min.js" type="text/javascript"></script>
     <script src="/euf/assets/others/etb/js/lib/jquery.svgmagic.js" type="text/javascript"></script>
+    <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js'></script>
     <script src="/euf/assets/others/etb/js/slick.js" type="text/javascript"></script>
 
     <script src="/euf/assets/others/etb/js/site-scripts.js" type="text/javascript"></script>

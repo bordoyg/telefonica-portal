@@ -53,7 +53,7 @@
             	?>
                 <h1>Reagendamiento</h1>
                 <p>Selecciona la fecha para agendar tu cita:</p>
-                <div id='calendar'></div>
+                <div id='calendar' class="hasDatepicker"></div>
                 <p class="tag"><span class="c1"></span> Disponible</p>
                 <p class="tag"><span class="c2"></span> Seleccionado</p>
                 <p class="tag"><span class="c3"></span> No Disponible</p>
