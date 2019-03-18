@@ -86,7 +86,7 @@
  					  }else{
  					      ?>
  					      <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_LABEL ?>" class="smallbtn sl actl" >Reagendar Cita</button>
- 					      <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_ ?>" class="smallbtn sr" >M&aacute;s Fechas</button>
+ 					      <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_MORE_DATES ?>" class="smallbtn sr" >M&aacute;s Fechas</button>
  					      <?php 
  					  }
  				?>
