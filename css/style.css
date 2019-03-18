@@ -363,6 +363,22 @@ section h3 {
     background: #455e75;
 }
 
+.multicanc{
+    position: relative;
+    float: left;
+    width: calc(100% - 0px);
+    padding: 10px;
+    margin-bottom: 40px;
+    text-align: center;
+    line-height: 100%;
+    font-size: 100%;
+    color: #666;
+    font-weight: 300;
+    background: #fff;
+    border: 1px solid #666;
+    border-radius: 25px;
+}
+
 
 /*—————–Content————–*/
 
