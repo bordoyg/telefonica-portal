@@ -24,6 +24,8 @@ class Controlador {
 	const MSJ_ORDEN_CONFIRMADA="<h1>Cita Confirmada</h1><p>Tu cita fue confirmada para el dia </p>@diaCita@<p>¡MUCHAS GRACIAS!</p>";
 	const MSJ_ORDEN_MODIFICADA="<h1>Cita Reagendada</h1><p>La nueva fecha para tu cita es</p>@diaCita@<p>¡MUCHAS GRACIAS!</p>";
 	const MSJ_ORDEN_CANCELADA="<h1>Cita Cancelada</h1><p>Su cita fue Cancelada</p><h2>@diaCita@</h2><p> s&iacute; requiere agendar una nueva cita por favor comun&iacute;quese a nuestra l&iacute;nea de atenci&oacute;n 3777777</p>";
+	const MSJ_LIMITE_CANCELACIONES="<h1>Cita Cancelada</h1><p>Su cita fue Cancelada</p><h2>@diaCita@</h2><p>Llegó al límite de cancelaciones, y entonces los equipos serán cobrados</p>";
+	
 	
 	const SUB_STATUS_CANCELADA="CANCELADA";
 	const SUB_STATUS_CONFIRMADA="CONFIRMADA";
