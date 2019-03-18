@@ -34,16 +34,19 @@
                 <p>Tu cita programada para el</p>
                 <h2>26-Ago-2018</h2> 
                 <p>con el fin de Instalación/reparación ha sido CANCELADA correctamente.</p>
+                <form action="" method="post">
                 <select class="multicanc">
                     <option>...</option>
                     <option>Servicio restablecido.</option>
                     <option>No puedo atender la visita.</option>
                 </select>
                 <?php          
-                    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CANCELAR_LABEL . '"';
+                    echo '<button type="submit" onclick="return validateSubmit();" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CANCELAR_LABEL . '"';
                     echo 'class="bigbtn">Cancelarla</button>';
                     
                 ?>
+                </form>
+                
             </section>
         </div>
     </div>
@@ -52,4 +55,18 @@
         <p class="credits">2018 © ETB S.A. ESP. Todos los derechos reservados. Música Autorizada Por Acinpro.</p>
     </footer>
 </body>
+<script>
+    console.log('validation script');
+    function validateSubmit(){
+        if($('.multicanc')[0].selectedIndex==0){
+        console.log('false');
+        event.preventDefault();
+        return false;
+        }
+        else{
+            console.log('true');
+            return true;
+        }
+    }
+</script>
 </html>
