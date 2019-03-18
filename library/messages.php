@@ -23,9 +23,9 @@
 				    && strcmp(Controlador::ERROR_ORDEN_NO_VIGENTE, $_REQUEST[Controlador::MESSAGE_PARAM])!=0){
 				    
 			        if(!isset($_REQUEST[Dispatcher::NO_VOLVER])){
-			            echo '<form action="" method="post">';
-			            echo '    <div><button type="submit" class="button btn btn-lg btn-primary" >Volver</button></div>';
-			            echo '</form>';
+// 			            echo '<form action="" method="post">';
+// 			            echo '    <div><button type="submit" class="button btn btn-lg btn-primary" >Volver</button></div>';
+// 			            echo '</form>';
 			        }
 				}
 				?>
