@@ -14,7 +14,46 @@
 	</header>
 	<script>
 		$(document).ready(() => {
+
 			$("#calendar").datepicker();
+
+			function hasAttr(objRef, attrName) {
+				var attr = $(objRef).attr(attrName);
+                return attr !== undefined || attr !== false
+			}
+
+			console.table(inputs);
+
+            var inputDays = $("form").children().filter("input").filter( (index) => {
+                return hasAttr(this, "data-timefrom") && hasAttr(this, "data-timeto");
+            });
+
+            var calendarDays = $(".ui-datepicker-calendar tbody")
+                                .children("tr")
+                                .find("td")
+                                .filter("[data-handler*='selectDay']");
+
+            console.table(calendarDays);
+
+            inputDays.each( (i) => {
+
+                var inputYear = parseInt( $(this).attr("data-day") );
+                var inputMonth = parseInt( $(this).attr("data-month") );
+                var inputDay = parseInt( $(this).attr("data-year") );
+
+                calendarDays.each( (j) => {
+                
+                    var calendarYear = parseInt( $(this).attr("data-year") );
+                    var calendarMonth = parseInt( $(this).attr("data-month") );
+                    var calendarDay = parseInt( $(this).children("a").first().val() );
+
+                    if( inputYear === calendarYear && inputMonth === calendarMonth && inputDay === calendarDay )
+                        $(this).css("background-color", "#00c389");
+
+                });  
+
+            });
+
 		});
 	</script>
 
