@@ -8,13 +8,52 @@
         <div class="menu-head">
             <div class="logo-head">
                 <a href="http://etb.com">
-                    <img alt="ETB" src="img/logoetb2.png" /></a>
+                    <img alt="ETB" src="/euf/assets/others/etb/img/logoetb2.png" /></a>
             </div>
         </div>
 	</header>
 	<script>
-		$( function(){
+		$(document).ready(() => {
+
 			$("#calendar").datepicker();
+
+			function hasAttr(objRef, attrName) {
+				var attr = $(objRef).attr(attrName);
+                return attr !== undefined || attr !== false
+			}
+
+			console.table(inputs);
+
+            var inputDays = $("form").children().filter("input").filter( (index) => {
+                return hasAttr(this, "data-timefrom") && hasAttr(this, "data-timeto");
+            });
+
+            var calendarDays = $(".ui-datepicker-calendar tbody")
+                                .children("tr")
+                                .find("td")
+                                .filter("[data-handler*='selectDay']");
+
+            console.table(calendarDays);
+
+            inputDays.each( (i) => {
+
+                var inputYear = parseInt( $(this).attr("data-day") );
+                var inputMonth = parseInt( $(this).attr("data-month") );
+                var inputDay = parseInt( $(this).attr("data-year") );
+
+                calendarDays.each( (j) => {
+                
+                    var calendarYear = parseInt( $(this).attr("data-year") );
+                    var calendarMonth = parseInt( $(this).attr("data-month") );
+                    var calendarDay = parseInt( $(this).children("a").first().val() );
+
+                    if( inputYear === calendarYear && inputMonth === calendarMonth && inputDay === calendarDay )
+                        $(this).css("background-color", "#00c389");
+
+                });  
+
+            });
+
 		});
 	</script>
 
@@ -58,7 +97,7 @@
             	?>
                 <h1>Reagendamiento</h1>
                 <p>Selecciona la fecha para agendar tu cita:</p>
-                <div id='calendar' class="hasDatepicker"></div>
+                <div id='calendar'></div>
                 <p class="tag"><span class="c1"></span> Disponible</p>
                 <p class="tag"><span class="c2"></span> Seleccionado</p>
                 <p class="tag"><span class="c3"></span> No Disponible</p>

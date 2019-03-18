@@ -67,8 +67,8 @@ class Dispatcher {
             if (strcmp(Dispatcher::CANCELAR_LABEL, $action) === 0){
                 return $this->controlador->excecuteCancelConfirm();
             }
-            if(trcmp(Dispatcher::CANCEL_MOTIVO_LABEL, $action) === 0){
-                return Dispacher::CANCEL_MOTIVO_URL;
+            if(strcmp(Dispatcher::CANCEL_MOTIVO_LABEL, $action) === 0){
+                return Dispatcher::CANCEL_MOTIVO_URL;
             }
             if (strcmp(Dispatcher::UBICACION_LABEL, $action) === 0){
                 return $this->controlador->excecuteLocation();
