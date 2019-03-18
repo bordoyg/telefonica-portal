@@ -30,24 +30,26 @@
                                 .children("tr")
                                 .find("td")
                                 .filter("[data-handler*='selectDay']");
-
+			
             inputDays.each( (i, e) => {
+
+				console.log( "Verde 2" );
 
                 var inputYear = parseInt( $(e).attr("data-day") );
                 var inputMonth = parseInt( $(e).attr("data-month") );
                 var inputDay = parseInt( $(e).attr("data-year") );
-
+			
                 calendarDays.each( (j, f) => {
                 
                     var calendarYear = parseInt( $(f).attr("data-year") );
-                    var calendarMonth = parseInt( $(f).attr("data-month") );
+                    var calendarMonth = parseInt( $(f).attr("data-month") ) + 1;
                     var calendarDay = parseInt( $(f).children("a").first().text() );
 
-					console.table({ calendarYear, calendarMonth, calendarDay });
-					console.table({ inputYear, inputMonth, inputDay });
+					//console.table({ calendarYear, calendarMonth, calendarDay });
+					//console.table({ inputYear, inputMonth, inputDay });
 
-                    if( inputYear === calendarYear && inputMonth === calendarMonth && inputDay === calendarDay )
-                        $(f).css("background-color", "#00c389");
+					if( (inputYear === calendarYear) && (inputMonth === calendarMonth) && (inputDay === calendarDay) )
+						$(f).css("background", "#00c389");
 
                 });  
 
