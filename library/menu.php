@@ -23,18 +23,18 @@ $Controlador = $dispatcher->getControlador();
             <section class="type1-cont">
             <form action="" method="post">
             	<?php 
+                	$activityID=$Controlador->getActivityIdFromContext();
+                	$activity=$Controlador->findActivityData($activityID);
+                	$dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
+                	$dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
+                	
+                	echo '<h1>Confirmación de Cita</h1>';
+                	echo '<p>Tu cita para Instalación/Reparación esta programada para el:</p>';
+                	Utils::logDebug("Fecha de la cita: " . $dateStart->format('d-F-Y g:i A'));
+                	echo '<h2>' . $dateStart->format('d') . '-' . $GLOBALS['translateMonth'][$dateStart->format('F')]  . '-' . $dateStart->format('Y') . '</h2>' ;
+                	echo '<p>entre las ' . $dateStart->format('g:i A') . ' y las ' . $dateEnd->format('g:i A') . ' hrs.</p>';
+                	
 					if($Controlador->showConfirm()){
-					    $activityID=$Controlador->getActivityIdFromContext();
-					    $activity=$Controlador->findActivityData($activityID);
-					    $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
-					    $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
-					    
-					    echo '<h1>Confirmación de Cita</h1>';
-					    echo '<p>Tu cita para Instalación/Reparación esta programada para el:</p>';
-					    Utils::logDebug("Fecha de la cita: " . $dateStart->format('d-F-Y g:i A'));
-					    echo '<h2>' . $dateStart->format('d') . '-' . $GLOBALS['translateMonth'][$dateStart->format('F')]  . '-' . $dateStart->format('Y') . '</h2>' ;
-					    echo '<p>entre las ' . $dateStart->format('g:i A') . ' y las ' . $dateEnd->format('g:i A') . ' hrs.</p>';
-					    
 					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CONFIRMAR_LABEL . '"';
 					    echo 'class="bigbtn">Confirmar Cita</button>';
 					}
