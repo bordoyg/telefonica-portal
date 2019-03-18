@@ -187,7 +187,7 @@ class Controlador {
             $activityID=$this->getActivityIdFromContext();
             $activity=$this->findActivityData($activityID);
             
-            $detectedAdctivityType = isAprovisionamientoAseguramientoRecupero($activity);
+            $detectedAdctivityType = $this->isAprovisionamientoAseguramientoRecupero($activity);
             $cancelacionesHechas = intval($activity->XA_NUM_MOD_PORTAL);
             $cancelacionesPermitidas = intval($GLOBALS['config']['cacelacionesPermitidas']);
             

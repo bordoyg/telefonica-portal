@@ -73,15 +73,15 @@
 				      $noMoreDates=$_REQUEST[Dispatcher::OPTION_PARAM ];
  					  $noMoreDatesBool=strcmp($noMoreDates, Dispatcher::SCHEDULE_MORE_DATES)==0;
  					  if($noMoreDatesBool){
- 					      echo '<a class="bigbtn" href="#">Reagendar Cita</a>';
- 					      echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CONFIRMAR_LABEL . '"';
- 					      echo 'class="smallbtn sl" >Confirmar<br>Cita Original</button>';
- 					      echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CANCELAR_LABEL . '"';
- 					      echo 'class="smallbtn sr" >Cancelar<br>Cita Original</button>';
+ 					      ?>
+ 					      <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_LABEL ?>" class="bigbtn" >Reagendar Cita</button>
+ 					      <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::CONFIRMAR_LABEL ?>" class="smallbtn sl" >Confirmar<br>Cita Original</button>
+ 					      <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::CANCELAR_LABEL ?>" class="smallbtn sr" >Cancelar<br>Cita Original</button>
+ 					      <?php 
  					  }else{
  					      ?>
- 					      	<a class="smallbtn sl actl" href="#">Reagendar Cita</a>
-                			<a class="smallbtn sr" href="#">M&aacute;s Fechas</a>
+ 					      <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_LABEL ?>" class="smallbtn sl actl" >Reagendar Cita</button>
+ 					      <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_ ?>" class="smallbtn sr" >M&aacute;s Fechas</button>
  					      <?php 
  					  }
  				?>
