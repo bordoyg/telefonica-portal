@@ -22,11 +22,12 @@
                 return attr !== undefined || attr !== false
 			}
 
-			console.table(inputs);
 
             var inputDays = $("form").children().filter("input").filter( (index) => {
                 return hasAttr(this, "data-timefrom") && hasAttr(this, "data-timeto");
             });
+
+			console.table(inputsDays);
 
             var calendarDays = $(".ui-datepicker-calendar tbody")
                                 .children("tr")
