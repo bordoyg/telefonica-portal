@@ -302,7 +302,7 @@ class Controlador {
             return $out;
         } catch (Exception $e) {
             Utils::logDebug('Hubo un error al buscar la cita', $e);
-            $this->addMessageError($e->getMessage());
+            $this->addMessageError(Controlador::ERROR_GENERIC_MSJ);
             return null;
         }
     }
