@@ -212,7 +212,7 @@ class Controlador {
             }
             $params=json_encode($params);
             //Se actualiza el timeslot y el estado XA_CONFIRMACITA
-            $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
+            //$this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
             
             $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
             $diaCita= $dateStart->format('d') . ' - ' . $GLOBALS['translateMonth'][$dateStart->format('F')] . ' - ' .$dateStart->format('Y');

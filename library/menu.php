@@ -44,7 +44,7 @@ $Controlador = $dispatcher->getControlador();
 					    echo 'class="smallbtn sl col-md-6" style="margin: auto 10px 20px 3%;" >Reagendar</button>';
 					}
 					if($Controlador->showCancel()){
-					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CANCELAR_LABEL . '"';
+					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CANCEL_MOTIVO_LABEL . '"';
 					    echo 'class="smallbtn sr col-md-6" style="margin: auto 3% 15px 0px;">Cancelarla</button>';
 					}
 					if($Controlador->showTechnicanLocation()){
