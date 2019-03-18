@@ -11,7 +11,12 @@
                     <img alt="ETB" src="img/logoetb2.png" /></a>
             </div>
         </div>
-    </header>
+	</header>
+	<script>
+		$( function(){
+			$("#calendar").datepicker();
+		});
+	</script>
 
     <div class="content">
         <div class="wrap">
