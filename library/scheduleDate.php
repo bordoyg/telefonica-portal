@@ -13,48 +13,44 @@
         </div>
 	</header>
 	<script>
-		$(document).ready(() => {
 
-			$("#calendar").datepicker();
+		function hasAttr(objRef, attrName) {
+			var attr = $(objRef).attr(attrName);
+			return attr !== undefined || attr !== false;
+		}
 
-			function hasAttr(objRef, attrName) {
-				var attr = $(objRef).attr(attrName);
-                return attr !== undefined || attr !== false
-			}
-
-            var inputDays = $("form").children().filter("input").filter( (index) => {
+		function paintAvaliableDays(){
+			var datesToPaint = $("form").children().filter("input").filter( (index) => {
                 return hasAttr(this, "data-timefrom") && hasAttr(this, "data-timeto");
             });
 
-            var calendarDays = $(".ui-datepicker-calendar tbody")
+            var calendarDates = $(".ui-datepicker-calendar tbody")
                                 .children("tr")
                                 .find("td")
                                 .filter("[data-handler*='selectDay']");
 			
-            inputDays.each( (i, e) => {
+            datesToPaint.each( (i, dateToPaint) => {
 
-				console.log( "Verde 2" );
-
-                var inputYear = parseInt( $(e).attr("data-day") );
-                var inputMonth = parseInt( $(e).attr("data-month") );
-                var inputDay = parseInt( $(e).attr("data-year") );
+                var inputYear = parseInt( $(dateToPaint).attr("data-day") );
+                var inputMonth = parseInt( $(dateToPaint).attr("data-month") );
+                var inputDay = parseInt( $(dateToPaint).attr("data-year") );
 			
-                calendarDays.each( (j, f) => {
+                calendarDates.each( (j, calendarDate) => {
                 
-                    var calendarYear = parseInt( $(f).attr("data-year") );
-                    var calendarMonth = parseInt( $(f).attr("data-month") ) + 1;
-                    var calendarDay = parseInt( $(f).children("a").first().text() );
-
-					//console.table({ calendarYear, calendarMonth, calendarDay });
-					//console.table({ inputYear, inputMonth, inputDay });
+                    var calendarYear = parseInt( $(calendarDate).attr("data-year") );
+                    var calendarMonth = parseInt( $(calendarDate).attr("data-month") ) + 1;
+                    var calendarDay = parseInt( $(calendarDate).children("a").first().text() );
 
 					if( (inputYear === calendarYear) && (inputMonth === calendarMonth) && (inputDay === calendarDay) )
-						$(f).css("background", "#00c389");
-
+						$(calendarDate).css("background", "#00c389");
                 });  
-
             });
-
+		}
+		
+		$(document).ready(() => {
+			$("#calendar").datepicker();
+			$(".ui-corner-all").click(paintAvaliableDays);
+			paintAvaliableDays();
 		});
 	</script>
 
