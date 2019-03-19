@@ -75,14 +75,31 @@ class Controlador {
 
          return $locationData;
     }
-
+    
     function findTechnicanLocationJson(){
 
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
         $coordinatesJson="";
         $locationData=$this->service->request('/rest/ofscCore/v1/whereIsMyTech', 'GET', 'activityId=' . $activity->activityId . '&includeAvatarImageData=true');
-        $coordinatesJson='{["'.$locationData->coordinates->longitude.'","'.$locationData->coordinates->latitud.'"]}';
+        
+        /*---DummyData---*/
+        $dummy = date('s', time());
+        $dummy= $dummy /10;
+
+        $dummyX=intval($locationData->coordinates->longitude) +intval($dummy);
+        $dummyY=intval($locationData->coordinates->latitude) +intval($dummy);
+
+        $dummyX=strval($dummyX);
+        $dummyY=strval($dummyY);
+
+
+
+        $coordinatesJson='{'.$dummyX.','.$dummyY.'}';
+        /*---End Dummy---*/
+
+        // $coordinatesJson='{'.$locationData->coordinates->longitude.','.$locationData->coordinates->latitude.'}';
+        
         return $coordinatesJson;
     }
 

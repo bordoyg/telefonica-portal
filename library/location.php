@@ -127,23 +127,36 @@
                       	  });
 
 													setInterval(() => {
-														var jsonData="";
+														var strSlice="";
 														$.ajax({
-														url: "ajaxCall.php",
-														 
+															method: "GET",
+															url: "/app/etb/ajaxCall",
+														
 														}).done(function(data) {
-														jsonData=JSON.parse(data);
-														console.log('Data del Ajax:'+data);
-														pictureGraphic2.geometry={
-                      		 	type: "point",
-                      			x:jsonData[0] ,
-                            y: jsonData[1]
-                      	   	};
+															var start;
+															var end;
+															var coords;
+															var x;
+															var y;
+															strSlice=data.slice(29195,29227);
+															start=strSlice.indexOf("{");
+															end=strSlice.indexOf("}");
+															strSlice=strSlice.slice(start+1,end);
+															coords=strSlice.split(',');
 
-													});
-													}, 1000);
+															view.graphics.remove(pictureGraphic);
+															pictureGraphic.geometry={
+															type: "point",
+															x:coords[0] ,
+															y: coords[1]
+															};
+
+														console.log(coords);
+                      	   	}).always(console.log('----'));
+													}, 5000);
 													
-                      	});
+								
+												});
                   </script>
                   <div id="viewDiv"></div>
                  
