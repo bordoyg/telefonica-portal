@@ -16,7 +16,7 @@ class Controlador {
 	
 	const ERROR_GENERIC_MSJ="Debido a un problema t&eacute;cnico no podemos procesar tu solicitud en este momento. Por favor intenta lo nuevamente m&aacute;s tarde. Si tienes alguna inquietud puedes comunicarte a la l&iacute;nea 01 80009 42545.";
 	const ERROR_ORDEN_INEXISTENTE="La orden no existe";
-	const ERROR_ORDEN_NO_VIGENTE="Tu cita no puede ser confirmada o modificada debido a que no se encuentra vigente en este momento. Si tienes alguna inquietud puedes comunicarte a la l&iacute;nea 01 80009 42545.";
+	const ERROR_ORDEN_NO_VIGENTE="Los datos de tu cita no pueden ser consultados y/o modificados debido a que no se encuentra vigente en este momento. Si tienes alguna inquietud puedes comunicarte a la l&iacute;nea 01 80009 42545";
 	
 	const MSJ_ORDEN_CONFIRMADA="Gracias por confirmar tu cita. No olvides tramitar la autorizaci&oacute;n para el ingreso del t&eacute;cnico a tu domicilio";
 	const MSJ_ORDEN_MODIFICADA="Tu cita para la instalaci&oacute;n de los servicios Movistar ha sido modificada. @diaCita@. No olvides tramitar la autorizaci&oacute;n para el ingreso del t&eacute;cnico a tu domicilio";
