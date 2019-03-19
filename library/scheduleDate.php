@@ -233,25 +233,38 @@
 			 				<?php } else { 
 								 ?>
 			 					<div class="row action-modify">
-									<div class="col-xs-6 col-sm-6 padding-right-8px">
+			 						<?php 
+			 						if(strcmp(Controlador::PROVISION_LABEL, $Controlador->isAveriaOProvision($activity))==0){
+			 						    ?>
+			 						    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 										<button type="submit" id="confirm" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_CONFIRM_LABEL ?>"
 											class="btn btn-lg btn-block btn-primary" onclick="onSubmitButton(this);" disabled>Reagendar Cita</button>
-									</div>
-				 					<div class="col-xs-6 col-sm-6 padding-left-8px">
-										<input type="button"
-				 						 	name="<?php echo Dispatcher::OPTION_PARAM ?>" value="Contactame"
-											 class="btn btn-lg btn-block btn-secondary" 
-											 onclick='
-											 	var event = new CustomEvent("callCallCenterShown", { "detail": "Example of an event" });
-												document.dispatchEvent(event);'
-				 							style="font-size: 14px;padding: 8px 5px;">
-				 						
-				 						<?php //Boton oculto que sirve para disparar el evento click del boton OK del popup?>
-				 						<button type="submit"
-				 						 	name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_CALLCENTER_CONTACT ?>"
-				 							class="btn btn-lg btn-block btn-secondary" onclick="onSubmitButton(this);"
-				 							style="font-size: 14px;padding: 8px 5px;display:none;"></button>
-				 					</div>
+    									</div>
+			 						    <?php
+			 						}else{
+			 						    ?>
+			 						    <div class="col-xs-6 col-sm-6 padding-right-8px">
+										<button type="submit" id="confirm" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_CONFIRM_LABEL ?>"
+											class="btn btn-lg btn-block btn-primary" onclick="onSubmitButton(this);" disabled>Reagendar Cita</button>
+    									</div>
+    				 					<div class="col-xs-6 col-sm-6 padding-left-8px">
+    										<input type="button"
+    				 						 	name="<?php echo Dispatcher::OPTION_PARAM ?>" value="Contactame"
+    											 class="btn btn-lg btn-block btn-secondary" 
+    											 onclick='
+    											 	var event = new CustomEvent("callCallCenterShown", { "detail": "Example of an event" });
+    												document.dispatchEvent(event);'
+    				 							style="font-size: 14px;padding: 8px 5px;">
+    				 						
+    				 						<?php //Boton oculto que sirve para disparar el evento click del boton OK del popup?>
+    				 						<button type="submit"
+    				 						 	name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_CALLCENTER_CONTACT ?>"
+    				 							class="btn btn-lg btn-block btn-secondary" onclick="onSubmitButton(this);"
+    				 							style="font-size: 14px;padding: 8px 5px;display:none;"></button>
+    				 					</div>
+			 						    <?php
+			 						}
+			 						?>
 								</div>
 			 				<?php } ?>
 						</form>

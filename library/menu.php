@@ -93,20 +93,26 @@ $Controlador = $dispatcher->getControlador();
                                         </style>';
                                     }
                                     ?>
+								<?php
+                                if(strcmp(Controlador::PROVISION_LABEL, $Controlador->isAveriaOProvision($activity))!=0){
+                                    ?>
+                                    <div id="cancelarMenuDiv" class="col-xs-6 col-sm-6 col-md-6 col-lg-6 cancelarBtnDiv">
+                                        <input  id ="cancelarMenuBtn" type="button" name="<?php echo Dispatcher::OPTION_PARAM; ?>"
+                                                value="Cancelarla"
+                                                class="btn btn-lg btn-block btn-secondary pull-right" 
+                                                onclick='
+                                                    var event = new CustomEvent("cancelarMenuBtnClicked", { "detail": "Example of an event" });
+                                                    document.dispatchEvent(event);'>
+                                        <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM; ?>"
+                                                value="<?php echo Dispatcher::CANCELAR_LABEL; ?>"
+                                                class="btn btn-lg btn-block btn-secondary pull-right" style="display:none;">Cancelarla</button>
+                                    </div>
+                                    
+                                    <?php
+                                }
+                                ?>
 
                                 
-
-                                <div id="cancelarMenuDiv" class="col-xs-6 col-sm-6 col-md-6 col-lg-6 cancelarBtnDiv">
-                                    <input  id ="cancelarMenuBtn" type="button" name="<?php echo Dispatcher::OPTION_PARAM; ?>"
-                                            value="Cancelarla"
-                                            class="btn btn-lg btn-block btn-secondary pull-right" 
-                                            onclick='
-                                                var event = new CustomEvent("cancelarMenuBtnClicked", { "detail": "Example of an event" });
-                                                document.dispatchEvent(event);'>
-                                    <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM; ?>"
-                                            value="<?php echo Dispatcher::CANCELAR_LABEL; ?>"
-                                            class="btn btn-lg btn-block btn-secondary pull-right" style="display:none;">Cancelarla</button>
-                                </div>
 
                             <?php } ?>
                             <?php
