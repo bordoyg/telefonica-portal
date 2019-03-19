@@ -33,15 +33,15 @@
                                 .find("td")
                                 .filter("[data-handler*='selectDay']");
 
-            //datesToPaint.each( (i, dateToPaint) => {
+            datesToPaint.each( (i, dateToPaint) => {
 
-                // var inputYear = parseInt( $(dateToPaint).attr("data-day") );
-                // var inputMonth = parseInt( $(dateToPaint).attr("data-month") );
-                // var inputDay = parseInt( $(dateToPaint).attr("data-year") );
+                var inputYear = parseInt( $(dateToPaint).attr("data-year") );
+                var inputMonth = parseInt( $(dateToPaint).attr("data-month") );
+                var inputDay = parseInt( $(dateToPaint).attr("data-day") );
 			
-				var inputYear = 2019;
-				var inputMonth = 3;
-				var inputDay = 24;
+				// var inputYear = 2019;
+				// var inputMonth = 3;
+				// var inputDay = 24;
 
                 calendarDates.each( (j, calendarDate) => {
                 
@@ -49,33 +49,68 @@
                     var calendarMonth = parseInt( $(calendarDate).attr("data-month") ) + 1;
 					var calendarDay = parseInt( $(calendarDate).children("a").first().text() );
 					
-					console.log( "%cCalendar month: " + calendarMonth, "rgb(255,0,0)" )
+					// console.log( "%cCalendar month: " + calendarMonth, "rgb(255,0,0)" )
 
 					if( (inputYear === calendarYear) && (inputMonth === calendarMonth) && (inputDay === calendarDay) )
 						//$(calendarDate).addClass("avaliable");
 						$(calendarDate).css("background", "#00c389");
                 });  
-            //});
+            });
 		}
 
-		function update(date){
-			var datesToPaintCopy = $(datesToPaint).clone();
-			var dateSplitted = date.split("/");
-			var date = { day: dateSplitted[1], month: dateSplitted[0], year: dateSplitted[2]};
+
+		
+		function selectedDate(date, calendar){
+			
+			setTimeout(() => {
+				$("#calendar").datepicker({
+				onChangeMonthYear: paintAvaliableDays,
+				onSelect: selectedDate,
+			});
 			paintAvaliableDays();
-			console.table(date);
-			//var calendarDatesCopy = $(calendarDates).clone();
-			//console.log(day);
+				var next=$('.ui-corner-all a')[0];
+        		var prev=$('.ui-corner-all a')[1];
+
+				next.addEventListener('click',next_prev_handler);
+				prev.addEventListener('click',next_prev_handler);
+				
+
+			
+			}, 0);
+			// paintAvaliableDays();
+
+		}
+
+		function next_prev_handler(){
+			setTimeout(() => {
+				$("#calendar").datepicker({
+				onChangeMonthYear: paintAvaliableDays,
+				onSelect: selectedDate,
+			});
+			var next=$('.ui-corner-all a')[0];
+			var prev=$('.ui-corner-all a')[1];
+
+				next.addEventListener('click',next_prev_handler);
+				prev.addEventListener('click',next_prev_handler);
+				
+			paintAvaliableDays();
+			}, 0);
 		}
 
 		$(document).ready(() => {
-			
 			$("#calendar").datepicker({
 				onChangeMonthYear: paintAvaliableDays,
-				onSelect: update,
+				onSelect: selectedDate,
 			});
-
 			paintAvaliableDays();
+
+			
+				var next=$('.ui-corner-all a')[0];
+        		var prev=$('.ui-corner-all a')[1];
+
+				next.addEventListener('click',next_prev_handler);
+				prev.addEventListener('click',next_prev_handler);
+			
 
 		});
 
