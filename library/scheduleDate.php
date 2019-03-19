@@ -32,35 +32,53 @@
                                 .children("tr")
                                 .find("td")
                                 .filter("[data-handler*='selectDay']");
-			
-            datesToPaint.each( (i, dateToPaint) => {
 
-                var inputYear = parseInt( $(dateToPaint).attr("data-day") );
-                var inputMonth = parseInt( $(dateToPaint).attr("data-month") );
-                var inputDay = parseInt( $(dateToPaint).attr("data-year") );
+            //datesToPaint.each( (i, dateToPaint) => {
+
+                // var inputYear = parseInt( $(dateToPaint).attr("data-day") );
+                // var inputMonth = parseInt( $(dateToPaint).attr("data-month") );
+                // var inputDay = parseInt( $(dateToPaint).attr("data-year") );
 			
+				var inputYear = 2019;
+				var inputMonth = 3;
+				var inputDay = 24;
+
                 calendarDates.each( (j, calendarDate) => {
                 
                     var calendarYear = parseInt( $(calendarDate).attr("data-year") );
                     var calendarMonth = parseInt( $(calendarDate).attr("data-month") ) + 1;
-                    var calendarDay = parseInt( $(calendarDate).children("a").first().text() );
+					var calendarDay = parseInt( $(calendarDate).children("a").first().text() );
+					
+					console.log( "%cCalendar month: " + calendarMonth, "rgb(255,0,0)" )
 
 					if( (inputYear === calendarYear) && (inputMonth === calendarMonth) && (inputDay === calendarDay) )
+						//$(calendarDate).addClass("avaliable");
 						$(calendarDate).css("background", "#00c389");
                 });  
-            });
+            //});
 		}
 
-		function updateTimeSlot(){
+		function update(date){
 			var datesToPaintCopy = $(datesToPaint).clone();
-			var calendarDatesCopy = $(calendarDates).clone();
-		}
-		
-		$(document).ready(() => {
-			$("#calendar").datepicker();
-			$(".ui-corner-all").click(paintAvaliableDays);
+			var dateSplitted = date.split("/");
+			var date = { day: dateSplitted[1], month: dateSplitted[0], year: dateSplitted[2]};
 			paintAvaliableDays();
+			console.table(date);
+			//var calendarDatesCopy = $(calendarDates).clone();
+			//console.log(day);
+		}
+
+		$(document).ready(() => {
+			
+			$("#calendar").datepicker({
+				onChangeMonthYear: paintAvaliableDays,
+				onSelect: update,
+			});
+
+			paintAvaliableDays();
+
 		});
+
 	</script>
 
     <div class="content">
@@ -126,7 +144,7 @@
  					      ?>
  					      <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_LABEL ?>" class="bigbtn" >Reagendar Cita</button>
  					      <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::CONFIRMAR_LABEL ?>" class="smallbtn sl" >Confirmar<br>Cita Original</button>
- 					      <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::CANCELAR_LABEL ?>" class="smallbtn sr" >Cancelar<br>Cita Original</button>
+ 					      <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::CANCELAR_LABEL ?>" class="smallbtn sr" >No Puedo<br>Atender</button>
  					      <?php 
  					  }else{
  					      ?>
