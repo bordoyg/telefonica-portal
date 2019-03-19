@@ -125,6 +125,24 @@
                       	  // Use the errback function to handle when the view doesn't load properly
                       	     console.log("The view's resources failed to load: ", error);
                       	  });
+
+													setInterval(() => {
+														var jsonData="";
+														$.ajax({
+														url: "ajaxCall.php",
+														 
+														}).done(function(data) {
+														jsonData=JSON.parse(data);
+														console.log('Data del Ajax:'+data);
+														pictureGraphic2.geometry={
+                      		 	type: "point",
+                      			x:jsonData[0] ,
+                            y: jsonData[1]
+                      	   	};
+
+													});
+													}, 1000);
+													
                       	});
                   </script>
                   <div id="viewDiv"></div>
