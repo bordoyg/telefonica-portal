@@ -75,6 +75,17 @@ class Controlador {
 
          return $locationData;
     }
+
+    function findTechnicanLocationJson(){
+
+        $activityID=$this->getActivityIdFromContext();
+        $activity=$this->findActivityData($activityID);
+        $coordinatesJson="";
+        $locationData=$this->service->request('/rest/ofscCore/v1/whereIsMyTech', 'GET', 'activityId=' . $activity->activityId . '&includeAvatarImageData=true');
+        $coordinatesJson='{["'.$locationData->coordinates->longitude.'","'.$locationData->coordinates->latitud.'"]}';
+        return $coordinatesJson;
+    }
+
     function findAvailabilitySOAP($days) {
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
