@@ -23,7 +23,8 @@ class Controlador {
 	
 	const MSJ_ORDEN_CONFIRMADA="<h1>Cita Confirmada</h1><p>Tu cita fue confirmada para el dia </p>@diaCita@<p>¡MUCHAS GRACIAS!</p>";
 	const MSJ_ORDEN_MODIFICADA="<h1>Cita Reagendada</h1><p>La nueva fecha para tu cita es</p>@diaCita@<p>¡MUCHAS GRACIAS!</p>";
-	const MSJ_ORDEN_CANCELADA="<h1>Cita Cancelada</h1><p>Su cita fue Cancelada</p><h2>@diaCita@</h2><p> s&iacute; requiere agendar una nueva cita por favor comun&iacute;quese a nuestra l&iacute;nea de atenci&oacute;n 3777777</p>";
+    const MSJ_ORDEN_CANCELADA="<h1>Cita Cancelada</h1><p>Su cita fue Cancelada</p><h2>@diaCita@</h2><p> s&iacute; requiere agendar una nueva cita por favor comun&iacute;quese a nuestra l&iacute;nea de atenci&oacute;n 3777777</p>";
+    const MSJ_CANCELACION_NOPUEDOATENDER="<h1>Cita Cancelada</h1><p>Su cita fue Cancelada</p><h2>@diaCita@</h2><p> para agendar una nueva cita por favor comun&iacute;quese a nuestra l&iacute;nea de atenci&oacute;n 3777777</p>";
 	const MSJ_LIMITE_CANCELACIONES="<h1>Cita Cancelada</h1><p>Su cita fue Cancelada</p><h2>@diaCita@</h2><p>Llegó al límite de cancelaciones, y entonces los equipos serán cobrados</p>";
 	
 	
@@ -239,6 +240,52 @@ class Controlador {
             return Dispatcher::MESSAGES_URL;
         }
     }
+
+    function excecuteNopuedoatenderConfirm(){
+        try {
+            $activityID=$this->getActivityIdFromContext();
+            $activity=$this->findActivityData($activityID);
+            
+            $detectedAdctivityType = $this->isAprovisionamientoAseguramientoRecupero($activity);
+            $cancelacionesHechas = intval($activity->XA_NUM_MOD_PORTAL);
+            $cancelacionesPermitidas = intval($GLOBALS['config']['cacelacionesPermitidas']);
+            
+            $params=array("setDate"=>array("date"=>NULL));
+            $params=json_encode($params);
+            
+            //Se actualiza el dia = null
+            $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId . '/custom-actions/move', 'POST', $params);
+            $params=array("timeSlot"=>NULL, "XA_CONFIRMACITA"=>Controlador::SUB_STATUS_CANCELADA);
+            
+            if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::RECUPERO) ){
+                
+                if( $cancelacionesHechas >= $cancelacionesPermitidas ){
+                    $this->addMessageError(Controlador::MSJ_LIMITE_CANCELACIONES);
+                }
+                
+                $cancelacionesHechas++;
+                $params["XA_NUM_MOD_PORTAL"] = strval($cancelacionesHechas);
+                
+            }
+            $params=json_encode($params);
+            //Se actualiza el timeslot y el estado XA_CONFIRMACITA
+            //$this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
+            
+            $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
+            $diaCita= $dateStart->format('d') . ' - ' . $GLOBALS['translateMonth'][$dateStart->format('F')] . ' - ' .$dateStart->format('Y');
+            
+            $msj= Controlador::MSJ_CANCELACION_NOPUEDOATENDER;
+            $msj=str_replace("@diaCita@", $diaCita, $msj);
+            $this->addMessageError($msj);
+            return Dispatcher::MESSAGES_URL;
+            
+        } catch (Exception $e) {
+            Utils::logDebug('Hubo un error al cancelar la cita', $e);
+            $this->addMessageError(Controlador::ERROR_GENERIC_MSJ);
+            return Dispatcher::MESSAGES_URL;
+        }
+    }
+
     function excecuteScheduleCalendar(){
 
         return Dispatcher::SCHEDULE_DATE_URL;

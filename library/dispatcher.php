@@ -22,6 +22,7 @@ class Dispatcher {
     const SCHEDULE_MORE_DATES = 'masFechasSchedule';
     const SCHEDULE_NO_MORE_DATES = 'noMasFechasSchedule';
     const CANCELAR_LABEL = 'cancelar';
+    const NOPUEDOATENDER_LABEL = 'nopuedoatender';
     const CANCEL_CONFIRM_LABEL = 'cancelConfirm';
     const SCHEDULE_DATE_LABEL = 'reagendar';
     const UBICACION_LABEL = 'map';
@@ -66,6 +67,9 @@ class Dispatcher {
             }
             if (strcmp(Dispatcher::CANCELAR_LABEL, $action) === 0){
                 return $this->controlador->excecuteCancelConfirm();
+            }
+            if (strcmp(Dispatcher::NOPUEDOATENDER_LABEL, $action) === 0){
+                return $this->controlador->excecuteNopuedoatenderConfirm();
             }
             if(strcmp(Dispatcher::CANCEL_MOTIVO_LABEL, $action) === 0){
                 return Dispatcher::CANCEL_MOTIVO_URL;
