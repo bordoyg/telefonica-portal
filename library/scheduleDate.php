@@ -14,17 +14,21 @@
 	</header>
 	<script>
 
+		var datesToPaint = undefined;
+		var calendarDates = undefined;
+
 		function hasAttr(objRef, attrName) {
 			var attr = $(objRef).attr(attrName);
 			return attr !== undefined || attr !== false;
 		}
 
 		function paintAvaliableDays(){
-			var datesToPaint = $("form").children().filter("input").filter( (index) => {
+			
+			datesToPaint = $("form").children().filter("input").filter( (index) => {
                 return hasAttr(this, "data-timefrom") && hasAttr(this, "data-timeto");
-            });
-
-            var calendarDates = $(".ui-datepicker-calendar tbody")
+			});
+			
+            calendarDates = $(".ui-datepicker-calendar tbody")
                                 .children("tr")
                                 .find("td")
                                 .filter("[data-handler*='selectDay']");
@@ -45,6 +49,11 @@
 						$(calendarDate).css("background", "#00c389");
                 });  
             });
+		}
+
+		function updateTimeSlot(){
+			var datesToPaintCopy = $(datesToPaint).clone();
+			var calendarDatesCopy = $(calendarDates).clone();
 		}
 		
 		$(document).ready(() => {
@@ -99,7 +108,7 @@
                 <p class="tag"><span class="c2"></span> Seleccionado</p>
                 <p class="tag"><span class="c3"></span> No Disponible</p>
 				
-				<div class="mostrar">
+				<div>
 					<p>Franja Horaria</p>
 					<select class="smallbtn smallbtnselect">
 						<option>A.M.</option>
