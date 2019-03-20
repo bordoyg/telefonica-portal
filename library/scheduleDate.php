@@ -215,7 +215,7 @@
             	$cantDias=$GLOBALS['config']['days-first-query-capacity-' . $detectedAdctivityType];
             	
             	if (strcmp(Dispatcher::SCHEDULE_MORE_DATES, $action) === 0){
-            	    $cantDias=$GLOBALS['config']['days-second-query-capacity' . $detectedAdctivityType];
+            	    $cantDias=$GLOBALS['config']['days-second-query-capacity-' . $detectedAdctivityType];
             	    echo '<input type="hidden" name="' . Dispatcher::SCHEDULE_NO_MORE_DATES . '" value"true"/>';
 				}
 				
