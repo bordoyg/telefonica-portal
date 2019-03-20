@@ -153,11 +153,12 @@
 					datesFiltered.each( (i, timeslot) => {
 						var from = $(timeslot).attr("data-timeFrom");
 						var to = $(timeslot).attr("data-timeTo");
+						var name = $(timeslot).attr("data-name");
 						from = from.substring(0, from.lastIndexOf(":"));
 						to = to.substring(0, to.lastIndexOf(":"));
 						if( i == 0 )
 							$(".smallbtnselect").empty();
-						$(".smallbtnselect").append(`<option>Desde ${from} Hasta ${to}</option>`);
+						$(".smallbtnselect").append(`<option value="${name}">De ${from} a ${to}</option>`);
 					});
 				} else {
 					$(".smallbtnselect").empty();
@@ -214,7 +215,7 @@
             	$cantDias=$GLOBALS['config']['days-first-query-capacity-' . $detectedAdctivityType];
             	
             	if (strcmp(Dispatcher::SCHEDULE_MORE_DATES, $action) === 0){
-            	    $cantDias=$GLOBALS['config']['days-second-query-capacity'];
+            	    $cantDias=$GLOBALS['config']['days-second-query-capacity' . $detectedAdctivityType];
             	    echo '<input type="hidden" name="' . Dispatcher::SCHEDULE_NO_MORE_DATES . '" value"true"/>';
 				}
 				
