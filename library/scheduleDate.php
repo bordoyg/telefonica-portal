@@ -16,44 +16,113 @@
 
 		var datesToPaint = undefined;
 		var calendarDates = undefined;
+		var today=new Date().toLocaleDateString();
 
 		function hasAttr(objRef, attrName) {
 			var attr = $(objRef).attr(attrName);
 			return attr !== undefined || attr !== false;
 		}
+		
+		function dateToArray(date){
+			var symbol = undefined;
+			for (let i = 0; i < date.length; i++) {
+				const char = date[i];
+				if ( isNaN(char) ){
+					symbol = char;
+					break
+				} else {
+					continue;
+				}
+			}
+			return date.split(symbol);
+		}
+
+		function formatDate(dateArray, arrayOrder, monthNames){
+			var ret = [];
+			ret.push(
+				dateArray[ arrayOrder.indexOf("d") ],
+				"-",
+				monthNames? $.datepicker._defaults.monthNamesShort[ parseInt(dateArray[arrayOrder.indexOf("m")])-1 ]:dateArray[ arrayOrder.indexOf("m") ],
+				"-",
+				dateArray[ arrayOrder.indexOf("y") ]
+			)
+
+			return ret.join("");
+		}
+
+		function addDays(date, days) {
+			var result = new Date(date);
+			result.setDate(result.getDate() + days);
+			return result;
+		}
 
 		function paintAvaliableDays(){
 			
 			datesToPaint = $("form").children().filter("input").filter( (index) => {
-                return hasAttr(this, "data-timefrom") && hasAttr(this, "data-timeto");
+                return hasAttr(this, "data-day") && hasAttr(this, "data-month") && hasAttr(this, "data-year");
 			});
+
+			
+			var days_to_add=parseInt($('#days_to_add')[0].value);
+			var start_date= new Date().toLocaleDateString().split('/');
+			var end_date= new Date(addDays(start_date,days_to_add)).toLocaleDateString().split('/');
+
+			
+
+			
+
+			var start_day=start_date[1];
+			var start_month=start_date[0];
+			var start_year=start_date[2];
+
+			var end_day=end_date[1];
+			var end_month=end_date[0];
+			var end_year=end_date[2];
+
+			
+	
+			
 			
             calendarDates = $(".ui-datepicker-calendar tbody")
                                 .children("tr")
                                 .find("td")
                                 .filter("[data-handler*='selectDay']");
+			calendarDates.each( (j, calendarDate) => {
+					var calendarYear = parseInt( $(calendarDate).attr("data-year") );
+                    var calendarMonth = parseInt( $(calendarDate).attr("data-month") ) + 1;
+					var calendarDay = parseInt( $(calendarDate).children("a").first().text() );
+					
+					if( (calendarYear >= parseInt(start_year) && calendarYear <= parseInt(end_year)) && (calendarMonth >= parseInt(start_month) && calendarMonth <= parseInt(end_month)) && (calendarDay >= parseInt(start_day) && calendarDay <= parseInt(end_day))){
+						$(calendarDate).css("background", "#455e75");
+
+							
+					}
+			});
 
             datesToPaint.each( (i, dateToPaint) => {
 
                 var inputYear = parseInt( $(dateToPaint).attr("data-year") );
                 var inputMonth = parseInt( $(dateToPaint).attr("data-month") );
                 var inputDay = parseInt( $(dateToPaint).attr("data-day") );
-			
-				// var inputYear = 2019;
-				// var inputMonth = 3;
-				// var inputDay = 24;
+				var hasTimeSlot=  hasAttr(this,"data-timefrom");
+
+				
 
                 calendarDates.each( (j, calendarDate) => {
                 
                     var calendarYear = parseInt( $(calendarDate).attr("data-year") );
                     var calendarMonth = parseInt( $(calendarDate).attr("data-month") ) + 1;
 					var calendarDay = parseInt( $(calendarDate).children("a").first().text() );
-					
-					// console.log( "%cCalendar month: " + calendarMonth, "rgb(255,0,0)" )
 
-					if( (inputYear === calendarYear) && (inputMonth === calendarMonth) && (inputDay === calendarDay) )
-						//$(calendarDate).addClass("avaliable");
+					
+
+					if( (inputYear === calendarYear) && (inputMonth === calendarMonth) && (inputDay === calendarDay) ){
+						
 						$(calendarDate).css("background", "#00c389");
+						
+					}
+				
+						
                 });  
             });
 		}
@@ -64,26 +133,46 @@
 			
 			setTimeout(() => {
 				$("#calendar").datepicker({
-				onChangeMonthYear: paintAvaliableDays,
-				onSelect: selectedDate,
+					dateFormat: "yy-mm-dd",
+					onChangeMonthYear: paintAvaliableDays,
+					onSelect: selectedDate,
 			});
-			paintAvaliableDays();
+				paintAvaliableDays();
 				var next=$('.ui-corner-all a')[0];
         		var prev=$('.ui-corner-all a')[1];
 
 				next.addEventListener('click',next_prev_handler);
 				prev.addEventListener('click',next_prev_handler);
+
+				console.log(date);
+				$("#selectedDate").text( formatDate(dateToArray(date),"ymd",true) );
+
+				date = date.replace(/-/g,"");
+				var datesFiltered = datesToPaint.filter("[id*='" + date + "']");
+				
+				if( datesFiltered.length > 0 ){
+					datesFiltered.each( (i, timeslot) => {
+						var from = $(timeslot).attr("data-timeFrom");
+						var to = $(timeslot).attr("data-timeTo");
+						from = from.substring(0, from.lastIndexOf(":"));
+						to = to.substring(0, to.lastIndexOf(":"));
+						if( i == 0 )
+							$(".smallbtnselect").empty();
+						$(".smallbtnselect").append(`<option>Desde ${from} Hasta ${to}</option>`);
+					});
+				} else {
+					$(".smallbtnselect").empty();
+				}
 				
 
-			
 			}, 0);
-			// paintAvaliableDays();
 
 		}
 
 		function next_prev_handler(){
 			setTimeout(() => {
 				$("#calendar").datepicker({
+				dateFormat: "yy-mm-dd",
 				onChangeMonthYear: paintAvaliableDays,
 				onSelect: selectedDate,
 			});
@@ -99,19 +188,17 @@
 
 		$(document).ready(() => {
 			$("#calendar").datepicker({
+				dateFormat: "yy-mm-dd",
 				onChangeMonthYear: paintAvaliableDays,
 				onSelect: selectedDate,
 			});
 			paintAvaliableDays();
+			$("#selectedDate").text( formatDate(dateToArray(today), "mdy", true) );
+			var next=$('.ui-corner-all a')[0];
+			var prev=$('.ui-corner-all a')[1];
 
-			
-				var next=$('.ui-corner-all a')[0];
-        		var prev=$('.ui-corner-all a')[1];
-
-				next.addEventListener('click',next_prev_handler);
-				prev.addEventListener('click',next_prev_handler);
-			
-
+			next.addEventListener('click', next_prev_handler);
+			prev.addEventListener('click', next_prev_handler);
 		});
 
 	</script>
@@ -127,7 +214,10 @@
             	if (strcmp(Dispatcher::SCHEDULE_MORE_DATES, $action) === 0){
             	    $cantDias=$GLOBALS['config']['days-second-query-capacity'];
             	    echo '<input type="hidden" name="' . Dispatcher::SCHEDULE_NO_MORE_DATES . '" value"true"/>';
-            	}
+				}
+				
+				echo '<input type="hidden" id="days_to_add" value="'.$cantDias.'" value"true"/>';
+
             	
             	try{
             	    $availability=$controlador->findAvailabilitySOAP($cantDias);
@@ -143,9 +233,12 @@
             	                    echo ' data-label="' . $availability[$j]->timeSlots[$k]->label . '"';
             	                    echo ' data-timeFrom="' . $availability[$j]->timeSlots[$k]->timeFrom . '"';
             	                    echo ' data-timeTo="' . $availability[$j]->timeSlots[$k]->timeTo . '"/>';
-            	                }
-            	            }
-            	        }
+								}
+								
+							}
+							
+						}
+						
             	    }
             	    
             	    
@@ -164,8 +257,7 @@
 				<div>
 					<p>Franja Horaria</p>
 					<select class="smallbtn smallbtnselect">
-						<option>A.M.</option>
-						<option>P.M.</option>
+						<option></option>
 					</select>
 				</div>
                 
