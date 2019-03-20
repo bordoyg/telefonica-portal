@@ -144,7 +144,6 @@
 				next.addEventListener('click',next_prev_handler);
 				prev.addEventListener('click',next_prev_handler);
 
-				console.log(date);
 				$("#selectedDate").text( formatDate(dateToArray(date),"ymd",true) );
 
 				date = date.replace(/-/g,"");
@@ -163,7 +162,6 @@
 				} else {
 					$(".smallbtnselect").empty();
 				}
-				
 
 			}, 0);
 
