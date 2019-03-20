@@ -274,7 +274,7 @@
  					      ?>
  					      <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_LABEL ?>" class="bigbtn" >Reagendar Cita</button>
  					      <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::CONFIRMAR_LABEL ?>" class="smallbtn sl" >Confirmar<br>Cita Original</button>
- 					      <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::NOPUEDOATENDER_LABEL ?>" class="smallbtn sr" >No Puedo<br>Atender</button>
+ 					      <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::NOPUEDOATENDER_LABEL ?>" class="smallbtn sr" style="margin-rigth:20px;">No Puedo<br>Atender</button>
  					      <?php 
  					  }else{
  					      ?>
