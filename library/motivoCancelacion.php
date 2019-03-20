@@ -31,20 +31,18 @@
         <div class="wrap">
             <section class="type1-cont">
                 <h1>Motivo de Cancelación</h1>
-                <p>Tu cita programada para el</p>
-                <h2>26-Ago-2018</h2> 
-                <p>con el fin de Instalación/reparación ha sido CANCELADA correctamente.</p>
+                <p>Por favor, selecciona un motivo para la cancelacion</p>
+                
                 <form action="" method="post">
-                <select class="multicanc">
-                    <option>...</option>
-                    <option>Servicio restablecido.</option>
-                    <option>No puedo atender la visita.</option>
-                </select>
-                <?php          
-                    echo '<button type="submit" onclick="return validateSubmit();" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CANCELAR_LABEL . '"';
-                    echo 'class="bigbtn">Cancelarla</button>';
-                    
-                ?>
+                    <select name="<?php echo Dispatcher::MOTIVO_CANCELACION_PARAM?>" class="multicanc">
+                        <option value="SREST">Servicio restablecido.</option>
+                        <option value="NPAV">No puedo atender la visita.</option>
+                    </select>
+                    <?php          
+                        echo '<button type="submit" onclick="return validateSubmit();" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CANCELAR_LABEL . '"';
+                        echo 'class="bigbtn">Cancelarla</button>';
+                        
+                    ?>
                 </form>
                 
             </section>

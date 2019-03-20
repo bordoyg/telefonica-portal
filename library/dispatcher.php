@@ -14,7 +14,6 @@ class Dispatcher {
     const ERROR_URL = 'error.php';
     const MESSAGES_URL = 'messages.php';
     const CANCEL_MOTIVO_URL='motivoCancelacion.php';
-
     
     const CONFIRMAR_LABEL = 'confirmar';
     const CONFIRM_CONFIRM_LABEL = 'confirmarConfirm';
@@ -30,6 +29,7 @@ class Dispatcher {
 
     
     const OPTION_PARAM = 'opcion';
+    const MOTIVO_CANCELACION_PARAM = 'motivoCancelacionParam';
     
     const NO_VOLVER = 'novolver';
 
@@ -69,7 +69,7 @@ class Dispatcher {
                 return $this->controlador->excecuteCancelConfirm();
             }
             if (strcmp(Dispatcher::NOPUEDOATENDER_LABEL, $action) === 0){
-                return $this->controlador->excecuteNopuedoatenderConfirm();
+                return $this->controlador->excecuteNoPuedoAtenderConfirm();
             }
             if(strcmp(Dispatcher::CANCEL_MOTIVO_LABEL, $action) === 0){
                 return Dispatcher::CANCEL_MOTIVO_URL;
