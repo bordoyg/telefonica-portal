@@ -32,13 +32,16 @@
                                 .children("tr")
                                 .find("td")
                                 .filter("[data-handler*='selectDay']");
-
+			
+			
             datesToPaint.each( (i, dateToPaint) => {
 
                 var inputYear = parseInt( $(dateToPaint).attr("data-year") );
                 var inputMonth = parseInt( $(dateToPaint).attr("data-month") );
                 var inputDay = parseInt( $(dateToPaint).attr("data-day") );
-			
+				var hasTimeSlot=  hasAttr(this,"data-timefrom");
+				
+				
 				// var inputYear = 2019;
 				// var inputMonth = 3;
 				// var inputDay = 24;
@@ -49,11 +52,16 @@
                     var calendarMonth = parseInt( $(calendarDate).attr("data-month") ) + 1;
 					var calendarDay = parseInt( $(calendarDate).children("a").first().text() );
 					
-					// console.log( "%cCalendar month: " + calendarMonth, "rgb(255,0,0)" )
 
-					if( (inputYear === calendarYear) && (inputMonth === calendarMonth) && (inputDay === calendarDay) )
+					if( (inputYear === calendarYear) && (inputMonth === calendarMonth) && (inputDay === calendarDay) && hasTimeSlot ){
 						//$(calendarDate).addClass("avaliable");
 						$(calendarDate).css("background", "#00c389");
+					}
+					else{
+						if( (inputYear === calendarYear) && (inputMonth === calendarMonth) && (inputDay === calendarDay) && !hasTimeSlot )
+							$(calendarDate).css("background", "#455e75");
+					}
+						
                 });  
             });
 		}
@@ -64,8 +72,9 @@
 			
 			setTimeout(() => {
 				$("#calendar").datepicker({
-				onChangeMonthYear: paintAvaliableDays,
-				onSelect: selectedDate,
+					dateFormat: "dd-mm-yy",
+					onChangeMonthYear: paintAvaliableDays,
+					onSelect: selectedDate,
 			});
 			paintAvaliableDays();
 				var next=$('.ui-corner-all a')[0];
@@ -73,17 +82,21 @@
 
 				next.addEventListener('click',next_prev_handler);
 				prev.addEventListener('click',next_prev_handler);
-				
-
-			
 			}, 0);
-			// paintAvaliableDays();
+
+			//var date = date.split("-");
+			console.log( date.replace(/-/g, "") );
+			date = { day:date[0], month:date[1], year:date[2] };
+			console.table(date);
+
+
 
 		}
 
 		function next_prev_handler(){
 			setTimeout(() => {
 				$("#calendar").datepicker({
+				dateFormat: "dd-mm-yy",
 				onChangeMonthYear: paintAvaliableDays,
 				onSelect: selectedDate,
 			});
@@ -99,19 +112,16 @@
 
 		$(document).ready(() => {
 			$("#calendar").datepicker({
+				dateFormat: "dd-mm-yy",
 				onChangeMonthYear: paintAvaliableDays,
 				onSelect: selectedDate,
 			});
 			paintAvaliableDays();
+			var next=$('.ui-corner-all a')[0];
+			var prev=$('.ui-corner-all a')[1];
 
-			
-				var next=$('.ui-corner-all a')[0];
-        		var prev=$('.ui-corner-all a')[1];
-
-				next.addEventListener('click',next_prev_handler);
-				prev.addEventListener('click',next_prev_handler);
-			
-
+			next.addEventListener('click', next_prev_handler);
+			prev.addEventListener('click', next_prev_handler);
 		});
 
 	</script>
@@ -133,7 +143,7 @@
             	    $availability=$controlador->findAvailabilitySOAP($cantDias);
             	    if(isset($availability)){
             	        for($j=0; $j<count($availability); $j++){
-            	            if(isset($availability[$j]->timeSlots)){
+            	            if(isset($availability[$j]->timeSlots && count($availability[$j]->timeSlots)>0){
             	                for($k=0; $k<count($availability[$j]->timeSlots); $k++){
             	                    echo '<input type="hidden" id="' . $availability[$j]->date->format('Ymd') . '"';
             	                    echo ' data-day="' . $availability[$j]->date->format('d') . '"';
