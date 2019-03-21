@@ -87,7 +87,7 @@ class Controlador {
         $locationData=$this->service->request('/rest/ofscCore/v1/whereIsMyTech', 'GET', 'activityId=' . $activity->activityId . '&includeAvatarImageData=true');
         
         /*---DummyData---*/
-        /*
+        
         $dummy = date('s', time());
         $dummy= $dummy /10;
         
@@ -98,12 +98,11 @@ class Controlador {
         $dummyY=strval($dummyY);
 
         $coordinates="<coordinates><x>".$dummyX."</x><y>".$dummyY."</y></coordinates>";
-        */
         
         /*---End Dummy---*/
 
         /* RealData */
-        
+        /*
         $longitude = $locationData->coordinates->longitude;
         $latitude = $locationData->coordinates->latitude;
         if( !strcmp($longitude,"") && !strcmp($latitude,"") ){
@@ -111,6 +110,7 @@ class Controlador {
         } else {
             $coordinates='<coordinates><x>null</x><y>null</y></coordinates>';
         }
+        */
 
         /* End of RealData */
         

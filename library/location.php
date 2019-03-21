@@ -152,20 +152,11 @@
 															var yToPaint = data.slice(data.indexOf('<y>')+3,data.indexOf('</y>'));
 
 															if( xToPaint !== "null" && yToPaint !== "null" ){
-																pictureGraphic = new Graphic({
-																											geometry: {
-																												type: "point",
-																												x: xToPaint,
-																												y: yToPaint
-																											},
-																											symbol: {
-																												type: "picture-marker",
-																												url: "/euf/assets/others/etb/images/tech-icon.png",
-																												width: "32px",
-																												height: "32px"
-																											}
-																									});
-																view.graphics.add(pictureGraphic);
+																pictureGraphic.geometry={
+																	type: "point",
+																	x:xToPaint ,
+																	y:yToPaint
+																};
 															}
 
 															console.log('x:'+pictureGraphic.geometry.x);
