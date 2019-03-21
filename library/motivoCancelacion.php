@@ -1,28 +1,12 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-    <title>ETB</title>
-    
-    <link rel="shortcut icon" href="img1/favicon.ico" />
-
-    <link href='css/style.css' rel='stylesheet' type='text/css' />
-    <link href='css/slick.css' rel='stylesheet' type='text/css' />
-
-    <script src="js/jquery-3.2.0.min.js" type="text/javascript"></script>
-    <script src="js/lib/jquery.svgmagic.js" type="text/javascript"></script>
-    <script src="js/slick.js" type="text/javascript"></script>
-
-    <script src="js/site-scripts.js" type="text/javascript"></script>
-</head>
 <?php require_once(APPPATH . 'widgets/custom/library/header.php'); ?>
 <body>
 <header>
         <div class="menu-head">
             <div class="logo-head">
                 <a href="http://etb.com">
-                    <img alt="ETB" src="img/logoetb2.png" /></a>
+                    <img alt="ETB" src="/euf/assets/others/etb/img/logoetb2.png" /></a>
             </div>
         </div>
     </header>
