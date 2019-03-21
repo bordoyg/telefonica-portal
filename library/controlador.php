@@ -108,7 +108,7 @@ class Controlador {
         /*
         $longitude = $locationData->coordinates->longitude;
         $latitude = $locationData->coordinates->latitude;
-        if( !strcmp($longitude,"") && !strcmp($latitude,"") ){
+        if( !strcmp($longitude,"")==0 && !strcmp($latitude,"")==0 ){
             $coordinates='<coordinates><x>'.$longitude.'</x><y>'.$latitude.'</y></coordinates>';
         } else {
             $coordinates='<coordinates><x>null</x><y>null</y></coordinates>';
@@ -274,7 +274,7 @@ class Controlador {
             $detectedAdctivityType = $this->isAprovisionamientoAseguramientoRecupero($activity);
             $cancelacionesHechas = intval($activity->XA_NUM_MOD_PORTAL);
             $cancelacionesPermitidas = intval($GLOBALS['config']['cacelacionesPermitidas']);
-            if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::RECUPERO) ){
+            if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::RECUPERO)==0 ){
                 
                 if( $cancelacionesHechas >= $cancelacionesPermitidas ){
                     $this->addMessageError(Controlador::MSJ_LIMITE_CANCELACIONES);
@@ -291,7 +291,7 @@ class Controlador {
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId . '/custom-actions/move', 'POST', $params);
             $params=array("timeSlot"=>NULL, "XA_CONFIRMACITA"=>Controlador::SUB_STATUS_CANCELADA, "cancel_reason"=>$motivoCancelacion, "XA_CANCELADA_PORTAL"=>"S");
             
-            if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::RECUPERO) ){
+            if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::RECUPERO)==0 ){
                 $cancelacionesHechas++;
                 $params["XA_NUM_MOD_PORTAL"] = strval($cancelacionesHechas);
             }
@@ -322,7 +322,7 @@ class Controlador {
             $detectedAdctivityType = $this->isAprovisionamientoAseguramientoRecupero($activity);
             $cancelacionesHechas = intval($activity->XA_NUM_MOD_PORTAL);
             $cancelacionesPermitidas = intval($GLOBALS['config']['cacelacionesPermitidas']);
-            if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::RECUPERO) ){
+            if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::RECUPERO)==0 ){
                 
                 if( $cancelacionesHechas >= $cancelacionesPermitidas ){
                     $this->addMessageError(Controlador::MSJ_LIMITE_CANCELACIONES);
@@ -337,7 +337,7 @@ class Controlador {
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId . '/custom-actions/move', 'POST', $params);
             $params=array("timeSlot"=>NULL, "XA_CONFIRMACITA"=>Controlador::SUB_STATUS_CANCELADA, "XA_DESPR_PORTAL"=>"S", "cancel_reason"=>Controlador::MOTIVO_CANCELACION_NPAV);
             
-            if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::RECUPERO) ){
+            if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::RECUPERO)==0 ){
                 $cancelacionesHechas++;
                 $params["XA_NUM_MOD_PORTAL"] = strval($cancelacionesHechas);
                 
@@ -351,10 +351,10 @@ class Controlador {
             
             $msj="";
             $detectedAdctivityType = $this->isAprovisionamientoAseguramientoRecupero($activity);
-            if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::RECUPERO) ){
+            if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::RECUPERO)==0 ){
                 $msj= Controlador::MSJ_ORDEN_CANCELADA;
             }
-            if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::ASEGURAMIENTO) ){
+            if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::ASEGURAMIENTO)==0 ){
                 $msj= Controlador::MSJ_CANCELACION_RECUPERO;
             }
             
@@ -420,7 +420,7 @@ class Controlador {
             $detectedAdctivityType = $this->isAprovisionamientoAseguramientoRecupero($activity);
             $modificacionesHechas = intval($activity->XA_NUM_MOD_PORTAL);
             $modificacionesPermitidas = intval($GLOBALS['config']['cacelacionesPermitidas']);
-            if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::RECUPERO) ){
+            if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::RECUPERO)==0 ){
                 
                 if( $modificacionesHechas >= $modificacionesPermitidas ){
                     $this->addMessageError(Controlador::MSJ_LIMITE_MODIFICACIONES);
@@ -435,7 +435,7 @@ class Controlador {
             //Se actualiza el dia
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId . '/custom-actions/move', 'POST', $params);
             
-            if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::RECUPERO) ){
+            if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::RECUPERO)==0 ){
                 $modificacionesHechas++;
                 $params["XA_NUM_MOD_PORTAL"] = strval($modificacionesHechas);
                 
@@ -529,23 +529,8 @@ class Controlador {
                 || !isset($activity->status)){
                     return false;
             }
-            //             $dtCurrent= new DateTime("now");
-            //             $dtETA=new DateTime();
-            //             $dtETA=$dtETA->createFromFormat("Y-m-d H:i:s", $activity->startTime);
             
-            //             Utils::logDebug("Current: " . $dtCurrent->format("Y-m-d H:i:s"));
-            //             Utils::logDebug("dtETA: " . $dtETA->format("Y-m-d H:i:s"));
-            
-            //             $interval=$dtCurrent->diff($dtETA, false);
-            //             $intervalInSeconds = (new DateTime())->setTimeStamp(0)->add($interval)->getTimeStamp();
-            //             $intervalInMinutes = $intervalInSeconds/60;
-            
-            //             Utils::logDebug("interval en minutos: " . $intervalInMinutes);
-            //             Utils::logDebug('Estado localizable: ' . in_array($activity->status, Controlador::STATUS_VIGENTE));
-            //             Utils::logDebug('XA_ROUTE: ' . (strcmp($activity->XA_ROUTE,"1")==0));
-            //             Utils::logDebug('interval mayor a 20: ' . ($intervalInMinutes>=20));
-            
-            $isVigente= ($this->showTechnicanLocation() || $this->showCancel());
+            $isVigente= ($this->showTechnicanLocation() || $this->showCancel()|| $this->showConfirm()|| $this->showSchedule());
             Utils::logDebug('isVigente: ' . ($isVigente));
             if($isVigente){
                 //Guardamos la url de acceso en el campo XA_PROJECT_CODE
@@ -577,21 +562,26 @@ class Controlador {
         return ($activity->status == Controlador::STATUS_PENDING) && ($activityDate >= $currentDate) && !$this->showTechnicanLocation();
     }
     function showCancel(){
+        Utils::logDebug("LLEGOACA1");
         if(strcmp($GLOBALS['config']['habilitarCancelacion'],"1")!=0){
             return false;
         }
+        Utils::logDebug("LLEGOACA2");
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
         $detectedAdctivityType = $this->isAprovisionamientoAseguramientoRecupero($activity);
+        Utils::logDebug("detectedAdctivityType: " . $detectedAdctivityType);
         if( $detectedAdctivityType != null 
-            && (strcmp($detectedAdctivityType, Controlador::RECUPERO) 
-                || strcmp($detectedAdctivityType, Controlador::APROVISIONAMIENTO)) ){
+            && (strcmp($detectedAdctivityType, Controlador::RECUPERO) ==0
+                || strcmp($detectedAdctivityType, Controlador::APROVISIONAMIENTO)==0) ){
+            
+            Utils::logDebug("LLEGOACA3");
             return false;
         }
         
         $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date, new DateTimeZone($activity->timeZoneIANA));
         $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'), new DateTimeZone($activity->timeZoneIANA));
-        
+        Utils::logDebug("LLEGOACA4");
         return ($activity->status == Controlador::STATUS_PENDING) && ($activityDate >= $currentDate) && !$this->showTechnicanLocation();
     }
     function showSchedule(){

@@ -262,7 +262,7 @@
                 <h3>Recuerda que el horario es de 9 a 18hr y tiene que haber alguien en el domicilio.</h3>
                 <?php 
                         $buttonValue=Dispatcher::CANCEL_FROM_CALENDAR_LABEL;
-                        if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::ASEGURAMIENTO) ){
+                        if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::ASEGURAMIENTO)==0 ){
                             $buttonValue=Dispatcher::CANCEL_FROM_CALENDAR_ASEGURAMIENTO_LABEL;
                         }
                 

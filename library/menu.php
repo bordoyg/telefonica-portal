@@ -46,7 +46,7 @@ $Controlador = $dispatcher->getControlador();
 					if($Controlador->showCancel()){
 					    $detectedAdctivityType = $Controlador->isAprovisionamientoAseguramientoRecupero($activity);
 					    $buttonValue=Dispatcher::CANCEL_MOTIVO_LABEL;
-					    if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::ASEGURAMIENTO) ){
+					    if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::ASEGURAMIENTO)==0 ){
 					        $buttonValue=Dispatcher::CANCEL_FROM_MENU_ASEGURAMIENTO_LABEL;
 					    }
 					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . $buttonValue . '"';
