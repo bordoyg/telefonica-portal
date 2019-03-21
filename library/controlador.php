@@ -25,7 +25,7 @@ class Controlador {
     const MSJ_ORDEN_CONFIRMADA="<h1>Cita Confirmada</h1><p>Tu cita fue confirmada para el dia </p>@diaCita@<p>¡MUCHAS GRACIAS!</p>";
     const MSJ_ORDEN_MODIFICADA="<h1>Cita Reagendada</h1><p>La nueva fecha para tu cita es</p>@diaCita@<p>¡MUCHAS GRACIAS!</p>";
     const MSJ_ORDEN_CANCELADA="<h1>Cita Cancelada</h1><p>Su cita fue Cancelada</p><h2>@diaCita@</h2><p> s&iacute; requiere agendar una nueva cita por favor comun&iacute;quese a nuestra l&iacute;nea de atenci&oacute;n 3777777</p>";
-    const MSJ_CANCELACION_NOPUEDOATENDER="<h1>Cita Cancelada</h1><p>Su cita fue Cancelada</p><h2>@diaCita@</h2><p>Por favor comunicarse con el operador logístico. Línea fija en Bogotá (1)3558170 o al WhatsApp 323-2056558</p>";
+    const MSJ_CANCELACION_RECUPERO="<h1>Cita Cancelada</h1><p>Su cita fue Cancelada</p><h2>@diaCita@</h2><p>Por favor comunicarse con el operador logístico. Línea fija en Bogotá (1)3558170 o al WhatsApp 323-2056558</p>";
     const MSJ_LIMITE_CANCELACIONES="<h1>Cita no Cancelada</h1><p>Su cita fue Cancelada</p><h2>@diaCita@</h2><p>Llegó al límite de cancelaciones, y entonces los equipos serán cobrados</p>";
     const MSJ_LIMITE_MODIFICACIONES="<h1>Cita no Reagendada</h1><p>Su cita no fue Reagendada</p><h2>@diaCita@</h2><p>Llegó al límite de reagendamientos, y entonces los equipos serán cobrados</p>";
     
@@ -41,6 +41,9 @@ class Controlador {
     const APROVISIONAMIENTO_VALUES=array('INS','COB_INS', 'FTTC_INS');
     const ASEGURAMIENTO_VALUES=array('MOD','COB_MOD');
     const RECUPERO_VALUES=array('RET','FTTC_RET');
+    
+    const MOTIVOS_CANCELCION=array('NPAV'=>'No puedo atender la visita.', 'SREST'=>'Servicio restablecido.');
+    const MOTIVO_CANCELACION_NPAV='NPAV';
     
     private $service=NULL;
     private $serviceSoap=NULL;
@@ -226,7 +229,43 @@ class Controlador {
             return null;
         }
     }
-    
+    function excecuteCancelAseguramientoFromCalendarConfirm(){
+        try {
+            $activityID=$this->getActivityIdFromContext();
+            $activity=$this->findActivityData($activityID);
+            $params=array("setDate"=>array("date"=>NULL));
+            $params=json_encode($params);
+            
+            $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId . '/custom-actions/cancel', 'POST', $params);
+            
+            $params=array("XA_CONFIRMACITA"=>Controlador::SUB_STATUS_CANCELADA, "cancel_reason"=>Controlador::MOTIVO_CANCELACION_NPAV, "XA_CANCELADA_PORTAL"=>"S");
+            $params=json_encode($params);
+            $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
+        } catch (Exception $e) {
+            Utils::logDebug('Hubo un error al cancelar la cita', $e);
+            $this->addMessageError(Controlador::ERROR_GENERIC_MSJ);
+            return Dispatcher::MESSAGES_URL;
+        }
+    }
+    function excecuteCancelAseguramientoFromMenuConfirm(){
+        try {
+            $activityID=$this->getActivityIdFromContext();
+            $activity=$this->findActivityData($activityID);
+            $params=array("setDate"=>array("date"=>NULL));
+            $params=json_encode($params);
+            
+            $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId . '/custom-actions/cancel', 'POST', $params);
+            
+            $motivoCancelacion = isset($_REQUEST[Dispatcher::MOTIVO_CANCELACION_PARAM]) ? $_REQUEST[Dispatcher::MOTIVO_CANCELACION_PARAM] : null ;
+            $params=array("XA_CONFIRMACITA"=>Controlador::SUB_STATUS_CANCELADA, "cancel_reason"=>$motivoCancelacion, "XA_CANCELADA_PORTAL"=>"S");
+            $params=json_encode($params);
+            $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
+        } catch (Exception $e) {
+            Utils::logDebug('Hubo un error al cancelar la cita', $e);
+            $this->addMessageError(Controlador::ERROR_GENERIC_MSJ);
+            return Dispatcher::MESSAGES_URL;
+        }
+    }
     function excecuteCancelConfirm(){
         try {
             $activityID=$this->getActivityIdFromContext();
@@ -275,7 +314,7 @@ class Controlador {
         }
     }
     
-    function excecuteNoPuedoAtenderConfirm(){
+    function excecuteCancelFromCalendarConfirm(){
         try {
             $activityID=$this->getActivityIdFromContext();
             $activity=$this->findActivityData($activityID);
@@ -296,7 +335,7 @@ class Controlador {
             
             //Se actualiza el dia = null
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId . '/custom-actions/move', 'POST', $params);
-            $params=array("timeSlot"=>NULL, "XA_CONFIRMACITA"=>Controlador::SUB_STATUS_CANCELADA, "XA_DESPR_PORTAL"=>"S");
+            $params=array("timeSlot"=>NULL, "XA_CONFIRMACITA"=>Controlador::SUB_STATUS_CANCELADA, "XA_DESPR_PORTAL"=>"S", "cancel_reason"=>Controlador::MOTIVO_CANCELACION_NPAV);
             
             if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::RECUPERO) ){
                 $cancelacionesHechas++;
@@ -310,7 +349,15 @@ class Controlador {
             $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
             $diaCita= $dateStart->format('d') . ' - ' . $GLOBALS['translateMonth'][$dateStart->format('F')] . ' - ' .$dateStart->format('Y');
             
-            $msj= Controlador::MSJ_CANCELACION_NOPUEDOATENDER;
+            $msj="";
+            $detectedAdctivityType = $this->isAprovisionamientoAseguramientoRecupero($activity);
+            if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::RECUPERO) ){
+                $msj= Controlador::MSJ_ORDEN_CANCELADA;
+            }
+            if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::ASEGURAMIENTO) ){
+                $msj= Controlador::MSJ_CANCELACION_RECUPERO;
+            }
+            
             $msj=str_replace("@diaCita@", $diaCita, $msj);
             $this->addMessageError($msj);
             return Dispatcher::MESSAGES_URL;
@@ -521,7 +568,13 @@ class Controlador {
         }
     }
     function showConfirm(){
-        return $this->showCancel();
+        $activityID=$this->getActivityIdFromContext();
+        $activity=$this->findActivityData($activityID);
+        
+        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date, new DateTimeZone($activity->timeZoneIANA));
+        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'), new DateTimeZone($activity->timeZoneIANA));
+        
+        return ($activity->status == Controlador::STATUS_PENDING) && ($activityDate >= $currentDate) && !$this->showTechnicanLocation();
     }
     function showCancel(){
         if(strcmp($GLOBALS['config']['habilitarCancelacion'],"1")!=0){
@@ -529,6 +582,13 @@ class Controlador {
         }
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
+        $detectedAdctivityType = $this->isAprovisionamientoAseguramientoRecupero($activity);
+        if( $detectedAdctivityType != null 
+            && (strcmp($detectedAdctivityType, Controlador::RECUPERO) 
+                || strcmp($detectedAdctivityType, Controlador::APROVISIONAMIENTO)) ){
+            return false;
+        }
+        
         $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date, new DateTimeZone($activity->timeZoneIANA));
         $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'), new DateTimeZone($activity->timeZoneIANA));
         
@@ -538,7 +598,13 @@ class Controlador {
         if(strcmp($GLOBALS['config']['habilitarModificacion'],"1")!=0){
             return false;
         }
-        return $this->showCancel();
+        $activityID=$this->getActivityIdFromContext();
+        $activity=$this->findActivityData($activityID);
+        
+        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date, new DateTimeZone($activity->timeZoneIANA));
+        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'), new DateTimeZone($activity->timeZoneIANA));
+        
+        return ($activity->status == Controlador::STATUS_PENDING) && ($activityDate >= $currentDate) && !$this->showTechnicanLocation();
     }
     function showTechnicanLocation(){
         if(strcmp($GLOBALS['config']['habilitarTecnicoEnCamino'],"1")!=0){

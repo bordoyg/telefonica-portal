@@ -261,20 +261,25 @@
                 <input  id="selectedDateHidden" type="hidden" name="<?php echo Controlador::SCHUEDULE_DATE_PARAM?>"/>
                 <h3>Recuerda que el horario es de 9 a 18hr y tiene que haber alguien en el domicilio.</h3>
                 <?php 
-				      $noMoreDates=$_REQUEST[Dispatcher::OPTION_PARAM ];
- 					  $noMoreDatesBool=strcmp($noMoreDates, Dispatcher::SCHEDULE_MORE_DATES)==0;
- 					  if($noMoreDatesBool){
- 					      ?>
- 					      <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_CONFIRM_LABEL ?>" class="bigbtn" >Reagendar Cita</button>
- 					      <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::CONFIRMAR_LABEL ?>" class="smallbtn sl" >Confirmar<br>Cita Original</button>
- 					      <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::NOPUEDOATENDER_LABEL ?>" class="smallbtn sr" style="margin-rigth:20px;">No Puedo<br>Atender</button>
- 					      <?php 
- 					  }else{
- 					      ?>
- 					      <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_CONFIRM_LABEL ?>" class="smallbtn sl actl" >Reagendar Cita</button>
- 					      <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_MORE_DATES ?>" class="smallbtn sr" >M&aacute;s Fechas</button>
- 					      <?php 
- 					  }
+                        $buttonValue=Dispatcher::CANCEL_FROM_CALENDAR_LABEL;
+                        if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::ASEGURAMIENTO) ){
+                            $buttonValue=Dispatcher::CANCEL_FROM_CALENDAR_ASEGURAMIENTO_LABEL;
+                        }
+                
+                        $noMoreDates=$_REQUEST[Dispatcher::OPTION_PARAM ];
+                        $noMoreDatesBool=strcmp($noMoreDates, Dispatcher::SCHEDULE_MORE_DATES)==0;
+                        if($noMoreDatesBool){
+                          ?>
+                          <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_CONFIRM_LABEL ?>" class="bigbtn" >Reagendar Cita</button>
+                          <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::CONFIRMAR_LABEL ?>" class="smallbtn sl" >Confirmar<br>Cita Original</button>
+                          <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo $buttonValue ?>" class="smallbtn sr" style="margin-rigth:20px;">Cancelar<br>Cita Original</button>
+                          <?php 
+                        }else{
+                          ?>
+                          <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_CONFIRM_LABEL ?>" class="smallbtn sl actl" >Reagendar Cita</button>
+                          <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_MORE_DATES ?>" class="smallbtn sr" >M&aacute;s Fechas</button>
+                          <?php 
+                        }
  				?>
                 
                 </form>

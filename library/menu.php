@@ -44,7 +44,12 @@ $Controlador = $dispatcher->getControlador();
 					    echo 'class="smallbtn sl col-md-6" style="margin: auto 10px 20px 3%;" >Reagendar</button>';
 					}
 					if($Controlador->showCancel()){
-					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CANCEL_MOTIVO_LABEL . '"';
+					    $detectedAdctivityType = $Controlador->isAprovisionamientoAseguramientoRecupero($activity);
+					    $buttonValue=Dispatcher::CANCEL_MOTIVO_LABEL;
+					    if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::ASEGURAMIENTO) ){
+					        $buttonValue=Dispatcher::CANCEL_FROM_MENU_ASEGURAMIENTO_LABEL;
+					    }
+					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . $buttonValue . '"';
 					    echo 'class="smallbtn sr col-md-6" style="margin: auto 3% 15px 0px;">Cancelarla</button>';
 					}
 					if($Controlador->showTechnicanLocation()){
