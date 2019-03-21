@@ -38,8 +38,17 @@
                         <option value="SREST">Servicio restablecido.</option>
                         <option value="NPAV">No puedo atender la visita.</option>
                     </select>
-                    <?php          
-                        echo '<button type="submit" onclick="return validateSubmit();" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CANCELAR_LABEL . '"';
+                    <?php    
+                        $dispatcher = $GLOBALS['dispatcher'];
+                        $Controlador = $dispatcher->getControlador();
+                        $activityID=$Controlador->getActivityIdFromContext();
+                        $activity=$Controlador->findActivityData($activityID);
+                        $detectedAdctivityType = $Controlador->isAprovisionamientoAseguramientoRecupero($activity);
+                        $buttonValue=Dispatcher::CANCELAR_LABEL;
+                        if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::ASEGURAMIENTO)==0 ){
+                            $buttonValue=Dispatcher::CANCEL_FROM_MENU_ASEGURAMIENTO_LABEL;
+                        }
+                        echo '<button type="submit" onclick="return validateSubmit();" name="' . Dispatcher::OPTION_PARAM . '" value="' . $buttonValue . '"';
                         echo 'class="bigbtn">Cancelarla</button>';
                         
                     ?>
