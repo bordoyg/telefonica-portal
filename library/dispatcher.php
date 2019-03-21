@@ -70,10 +70,10 @@ class Dispatcher {
             if (strcmp(Dispatcher::CANCELAR_LABEL, $action) === 0){
                 return $this->controlador->excecuteCancelConfirm();
             }
-            if (strcmp(Dispatcher::, $action) === 0){
+            if (strcmp(Dispatcher::CANCEL_FROM_MENU_ASEGURAMIENTO_LABEL, $action) === 0){
                 return $this->controlador->excecuteCancelAseguramientoFromMenuConfirm();
             }
-            if (strcmp(Dispatcher::, $action) === 0){
+            if (strcmp(Dispatcher::CANCEL_FROM_CALENDAR_ASEGURAMIENTO_LABEL, $action) === 0){
                 return $this->controlador->excecuteCancelAseguramientoFromCalendarConfirm();
             }
             if (strcmp(Dispatcher::CANCEL_FROM_CALENDAR_LABEL, $action) === 0){
