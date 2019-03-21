@@ -147,11 +147,17 @@
 															// coords=strSlice.split(',');
 
 															view.graphics.remove(pictureGraphic);
-															pictureGraphic.geometry={
-															type: "point",
-															x: data.slice(data.indexOf('<x>')+3,data.indexOf('</x>')) ,
-															y: data.slice(data.indexOf('<y>')+3,data.indexOf('</y>'))
-															};
+															
+															var xToPaint = data.slice(data.indexOf('<x>')+3,data.indexOf('</x>'));
+															var yToPaint = data.slice(data.indexOf('<y>')+3,data.indexOf('</y>'));
+
+															if( xToPaint !== "null" && yToPaint !== "null" ){
+																pictureGraphic.geometry={
+																	type: "point",
+																	x: xToPaint,
+																	y: yToPaint
+																};
+															}
 
 															console.log('x:'+pictureGraphic.geometry.x);
 															console.log('y:'+pictureGraphic.geometry.y);
