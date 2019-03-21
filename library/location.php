@@ -133,25 +133,28 @@
 															url: "/app/etb/ajaxCall",
 														
 														}).done(function(data) {
-															var start;
-															var end;
-															var coords;
-															var x;
-															var y;
-															strSlice=data.slice(29195,29227);
-															start=strSlice.indexOf("{");
-															end=strSlice.indexOf("}");
-															strSlice=strSlice.slice(start+1,end);
-															coords=strSlice.split(',');
+															// var start;
+															// var end;
+															// var coords;
+															// var x;
+															// var y;
+															// //strSlice=data.slice(29195,29227);
+															// dataSplitted = $(data).find("coordinates");
+															// console.table(dataSplitted); 
+															// start=strSlice.indexOf("{");
+															// end=strSlice.indexOf("}");
+															// strSlice=strSlice.slice(start+1,end);
+															// coords=strSlice.split(',');
 
 															view.graphics.remove(pictureGraphic);
 															pictureGraphic.geometry={
 															type: "point",
-															x:coords[0] ,
-															y: coords[1]
+															x: data.slice(data.indexOf('<x>')+3,data.indexOf('</x>')) ,
+															y: data.slice(data.indexOf('<y>')+3,data.indexOf('</y>'))
 															};
 
-														console.log(coords);
+															console.log('x:'+pictureGraphic.geometry.x);
+															console.log('y:'+pictureGraphic.geometry.y);
                       	   	}).always(console.log('----'));
 													}, 5000);
 													
