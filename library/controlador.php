@@ -123,7 +123,7 @@ class Controlador {
         //Genero los dias para solicitar disponibilidad
         $date = date("Y-m-d");
         $params=array();
-        for($i=0; $i<$days - 1; $i++){
+        for($i=0; $i<$days; $i++){
             $newDate = strtotime($date."+ 1 days");
             $date = date("Y-m-d",$newDate);
             

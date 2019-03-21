@@ -61,15 +61,10 @@
 			datesToPaint = $("form").children().filter("input").filter( (index) => {
                 return hasAttr(this, "data-day") && hasAttr(this, "data-month") && hasAttr(this, "data-year");
 			});
-
 			
 			var days_to_add=parseInt($('#days_to_add')[0].value);
 			var start_date= new Date().toLocaleDateString().split('/');
 			var end_date= new Date(addDays(start_date,days_to_add)).toLocaleDateString().split('/');
-
-			
-
-			
 
 			var start_day=start_date[1];
 			var start_month=start_date[0];
@@ -79,10 +74,6 @@
 			var end_month=end_date[0];
 			var end_year=end_date[2];
 
-			
-	
-			
-			
             calendarDates = $(".ui-datepicker-calendar tbody")
                                 .children("tr")
                                 .find("td")
