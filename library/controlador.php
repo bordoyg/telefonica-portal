@@ -86,6 +86,7 @@ class Controlador {
         $locationData=$this->service->request('/rest/ofscCore/v1/whereIsMyTech', 'GET', 'activityId=' . $activity->activityId . '&includeAvatarImageData=true');
         
         /*---DummyData---*/
+        /*
         $dummy = date('s', time());
         $dummy= $dummy /10;
         
@@ -94,15 +95,25 @@ class Controlador {
         
         $dummyX=strval($dummyX);
         $dummyY=strval($dummyY);
+
+        $coordinates="<coordinates><x>".$dummyX."</x><y>".$dummyY."</y></coordinates>";
+        */
         
-        
-        
-        $coordinatesJson="<coordinates><x>".$dummyX."</x><y>".$dummyY."</y></coordinates>";
         /*---End Dummy---*/
+
+        /* RealData */
         
-        // $coordinatesJson='{'.$locationData->coordinates->longitude.','.$locationData->coordinates->latitude.'}';
+        $longitude = $locationData->coordinates->longitude;
+        $latitude = $locationData->coordinates->latitude;
+        if( !strcmp($longitude,"") && !strcmp($latitude,"") ){
+            $coordinates='<coordinates><x>'.$longitude.'</x><y>'.$latitude.'</y></coordinates>';
+        } else {
+            $coordinates='<coordinates><x>null</x><y>null</y></coordinates>';
+        }
+
+        /* End of RealData */
         
-        return $coordinatesJson;
+        return $coordinates;
     }
     
     function findAvailabilitySOAP($days) {
