@@ -136,6 +136,7 @@
 				prev.addEventListener('click',next_prev_handler);
 
 				$("#selectedDate").text( formatDate(dateToArray(date),"ymd",true) );
+				$("#selectedDateHidden").val(date);
 
 				date = date.replace(/-/g,"");
 				var datesFiltered = datesToPaint.filter("[id*='" + date + "']");
@@ -250,26 +251,27 @@
 				
 				<div>
 					<p>Franja Horaria</p>
-					<select class="smallbtn smallbtnselect">
+					<select name="<?php echo Controlador::TIMESLOT_PARAM ?>" class="smallbtn smallbtnselect">
 						<option></option>
 					</select>
 				</div>
                 
                 <p>Seleccionaste:</p>
                 <h2 id="selectedDate">31-Ago-2018</h2>
+                <input  id="selectedDateHidden" type="hidden" name="<?php echo Controlador::SCHUEDULE_DATE_PARAM?>"/>
                 <h3>Recuerda que el horario es de 9 a 18hr y tiene que haber alguien en el domicilio.</h3>
                 <?php 
 				      $noMoreDates=$_REQUEST[Dispatcher::OPTION_PARAM ];
  					  $noMoreDatesBool=strcmp($noMoreDates, Dispatcher::SCHEDULE_MORE_DATES)==0;
  					  if($noMoreDatesBool){
  					      ?>
- 					      <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_LABEL ?>" class="bigbtn" >Reagendar Cita</button>
+ 					      <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_CONFIRM_LABEL ?>" class="bigbtn" >Reagendar Cita</button>
  					      <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::CONFIRMAR_LABEL ?>" class="smallbtn sl" >Confirmar<br>Cita Original</button>
  					      <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::NOPUEDOATENDER_LABEL ?>" class="smallbtn sr" style="margin-rigth:20px;">No Puedo<br>Atender</button>
  					      <?php 
  					  }else{
  					      ?>
- 					      <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_LABEL ?>" class="smallbtn sl actl" >Reagendar Cita</button>
+ 					      <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_CONFIRM_LABEL ?>" class="smallbtn sl actl" >Reagendar Cita</button>
  					      <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_MORE_DATES ?>" class="smallbtn sr" >M&aacute;s Fechas</button>
  					      <?php 
  					  }

@@ -10,8 +10,9 @@ class Controlador {
     const LOCATION_TECHNICAN_LAT_PARAM='locationTechnicanLat';
     const LOCATION_CUSTOMER_LON_PARAM='locationCustomerLon';
     const LOCATION_CUSTOMER_LAT_PARAM='locationCustomerLat';
+    const TIMESLOT_PARAM = 'timeslotParam';
     const LOCATION_TECHNICAN="technicanLocation";
-    const SCHUEDULE_DATE_PARAM='timeSlot';
+    const SCHUEDULE_DATE_PARAM='dateSelectedParam';
     const STATUS_LOCALIZABLE=array("onTheWay", "started");
     const STATUS_VIGENTE=array("onTheWay", "started", "pending");
     const STATUS_PENDING="pending";
@@ -19,7 +20,7 @@ class Controlador {
     const ERROR_GENERIC_MSJ="<h1 class=\"resalt\">ERROR</h1> <p>No fue posible procesar tu solicitud, por favor int&eacute;ntalo m&aacute;s tarde.</p> ";
     const ERROR_ORDEN_INEXISTENTE="La orden no existe";
     const ERROR_ORDEN_NO_VIGENTE="La fecha de tu cita con ETB ha expirado. Para volver agendar tu cita comun&iacute;cate al 3777777";
-    const ERROR_REAGENDAR_MSJ="<h1 class=\"resalt\">ERROR DE AGENDAMIENTO</h1> <p>No fue posible reagendar tu cita. Por favor inténtelo más tarde.</p>";
+    const ERROR_REAGENDAR_MSJ="<h1 class=\"resalt\">ERROR</h1> <p>No fue posible procesar tu solicitud, por favor int&eacute;ntalo m&aacute;s tarde.</p> ";
     
     const MSJ_ORDEN_CONFIRMADA="<h1>Cita Confirmada</h1><p>Tu cita fue confirmada para el dia </p>@diaCita@<p>¡MUCHAS GRACIAS!</p>";
     const MSJ_ORDEN_MODIFICADA="<h1>Cita Reagendada</h1><p>La nueva fecha para tu cita es</p>@diaCita@<p>¡MUCHAS GRACIAS!</p>";
@@ -188,7 +189,7 @@ class Controlador {
                 $minTimeSlotFrom='99:99:99';
                 $minTimeSlot=0;
                 for($l=0; $l<count($timeSlots); $l++){
-                    for($m=0; $m<count($timeSlots); $m++){
+                    for($m=0; $m<count($timeSlots)-$l; $m++){
                         if(isset($timeSlots[$m])){
                             $dateTimeConverter= $dateTimeConverter->createFromFormat('H:i:s', $timeSlots[$m]->timeFrom);
                             $currentTimeSlotFrom=$dateTimeConverter->format('H:i:s');
@@ -380,7 +381,7 @@ class Controlador {
                 }
             }
             //rawTimeslot Ej: 2018-08-01|AM
-            $rawTimeslot=$_REQUEST[Controlador::SCHUEDULE_DATE_PARAM];
+            $rawTimeslot=$_REQUEST[Controlador::SCHUEDULE_DATE_PARAM]. '|'. $_REQUEST[Controlador::TIMESLOT_PARAM];
             $scheduleDate=substr($rawTimeslot, 0, strrpos($rawTimeslot, '|'));
             $params=array("setDate"=>array("date"=>$scheduleDate));
             $params=json_encode($params);
@@ -402,7 +403,7 @@ class Controlador {
             $activity=$this->findActivityData($activityID);
             $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
             $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
-            $diaCita= $dateStart->format('d') . ' de ' . $GLOBALS['translateMonth'][$dateStart->format('F')] . ' de ' .$dateStart->format('Y'). ', Jornada: ' . $activity->timeSlot . '(' . $dateStart->format('g:i A') . ' - ' . $dateEnd->format('g:i A') . ')';
+            $diaCita= $dateStart->format('d') . ' de ' . $GLOBALS['translateMonth'][$dateStart->format('F')] . ' de ' .$dateStart->format('Y'). ', de ' . $dateStart->format('g:i A') . ' a ' . $dateEnd->format('g:i A');
             
             $msj= Controlador::MSJ_ORDEN_MODIFICADA;
             $msj=str_replace("@diaCita@", $diaCita, $msj);
