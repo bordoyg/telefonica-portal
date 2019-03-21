@@ -197,7 +197,7 @@
     <div class="content">
         <div class="wrap">
             <section class="type1-cont">
-                <form action="" method="post">
+                <form id="scheduleForm" action="" method="post">
             	<?php 
             	$controlador = $GLOBALS['Controlador'];
             	$activityID=$controlador->getActivityIdFromContext();
@@ -251,8 +251,8 @@
 				
 				<div>
 					<p>Franja Horaria</p>
-					<select name="<?php echo Controlador::TIMESLOT_PARAM ?>" class="smallbtn smallbtnselect">
-						<option></option>
+					<select id ="selectTimeslot" name="<?php echo Controlador::TIMESLOT_PARAM ?>" class="smallbtn smallbtnselect">
+						
 					</select>
 				</div>
                 
@@ -290,6 +290,15 @@
     <footer>
         <p class="credits">2018 © ETB S.A. ESP. Todos los derechos reservados. Música Autorizada Por Acinpro.</p>
     </footer>
-   
+   <script>
+       	$('#scheduleForm').submit(function(event) {
+            if($('#selectTimeslot').val()==null){
+                event.preventDefault();
+                return false;
+            }else{
+            	return true;
+            }
+    	});
+    </script>
 </body>
 </html>

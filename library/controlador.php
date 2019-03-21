@@ -241,6 +241,13 @@ class Controlador {
             $params=array("XA_CONFIRMACITA"=>Controlador::SUB_STATUS_CANCELADA, "cancel_reason"=>Controlador::MOTIVO_CANCELACION_NPAV, "XA_CANCELADA_PORTAL"=>"S");
             $params=json_encode($params);
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
+            
+            $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
+            $diaCita= $dateStart->format('d') . ' - ' . $GLOBALS['translateMonth'][$dateStart->format('F')] . ' - ' .$dateStart->format('Y');
+            $msj= Controlador::MSJ_ORDEN_CANCELADA;
+            $msj=str_replace("@diaCita@", $diaCita, $msj);
+            $this->addMessageError($msj);
+            return Dispatcher::MESSAGES_URL;
         } catch (Exception $e) {
             Utils::logDebug('Hubo un error al cancelar la cita', $e);
             $this->addMessageError(Controlador::ERROR_GENERIC_MSJ);
@@ -260,6 +267,13 @@ class Controlador {
             $params=array("XA_CONFIRMACITA"=>Controlador::SUB_STATUS_CANCELADA, "cancel_reason"=>$motivoCancelacion, "XA_CANCELADA_PORTAL"=>"S");
             $params=json_encode($params);
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
+            
+            $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
+            $diaCita= $dateStart->format('d') . ' - ' . $GLOBALS['translateMonth'][$dateStart->format('F')] . ' - ' .$dateStart->format('Y');
+            $msj= Controlador::MSJ_ORDEN_CANCELADA;
+            $msj=str_replace("@diaCita@", $diaCita, $msj);
+            $this->addMessageError($msj);
+            return Dispatcher::MESSAGES_URL;
         } catch (Exception $e) {
             Utils::logDebug('Hubo un error al cancelar la cita', $e);
             $this->addMessageError(Controlador::ERROR_GENERIC_MSJ);

@@ -33,8 +33,8 @@
                 <h1>Motivo de Cancelación</h1>
                 <p>Por favor, selecciona un motivo para la cancelacion</p>
                 
-                <form action="" method="post">
-                    <select name="<?php echo Dispatcher::MOTIVO_CANCELACION_PARAM?>" class="multicanc">
+                <form id="motivoCancelacionForm" action="" method="post">
+                    <select id="motivoCancelacionSelect" name="<?php echo Dispatcher::MOTIVO_CANCELACION_PARAM?>" class="multicanc">
                         <option value="SREST">Servicio restablecido.</option>
                         <option value="NPAV">No puedo atender la visita.</option>
                     </select>
@@ -54,17 +54,13 @@
     </footer>
 </body>
 <script>
-    console.log('validation script');
-    function validateSubmit(){
-        if($('.multicanc')[0].selectedIndex==0){
-        console.log('false');
-        event.preventDefault();
-        return false;
+   	$('#motivoCancelacionForm').submit(function(event) {
+        if($('#motivoCancelacionSelect').val()==null){
+            event.preventDefault();
+            return false;
+        }else{
+        	return true;
         }
-        else{
-            console.log('true');
-            return true;
-        }
-    }
+	});
 </script>
 </html>
