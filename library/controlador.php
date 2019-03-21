@@ -150,9 +150,8 @@ class Controlador {
                 && isset($response['CAPACITY'][$i]['AVAILABLE'])){
                     
                     $availableQuota=$response['CAPACITY'][$i]['AVAILABLE'];
-                    $activityDuration=$response['ACTIVITY_DURATION'];
-                    
-                    if($availableQuota>$activityDuration){
+                   
+                    if($availableQuota>0){
                         if(!isset($datesAux[$response['CAPACITY'][$i]['DATE']])){
                             $datesAux[$response['CAPACITY'][$i]['DATE']]=array();
                         }
@@ -178,14 +177,16 @@ class Controlador {
                 $minTimeSlotFrom='99:99:99';
                 $minTimeSlot=0;
                 for($l=0; $l<count($timeSlots); $l++){
-                    for($m=0; $m<count($timeSlots)-$l; $m++){
-                        $dateTimeConverter= $dateTimeConverter->createFromFormat('H:i:s', $timeSlots[$m]->timeFrom);
-                        $currentTimeSlotFrom=$dateTimeConverter->format('H:i:s');
-                        $minTimeSlot=$timeSlots[$m];
-                        if(strcmp($currentTimeSlotFrom, $minTimeSlotFrom)<0){
-                            $minTimeSlotFrom=$currentTimeSlotFrom;
+                    for($m=0; $m<count($timeSlots); $m++){
+                        if(isset($timeSlots[$m])){
+                            $dateTimeConverter= $dateTimeConverter->createFromFormat('H:i:s', $timeSlots[$m]->timeFrom);
+                            $currentTimeSlotFrom=$dateTimeConverter->format('H:i:s');
                             $minTimeSlot=$timeSlots[$m];
-                        }
+                            if(strcmp($currentTimeSlotFrom, $minTimeSlotFrom)<0){
+                                $minTimeSlotFrom=$currentTimeSlotFrom;
+                                $minTimeSlot=$timeSlots[$m];
+                            }
+                        }                        
                     }
                     
                     array_push($sortedTimeSlots, $minTimeSlot);
