@@ -42,7 +42,7 @@ $Controlador = $dispatcher->getControlador();
                                         <span>Instalación/Reparación </span>
                                     </p> -->
                                     <p>
-                                        <span>est&aacute; progamada para el </span>
+                                        <span>est&aacute; programada para el </span>
                                     </p>
                                     <p>
                                         <span class="appointment-date-formatted"><?php echo $dateStart->format('d-M-Y'); ?></span>

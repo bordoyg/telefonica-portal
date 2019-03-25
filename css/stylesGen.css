@@ -124,7 +124,7 @@ a, input[type=submit]{
 
 #display_no_photo{
     content: "";
-    background: url(../images/no_photo.gif) center center no-repeat;
+    background: url(../images/no_photo.jpg) center center no-repeat;
     background-size: cover;
     opacity: 0.2;
     top: 0;

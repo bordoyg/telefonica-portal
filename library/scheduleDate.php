@@ -217,7 +217,7 @@
 		                                <span>Record&aacute; que el horario es de 9 a 18hs y tiene </span>
 		                            </p>
 		                            <p>
-		                            	<span>que haber alguien en el domicilio.</span>
+		                            	<span>que haber alguien mayor de edad en el domicilio.</span>
 		                            </p>
 		                        </div>
 								<div class="row action-modify">
