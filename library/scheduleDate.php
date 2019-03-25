@@ -214,10 +214,10 @@
 			                    </div>
 								<div class="row appointment-remember-ad">
 		                            <p>
-		                                <span>Record&aacute; que el horario es de 9 a 18hs y tiene </span>
+		                                <span>Record&aacute; que tiene que haber alguien </span>
 		                            </p>
 		                            <p>
-		                            	<span>que haber alguien mayor de edad en el domicilio.</span>
+		                            	<span>mayor de edad en el domicilio.</span>
 		                            </p>
 		                        </div>
 								<div class="row action-modify">
