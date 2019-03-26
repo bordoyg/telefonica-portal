@@ -38,6 +38,11 @@ if($dispatcher->getControlador()->existActivity()){
 }
 
 isset($htmlFile) ? require_once(APPPATH .  '/widgets/custom/library/'. $htmlFile) :'';
+
+header("X-Content-Type-Options: nosniff");
+header("Strict-Transport-Security: max-age=25200");
+header("X-XSS-Protection: 1; mode=block");
+header("X-Frame-Options: DENY");
 ?>
 <head>
 </head>
