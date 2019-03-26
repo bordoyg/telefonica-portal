@@ -42,6 +42,11 @@ try{
     }
     
     isset($htmlFile) ? require_once(APPPATH .  '/widgets/custom/library/'. $htmlFile) :'';
+    
+    header("X-Content-Type-Options: nosniff");
+    header("Strict-Transport-Security: max-age=25200");
+    header("X-XSS-Protection: 1; mode=block");
+    //header("X-Frame-Options: DENY");
 }catch(Exception $e){
     Utils::logDebug('Hubo un error generico al ingresar a la aplicaicon', e);
 }
