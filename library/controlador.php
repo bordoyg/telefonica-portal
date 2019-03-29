@@ -721,7 +721,6 @@ class Controlador {
     }
 
     function isValidActivity(){
-        return true;
         try{
             $activityID=$this->getActivityIdFromContext();
             $activity=$this->findActivityData($activityID);
@@ -746,13 +745,8 @@ class Controlador {
 //             Utils::logDebug('Estado localizable: ' . in_array($activity->status, Controlador::STATUS_VIGENTE));
 //             Utils::logDebug('XA_ROUTE: ' . (strcmp($activity->XA_ROUTE,"1")==0));
 //             Utils::logDebug('interval mayor a 20: ' . ($intervalInMinutes>=20));
-            $isShowTechnicanLocation=$this->showTechnicanLocation();
-            $isShowCancel=$this->showCancel();
-            $isVigente= $isShowTechnicanLocation || $isShowCancel /*&& $intervalInMinutes>=0*/;
-            Utils::logDebug('isVigente: ' . $isVigente? 'true' : 'false');
-            Utils::logDebug('showTechnicanLocation: ' . $isShowTechnicanLocation? 'true' : 'false');
-            Utils::logDebug('showCancel: ' . $isShowCancel? 'true' : 'false');
-
+            $isVigente= ($this->showTechnicanLocation() || $this->showCancel()|| $this->showConfirm()|| $this->showSchedule());
+            Utils::logDebug('isValid: ' . ($isVigente));
             return $isVigente;
         }catch(Exception $e){
             Utils::logDebug('Error en isValidActivity ', $e);

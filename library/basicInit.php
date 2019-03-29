@@ -27,10 +27,13 @@ try{
     Utils::logDebug('INICIO basicInit');
     //validacion de existencia
     if($dispatcher->getControlador()->existActivity()){
+        Utils::logDebug('basicInit existe actividad');
         //Validacion vigencia
         if($dispatcher->getControlador()->isValidActivity()){
+            Utils::logDebug('basicInit actividad valida');
             $htmlFile=$dispatcher->resolveAction();
         }else{
+            Utils::logDebug('basicInit actividad no valida');
             $activityType=$dispatcher->getControlador()->getActivityType();
             if(strpos($activityType, 'PRO')===0){
                 $dispatcher->getControlador()->addMessageError(Controlador::ERROR_ORDEN_NO_VIGENTE_PROVISION);
@@ -40,10 +43,11 @@ try{
             $htmlFile= Dispatcher::MESSAGES_URL;
         }
     }else{
+        Utils::logDebug('basicInit no existe actividad');
         $dispatcher->getControlador()->addMessageError(Controlador::ERROR_ORDEN_INEXISTENTE);
         $htmlFile= Dispatcher::MESSAGES_URL;
     }
-    
+    Utils::logDebug('basicInit htmlfile: ' . $htmlFile);
     isset($htmlFile) ? require_once(APPPATH .  '/widgets/custom/library/'. $htmlFile) :'';
 }catch(Exception $e){
     Utils::logDebug('Hubo un error generico al ingresar a la aplicaicon', e);
