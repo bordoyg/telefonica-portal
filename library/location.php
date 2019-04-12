@@ -19,7 +19,7 @@
 <!-- 			</ul> -->
 <!-- 		</div> -->
 		<div class="container">
-            <h3 class="text_center">Donde esta mi t&eacute;cnico?</h3>
+            <h3 class="text_center">¿Donde esta mi t&eacute;cnico?</h3>
             
             <div>
             <div style="float:left;">
