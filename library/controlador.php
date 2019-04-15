@@ -100,35 +100,37 @@ class Controlador {
             array_push($params, array('date'=>$date));
         }
         
-        array_push($params, array('calculate_duration'=>true));
-        //array_push($params, array('calculate_travel_time'=>true));
+        //array_push($params, array('calculate_duration'=>true));
+        array_push($params, array('calculate_travel_time'=>true));
         array_push($params, array('calculate_work_skill'=>true));
-        //array_push($params, array('return_time_slot_info'=>true));
+        array_push($params, array('return_time_slot_info'=>true));
         array_push($params, array('determine_location_by_work_zone'=>true));
-        //array_push($params, array('dont_aggregate_results'=>true));
+        array_push($params, array('dont_aggregate_results'=>true));
         //array_push($params, array('min_time_to_end_of_time_slot'=>0));
         array_push($params, array('activity_field'=>array('name'=>'XA_WORK_ZONE_KEY', 'value'=>$activity->XA_WORK_ZONE_KEY)));
-        //array_push($params, array('activity_field'=>array('name'=>'XA_QUADRANT', 'value'=>$activity->XA_QUADRANT)));
+        array_push($params, array('activity_field'=>array('name'=>'XA_QUADRANT', 'value'=>$activity->XA_QUADRANT)));
         array_push($params, array('activity_field'=>array('name'=>'XA_ACCESS_TECHNOLOGY', 'value'=>$activity->XA_ACCESS_TECHNOLOGY)));
         array_push($params, array('activity_field'=>array('name'=>'worktype_label', 'value'=>$activity->activityType)));
         array_push($params, array('activity_field'=>array('name'=>'XA_WORK_TYPE', 'value'=>$activity->XA_WORK_TYPE)));
-        //array_push($params, array('activity_field'=>array('name'=>'XA_NUMBER_DECODERS', 'value'=>0)));
-        //array_push($params, array('activity_field'=>array('name'=>'XA_CUSTOMER_SEGMENT', 'value'=>$activity->XA_CUSTOMER_SEGMENT)));
-        //array_push($params, array('activity_field'=>array('name'=>'XA_CENTRAL', 'value'=>$activity->XA_CENTRAL)));
+        array_push($params, array('activity_field'=>array('name'=>'XA_NUMBER_DECODERS', 'value'=>0)));
+        array_push($params, array('activity_field'=>array('name'=>'XA_CUSTOMER_SEGMENT', 'value'=>$activity->XA_CUSTOMER_SEGMENT)));
+        array_push($params, array('activity_field'=>array('name'=>'XA_CENTRAL', 'value'=>$activity->XA_CENTRAL)));
         array_push($params, array('activity_field'=>array('name'=>'XA_BROADBAND_TECHNOLOGY', 'value'=>$activity->XA_BROADBAND_TECHNOLOGY)));
-        array_push($params, array('activity_field'=>array('name'=>'XA_EFFORT_CODE', 'value'=>'WEBAGENDAMIENTO')));
-        //array_push($params, array('activity_field'=>array('name'=>'ACTIVITY_GROUP', 'value'=>NULL)));
-        //array_push($params, array('activity_field'=>array('name'=>'PRIORITY', 'value'=>$activity->XA_PRIORITY)));
+        array_push($params, array('activity_field'=>array('name'=>'XA_EFFORT_CODE', 'value'=>'WEB_AGENDAMIENTO')));
+        
+        //Push de datos Pablo
+        array_push($params, array('activity_field'=>array('name'=>'ACTIVITY_GROUP', 'value'=>NULL)));
+        array_push($params, array('activity_field'=>array('name'=>'PRIORITY', 'value'=>$activity->XA_PRIORITY)));
         array_push($params, array('activity_field'=>array('name'=>'XA_TERMINATION_TYPE', 'value'=>$activity->XA_TERMINATION_TYPE)));
         array_push($params, array('activity_field'=>array('name'=>'XA_CURRENT_DIAGNOSIS', 'value'=>$activity->XA_CURRENT_DIAGNOSIS)));
         array_push($params, array('activity_field'=>array('name'=>'XA_TELEPHONE_TECHNOLOGY', 'value'=>$activity->XA_TELEPHONE_TECHNOLOGY)));
-        //array_push($params, array('activity_field'=>array('name'=>'XA_CUSTOMER_TYPE', 'value'=>$activity->XA_CUSTOMER_TYPE)));
+        array_push($params, array('activity_field'=>array('name'=>'XA_CUSTOMER_TYPE', 'value'=>$activity->XA_CUSTOMER_TYPE)));
         array_push($params, array('activity_field'=>array('name'=>'XA_CUSTOMER_SUBTYPE', 'value'=>$activity->XA_CUSTOMER_SUBTYPE)));
         array_push($params, array('activity_field'=>array('name'=>'XA_TV_TECHNOLOGY', 'value'=>$activity->XA_TV_TECHNOLOGY)));
-        //array_push($params, array('activity_field'=>array('name'=>'XA_COMPANY_NAME', 'value'=>$activity->XA_COMPANY_NAME)));
+        array_push($params, array('activity_field'=>array('name'=>'XA_COMPANY_NAME', 'value'=>$activity->XA_COMPANY_NAME)));
         array_push($params, array('activity_field'=>array('name'=>'XA_GUARANTEE', 'value'=>$activity->XA_GUARANTEE)));
-
-
+        
+        
         $response=$this->serviceSoap->request("/soap/capacity/", "urn:toa:capacity", "get_capacity", $params);
         
         $response=$response['SOAP-ENV:ENVELOPE']['SOAP-ENV:BODY']['URN:GET_CAPACITY_RESPONSE'];
