@@ -445,7 +445,22 @@ class Controlador {
             $this->addMessageError(Controlador::MSJ_LIMITE_MODIFICACIONES);
             return Dispatcher::MESSAGES_URL;
         }
-
+        try{
+            $activityID=$this->getActivityIdFromContext();
+            $activity=$this->findActivityData($activityID);
+            
+            $currentDateTime=date('Y-m-d H:i:s');
+            $params=array();
+            $params['XA_Q_CAMBIOS']= $activity->XA_Q_CAMBIOS . 'Acceso CALENDARIO ' . $currentDateTime . ' ';
+            
+            $params=json_encode($params);
+            $this->service->request('/rest/ofscCore/v1/activities/' . $activityID, 'PATCH', $params);
+            
+            $this->addMessageError(Controlador::MSJ_CALLCENTER_CONTACT);
+            return Dispatcher::MESSAGES_URL;
+        } catch (Exception $e) {
+            Utils::logDebug('Hubo un error al registrar la actividad del usuario', $e);
+        }
         return Dispatcher::SCHEDULE_DATE_URL;
     }
     function excecuteCallCenterContact(){
@@ -636,6 +651,22 @@ class Controlador {
         return Dispatcher::LOCATION_URL;
     }
     function excecuteMenu(){
+        try{
+            $activityID=$this->getActivityIdFromContext();
+            $activity=$this->findActivityData($activityID);
+            
+            $currentDateTime=date('Y-m-d H:i:s');
+            $params=array();
+            $params['XA_Q_CAMBIOS']= $activity->XA_Q_CAMBIOS . 'Acceso MENU ' . $currentDateTime . ' ';
+            
+            $params=json_encode($params);
+            $this->service->request('/rest/ofscCore/v1/activities/' . $activityID, 'PATCH', $params);
+            
+            $this->addMessageError(Controlador::MSJ_CALLCENTER_CONTACT);
+            return Dispatcher::MESSAGES_URL;
+        } catch (Exception $e) {
+            Utils::logDebug('Hubo un error al registrar la actividad del usuario', $e);
+        }
         return Dispatcher::MENU_URL;
     }
     function existActivity(){
