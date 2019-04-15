@@ -440,8 +440,6 @@ class Controlador {
         $activity=$this->findActivityData($activityID);
         $modificacionesHechas = intval($activity->XA_Q_REAGENDAMIENTO);
         $modificacionesPermitidas = intval($GLOBALS['config']['modificaciones-permitidas']);
-        var_dump($modificacionesHechas);
-        var_dump($modificacionesPermitidas);
         
         if( $modificacionesHechas >= $modificacionesPermitidas ){
             $this->addMessageError(Controlador::MSJ_LIMITE_MODIFICACIONES);
