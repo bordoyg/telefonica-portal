@@ -116,7 +116,7 @@ class Controlador {
         //array_push($params, array('activity_field'=>array('name'=>'XA_CUSTOMER_SEGMENT', 'value'=>$activity->XA_CUSTOMER_SEGMENT)));
         //array_push($params, array('activity_field'=>array('name'=>'XA_CENTRAL', 'value'=>$activity->XA_CENTRAL)));
         array_push($params, array('activity_field'=>array('name'=>'XA_BROADBAND_TECHNOLOGY', 'value'=>$activity->XA_BROADBAND_TECHNOLOGY)));
-        array_push($params, array('activity_field'=>array('name'=>'XA_EFFORT_CODE', 'value'=>'WEB_AGENDAMIENTO')));
+        array_push($params, array('activity_field'=>array('name'=>'XA_EFFORT_CODE', 'value'=>'WEBAGENDAMIENTO')));
         //array_push($params, array('activity_field'=>array('name'=>'ACTIVITY_GROUP', 'value'=>NULL)));
         //array_push($params, array('activity_field'=>array('name'=>'PRIORITY', 'value'=>$activity->XA_PRIORITY)));
         array_push($params, array('activity_field'=>array('name'=>'XA_TERMINATION_TYPE', 'value'=>$activity->XA_TERMINATION_TYPE)));
