@@ -27,7 +27,7 @@ class Controlador {
     const MSJ_ORDEN_CANCELADA_AVERIAS='<div class="row appointment-info"><p><span>Tu cita fue cancelada.</span></p><p><span>Podrás reagendarla</span></p><p><span>llamando al</span></p><p><span class="contact-number text-underline">0800-222-8114</span></p><p><span>&nbsp;de lunes a viernes de 9 a</span></p><p><span>21hs.</span></p></div>';
     const MSJ_ORDEN_CANCELADA_PROVISION='<div class="row appointment-info"><p><span>Tu cita fue cancelada.</span></p><p><span>Podrás reagendarla</span></p><p><span>llamando al</span></p><p><span class="contact-number text-underline">0800-222-8112</span></p><p><span>&nbsp;de lunes a viernes de 9 a</span></p><p><span>21hs.</span></p></div>';
 	const MSJ_ORDEN_NO_CANCELADA='<div class="row appointment-info"><p><span>Tu cita no pudo ser cancelada.</span></p><p><span>llamanos al</span></p><p><span class="contact-number text-underline">0800-222-8114 para cancelarla</span></p><p><span>&nbsp;de lunes a viernes de 9 a</span></p><p><span>21hs.</span></p></div>';
-	const MSJ_LIMITE_MODIFICACIONES='<div class="row appointment-info"> <p> <span>Tu cita no puede ser modificada</span></p><p><span>LLegaste al m&aacute;ximo de modificaciones permitidas</span></p></div>';
+	const MSJ_LIMITE_MODIFICACIONES='<div class="row appointment-info"> <p> <span>Tu cita no puede ser modificada</span></p><p><span>Llegaste al m&aacute;ximo de modificaciones permitidas</span></p></div>';
 	const MSJ_CALLCENTER_CONTACT='<div class="row appointment-info"> <p> <span>Gracias por tu mensaje</span></p><p><span>Un representante se pondr&aacute; en contacto con vos</span></p></div>';
 	
     const SUB_STATUS_SIN_FECHA="SINFECHASELECCIONADA";
@@ -100,34 +100,32 @@ class Controlador {
             array_push($params, array('date'=>$date));
         }
         
-        //array_push($params, array('calculate_duration'=>true));
-        array_push($params, array('calculate_travel_time'=>true));
+        array_push($params, array('calculate_duration'=>true));
+        //array_push($params, array('calculate_travel_time'=>true));
         array_push($params, array('calculate_work_skill'=>true));
-        array_push($params, array('return_time_slot_info'=>true));
+        //array_push($params, array('return_time_slot_info'=>true));
         array_push($params, array('determine_location_by_work_zone'=>true));
-        array_push($params, array('dont_aggregate_results'=>true));
+        //array_push($params, array('dont_aggregate_results'=>true));
         //array_push($params, array('min_time_to_end_of_time_slot'=>0));
         array_push($params, array('activity_field'=>array('name'=>'XA_WORK_ZONE_KEY', 'value'=>$activity->XA_WORK_ZONE_KEY)));
-        array_push($params, array('activity_field'=>array('name'=>'XA_QUADRANT', 'value'=>$activity->XA_QUADRANT)));
+        //array_push($params, array('activity_field'=>array('name'=>'XA_QUADRANT', 'value'=>$activity->XA_QUADRANT)));
         array_push($params, array('activity_field'=>array('name'=>'XA_ACCESS_TECHNOLOGY', 'value'=>$activity->XA_ACCESS_TECHNOLOGY)));
         array_push($params, array('activity_field'=>array('name'=>'worktype_label', 'value'=>$activity->activityType)));
         array_push($params, array('activity_field'=>array('name'=>'XA_WORK_TYPE', 'value'=>$activity->XA_WORK_TYPE)));
-        array_push($params, array('activity_field'=>array('name'=>'XA_NUMBER_DECODERS', 'value'=>0)));
-        array_push($params, array('activity_field'=>array('name'=>'XA_CUSTOMER_SEGMENT', 'value'=>$activity->XA_CUSTOMER_SEGMENT)));
-        array_push($params, array('activity_field'=>array('name'=>'XA_CENTRAL', 'value'=>$activity->XA_CENTRAL)));
+        //array_push($params, array('activity_field'=>array('name'=>'XA_NUMBER_DECODERS', 'value'=>0)));
+        //array_push($params, array('activity_field'=>array('name'=>'XA_CUSTOMER_SEGMENT', 'value'=>$activity->XA_CUSTOMER_SEGMENT)));
+        //array_push($params, array('activity_field'=>array('name'=>'XA_CENTRAL', 'value'=>$activity->XA_CENTRAL)));
         array_push($params, array('activity_field'=>array('name'=>'XA_BROADBAND_TECHNOLOGY', 'value'=>$activity->XA_BROADBAND_TECHNOLOGY)));
         array_push($params, array('activity_field'=>array('name'=>'XA_EFFORT_CODE', 'value'=>'WEB_AGENDAMIENTO')));
-        
-        //Push de datos Pablo
-        array_push($params, array('activity_field'=>array('name'=>'ACTIVITY_GROUP', 'value'=>NULL)));
-        array_push($params, array('activity_field'=>array('name'=>'PRIORITY', 'value'=>$activity->XA_PRIORITY)));
+        //array_push($params, array('activity_field'=>array('name'=>'ACTIVITY_GROUP', 'value'=>NULL)));
+        //array_push($params, array('activity_field'=>array('name'=>'PRIORITY', 'value'=>$activity->XA_PRIORITY)));
         array_push($params, array('activity_field'=>array('name'=>'XA_TERMINATION_TYPE', 'value'=>$activity->XA_TERMINATION_TYPE)));
         array_push($params, array('activity_field'=>array('name'=>'XA_CURRENT_DIAGNOSIS', 'value'=>$activity->XA_CURRENT_DIAGNOSIS)));
         array_push($params, array('activity_field'=>array('name'=>'XA_TELEPHONE_TECHNOLOGY', 'value'=>$activity->XA_TELEPHONE_TECHNOLOGY)));
-        array_push($params, array('activity_field'=>array('name'=>'XA_CUSTOMER_TYPE', 'value'=>$activity->XA_CUSTOMER_TYPE)));
+        //array_push($params, array('activity_field'=>array('name'=>'XA_CUSTOMER_TYPE', 'value'=>$activity->XA_CUSTOMER_TYPE)));
         array_push($params, array('activity_field'=>array('name'=>'XA_CUSTOMER_SUBTYPE', 'value'=>$activity->XA_CUSTOMER_SUBTYPE)));
         array_push($params, array('activity_field'=>array('name'=>'XA_TV_TECHNOLOGY', 'value'=>$activity->XA_TV_TECHNOLOGY)));
-        array_push($params, array('activity_field'=>array('name'=>'XA_COMPANY_NAME', 'value'=>$activity->XA_COMPANY_NAME)));
+        //array_push($params, array('activity_field'=>array('name'=>'XA_COMPANY_NAME', 'value'=>$activity->XA_COMPANY_NAME)));
         array_push($params, array('activity_field'=>array('name'=>'XA_GUARANTEE', 'value'=>$activity->XA_GUARANTEE)));
 
 
@@ -442,7 +440,9 @@ class Controlador {
         $activity=$this->findActivityData($activityID);
         $modificacionesHechas = intval($activity->XA_Q_REAGENDAMIENTO);
         $modificacionesPermitidas = intval($GLOBALS['config']['modificaciones-permitidas']);
-            
+        var_dump($modificacionesHechas);
+        var_dump($modificacionesPermitidas);
+        
         if( $modificacionesHechas >= $modificacionesPermitidas ){
             $this->addMessageError(Controlador::MSJ_LIMITE_MODIFICACIONES);
             return Dispatcher::MESSAGES_URL;
