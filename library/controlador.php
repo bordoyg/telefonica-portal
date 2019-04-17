@@ -128,13 +128,15 @@ class Controlador {
         array_push($params, array('activity_field'=>array('name'=>'XA_CUSTOMER_SUBTYPE', 'value'=>$activity->XA_CUSTOMER_SUBTYPE)));
         array_push($params, array('activity_field'=>array('name'=>'XA_TV_TECHNOLOGY', 'value'=>$activity->XA_TV_TECHNOLOGY)));
         array_push($params, array('activity_field'=>array('name'=>'XA_COMPANY_NAME', 'value'=>$activity->XA_COMPANY_NAME)));
-        array_push($params, array('activity_field'=>array('name'=>'XA_GUARANTEE', 'value'=>$activity->XA_GUARANTEE)));
-        
+        if(isset($activity->XA_GUARANTEE)){
+            array_push($params, array('activity_field'=>array('name'=>'XA_GUARANTEE', 'value'=>$activity->XA_GUARANTEE)));
+        }else{
+            array_push($params, array('activity_field'=>array('name'=>'XA_GUARANTEE', 'value'=>0)));
+        }
         
         $response=$this->serviceSoap->request("/soap/capacity/", "urn:toa:capacity", "get_capacity", $params);
         
         $response=$response['SOAP-ENV:ENVELOPE']['SOAP-ENV:BODY']['URN:GET_CAPACITY_RESPONSE'];
-        
         
         $timeSlotsMap=array();
         if(isset($response['TIME_SLOT_INFO'])){
