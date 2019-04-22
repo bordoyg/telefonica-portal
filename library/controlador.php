@@ -459,9 +459,7 @@ class Controlador {
             
             $params=json_encode($params);
             $this->service->request('/rest/ofscCore/v1/activities/' . $activityID, 'PATCH', $params);
-            
-            $this->addMessageError(Controlador::MSJ_CALLCENTER_CONTACT);
-            return Dispatcher::MESSAGES_URL;
+            Utils::logDebug('Se registro el acceso al calendario correctamente');
         } catch (Exception $e) {
             Utils::logDebug('Hubo un error al registrar la actividad del usuario', $e);
         }
@@ -665,9 +663,7 @@ class Controlador {
             
             $params=json_encode($params);
             $this->service->request('/rest/ofscCore/v1/activities/' . $activityID, 'PATCH', $params);
-            
-            $this->addMessageError(Controlador::MSJ_CALLCENTER_CONTACT);
-            return Dispatcher::MESSAGES_URL;
+            Utils::logDebug('Se registro el acceso al menu correctamente');
         } catch (Exception $e) {
             Utils::logDebug('Hubo un error al registrar la actividad del usuario', $e);
         }
