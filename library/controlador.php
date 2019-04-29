@@ -652,6 +652,12 @@ class Controlador {
         $this->findTechnicanLocation($activity);
         return Dispatcher::LOCATION_URL;
     }
+    function excecuteMap(){
+        $activityID=$this->getActivityIdFromContext();
+        $activity=$this->findActivityData($activityID);
+        $this->findTechnicanLocation($activity);
+        return Dispatcher::MAP_URL;
+    }
     function excecuteMenu(){
         try{
             $activityID=$this->getActivityIdFromContext();

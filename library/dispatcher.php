@@ -10,6 +10,7 @@ class Dispatcher {
     const SCHEDULE_DATE_CONFIRM_URL = 'scheduleDateConfirm.php';
     const SCHEDULE_ANY_DATE_URL = 'scheduleAnyDate.php';
     const LOCATION_URL = 'location.php';
+    const MAP_URL = 'map.php';
     const CUSTOMER_DATA_URL = 'customerData.php';
     const MENU_URL = 'menu.php';
     const ERROR_URL = 'error.php';
@@ -25,6 +26,7 @@ class Dispatcher {
     const CANCEL_CONFIRM_LABEL = 'cancelConfirm';
     const SCHEDULE_DATE_LABEL = 'reagendar';
     const UBICACION_LABEL = 'map';
+    const MAP_LABEL='map-only';
     
     const OPTION_PARAM = 'opcion';
     
@@ -75,6 +77,9 @@ class Dispatcher {
             }
             if (strcmp(Dispatcher::CANCELAR_LABEL, $action) === 0){
                 return $this->controlador->excecuteCancelConfirm();
+            }
+            if (strcmp(Dispatcher::MAP_LABEL, $action) === 0){
+                return $this->controlador->excecuteMap();
             }
             if (strcmp(Dispatcher::UBICACION_LABEL, $action) === 0){
                 return $this->controlador->excecuteLocation();
