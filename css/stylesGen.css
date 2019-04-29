@@ -34,10 +34,168 @@
 .icon-icon_down:before { content: '\e807'; }
 .icon-icon_up:before { content: '\e808'; }
 
+.padding-left-8px {
+    padding-left: 8px !important;
+}
+
+.padding-right-8px {
+    padding-right: 8px !important;
+}
+
+.text-bold {
+    font-weight: 700;
+}
+
+.btn:focus, .btn:active:focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn.active.focus {
+    outline: initial;
+}
+
+.btn.btn-primary {
+    color: #ffffff;
+    background: rgba(0, 204, 0, 1);
+    border-color: transparent;
+}
+
+.btn.btn-secondary {
+    color: #999999;
+    background: #ffffff;
+    box-sizing: border-box;
+    border-width: 2px;
+    border-style: solid;
+    border-color: rgba(153, 153, 153, 1);
+    border-radius: 5px;
+}
+
+.btn.btn-blue {
+    color: #ffffff;
+    background: #00A9E0;
+    box-sizing: border-box;
+    border-color: transparent;
+}
+
+.btn-lg {
+    padding: 8px 16px;
+    font-size: 16px;
+}
+
+.text-underline {
+    text-decoration: underline;
+}
+
+.contact-number {
+    color:#00ABE3;
+}
+
+#appointment-confirmation {
+    color:#666666;
+    /*font-family: 'Telefonica Headline Light', 'Telefonica Headline';*/
+    font-family: serif;
+    font-weight: 300;
+    font-style: normal;
+    font-size: 1.6em;
+}
+
+#appointment-confirmation p {
+    margin: 0px;
+    margin-left: 15px;
+    margin-right: 15px;
+    line-height: normal;
+}
+
+#appointment-confirmation .row .header-image {
+    margin-top: 12px;
+}
+
+#appointment-confirmation .row .header-image img {
+    width: 93px;
+    height: 59px;
+}
+
+#appointment-confirmation .row .appointment-info {
+    margin-top: 13px;
+}
+
+#appointment-confirmation .row .appointment-info .appointment-date-formatted {
+    color:#00ABE3;
+}
+
+#appointment-confirmation .row .appointment-remember-ad {
+    padding-left: 10%;
+    padding-right: 10%;
+    margin-top: 45px;
+    /*font-family: 'Telefonica Text Italic', 'Telefonica Text Regular', 'Telefonica Text';*/
+    font-family: serif;
+    font-weight: 400;
+    font-style: italic;
+    font-size: 0.5em;
+}
+
+#appointment-confirmation .row .appointment-remember-ad p {
+    /*max-height: 16px;*/
+}
+
+#appointment-confirmation .row .appointment-thanks-msg {
+    margin-top: 20px;
+}
+
+#appointment-confirmation .row .appointment-thanks-msg .action-back {
+    margin-top: 30px;
+}
+
+#appointment-confirmation .row .action-confirm {
+    margin-top: 60px;
+    padding: 0px 37px;
+}
+
+#appointment-confirmation .row .action-modify {
+    margin-top: 11px;
+    padding: 0px 37px;
+}
+
+#appointment-confirmation .row .separator {
+    margin-top: 40px;
+}
+
+#appointment-confirmation .row .footer-image {
+    margin-top: 0px;
+}
+
+#appointment-calendar.container-fluid {
+    padding-right: 0px !important;
+    padding-left: 0px !important;
+}
+
+#appointment-calendar form {
+    margin-bottom: 30px;
+}
+
+#appointment-calendar .row.separator {
+    margin-top: 5px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+#appointment-calendar .row.separator img {
+    width: 100%;
+}
+
+#appointment-calendar .appointment-remember-ad {
+    margin-top: 10px !important;
+    font-size: 0.6em !important;
+}
+
+#appointment-calendar .row.action-modify {
+    margin-top: 30px;
+    padding: 0px 15px;
+}
+
+#appointment-calendar .row.action-modify div {
+    padding: 0px;
+}
 
 /* --- */
 #cont_agend{
-    background: #F6F7F9;
+    background: #FFFFFF;
     color: #50535a;
     padding: 0 0 3em;
     font-family: 'TelefonicaLight';
@@ -124,7 +282,7 @@ a, input[type=submit]{
 
 #display_no_photo{
     content: "";
-    background: url(../images/no_photo.gif) center center no-repeat;
+    background: url(../images/no_photo.jpg) center center no-repeat;
     background-size: cover;
     opacity: 0.2;
     top: 0;
@@ -189,7 +347,7 @@ a, input[type=submit]{
     list-style: none;
     margin: 2em 0;
     padding: 0;
-}   
+}
 #cont_agend ul.steps_form li{
     width: calc((100% / 2) - 5px);
     display: inline-block; *display: inline; zoom: 1;
@@ -287,22 +445,25 @@ a, input[type=submit]{
     background: #54AF04;
 }
 .wrap_calendar{
-    margin: 3em 0 0;
+    margin-top: 36px;
 }
 .wrap_calendar .row.colors_date{
-    margin-top: 2em;
+    /*margin-top: 2em;*/
 }
 .wrap_calendar .row.colors_date > div{
-    font-size: 1.6em;
+    font-size: 0.6em;
     line-height: 1.2;
     position: relative;
-    padding: 0 0 0 2.5em;
+    /*padding: 0 0 0 2.5em;*/
+    padding-left: 23px;
+    padding-right: 0px;
     min-height: 40px;
 }
-.wrap_calendar .date_checkbox{
+
+#appointment-calendar .date_checkbox{
     margin: 2em auto;
 }
-.wrap_calendar .date_checkbox label{
+#appointment-calendar .date_checkbox label{
     position: relative;
     padding: 0 0 0 1.8em;
     display: block;
@@ -311,22 +472,22 @@ a, input[type=submit]{
     max-width: 190px;
     color: #b6b7b7;
 }
-.wrap_calendar .date_checkbox label p{
+#appointment-calendar .date_checkbox label p{
     line-height: 1 !important;
     margin: 0 !important;
     padding: 0 !important;
 }
-.wrap_calendar .date_checkbox label:last-child{
+#appointment-calendar .date_checkbox label:last-child{
     margin-bottom: 0;
 }
-.wrap_calendar .date_checkbox input{
+#appointment-calendar .date_checkbox input{
     width: 1em;
     height: 1em;
     position: absolute;
     opacity: 0;
     cursor: pointer;
 }
-.wrap_calendar .date_checkbox .checkmark{
+#appointment-calendar .date_checkbox .checkmark{
     display: block;
     width: 1.3em;
     height: 1.3em;
@@ -336,7 +497,7 @@ a, input[type=submit]{
     left: 0;
     top: 0;
 }
-.wrap_calendar .date_checkbox .checkmark:after {
+#appointment-calendar .date_checkbox .checkmark:after {
     top: 0.27em;
     left: 0.27em;
     width: 0.45em;
@@ -344,27 +505,30 @@ a, input[type=submit]{
     border-radius: 50%;
     background: #5bc500;
 }
-.wrap_calendar .date_checkbox .checkmark:after {
+#appointment-calendar .date_checkbox .checkmark:after {
     content: "";
     position: absolute;
     display: none;
 }
-.wrap_calendar .date_checkbox input:checked ~ .checkmark:after {
+#appointment-calendar .date_checkbox input:checked ~ .checkmark:after {
     display: block;
 }
-.wrap_calendar .date_checkbox input:checked ~ p {
+#appointment-calendar .date_checkbox input:checked ~ p {
     color: #50535a;
 }
 .wrap_calendar .calendar{
-    margin: 3em 0 2em;
+    /*margin: 3em 0 2em;*/
+    margin-bottom: 36px;
 }
 .wrap_calendar .calendar header{
     position: relative;
-    background: #5bc500;
+    background: #4fba01;
     padding: 0.3em;
 }
-.wrap_calendar .calendar header h2.month{
-    font-size: 2em;
+.wrap_calendar .calendar header h2.month {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-size: 1em;
     text-align: center;
     color: #ffffff;
 }
@@ -383,7 +547,7 @@ a, input[type=submit]{
 .wrap_calendar .calendar table{
     width: 100%;
     text-align: center;
-    font-size: 1.4em;
+    /*font-size: 1.4em;*/
     background: #ffffff;
 }
 .wrap_calendar .calendar table thead{
@@ -393,7 +557,7 @@ a, input[type=submit]{
     text-align: center;
 }
 .wrap_calendar .calendar table td{
-    padding: 0.5em 0.2em; 
+    /*padding: 0.5em 0.2em;*/
 }
 .wrap_calendar .calendar table a{
     color: #50535a;
@@ -424,8 +588,8 @@ a, input[type=submit]{
 }
 
 .wrap_calendar .box_green, .wrap_calendar .box_blue, .wrap_calendar .box_red{
-    width: 40px;
-    height: 40px;
+    width: 21px;
+    height: 22px;
     margin: 0 0.5em 0 0;
     position: absolute;
     left: 0;
@@ -478,6 +642,6 @@ a, input[type=submit]{
 
     #cont_agend ul.steps_form li:first-child:after, #cont_agend ul.steps_form li:nth-child(2):after, #cont_agend ul.steps_form li:nth-child(2):before, #cont_agend ul.steps_form li:last-child:before{ top: 20px;}
 
-    .wrap_calendar .calendar table{ font-size: 1em;}
+    /*.wrap_calendar .calendar table{ font-size: 1em;}*/
     .wrap_calendar .calendar table td{ padding: 0.2em 0.1em;}
 }

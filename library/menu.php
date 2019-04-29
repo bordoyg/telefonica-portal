@@ -19,7 +19,7 @@ $Controlador = $dispatcher->getControlador();
                             $dispatcher = $GLOBALS['dispatcher'];
                             $Controlador = $dispatcher->getControlador();
                             if($Controlador->showCancel() && !$Controlador->showTechnicanLocation()) {
-                                
+                                //$activityID=$Controlador->getActivityIdFromContext();
                                 $activityID=$dispatcher->getControlador()->getActivityIdFromContext();
                                 $activity=$dispatcher->getControlador()->findActivityData($activityID);
                                 $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
@@ -42,7 +42,7 @@ $Controlador = $dispatcher->getControlador();
                                         <span>Instalación/Reparación </span>
                                     </p> -->
                                     <p>
-                                        <span>est&aacute; progamada para el </span>
+                                        <span>est&aacute; programada para el </span>
                                     </p>
                                     <p>
                                         <span class="appointment-date-formatted"><?php echo $dateStart->format('d-M-Y'); ?></span>
@@ -93,27 +93,33 @@ $Controlador = $dispatcher->getControlador();
                                         </style>';
                                     }
                                     ?>
+								<?php
+                                if(strcmp(Controlador::PROVISION_LABEL, $Controlador->isAveriaOProvision($activity))!=0){
+                                ?>
+                                    <div id="cancelarMenuDiv" class="col-xs-6 col-sm-6 col-md-6 col-lg-6 cancelarBtnDiv">
+                                        <input  id ="cancelarMenuBtn" type="button" name="<?php echo Dispatcher::OPTION_PARAM; ?>"
+                                                value="Cancelarla"
+                                                class="btn btn-lg btn-block btn-secondary pull-right" 
+                                                onclick='
+                                                    var event = new CustomEvent("cancelarMenuBtnClicked", { "detail": "Example of an event" });
+                                                    document.dispatchEvent(event);'>
+                                        <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM; ?>"
+                                                value="<?php echo Dispatcher::CANCELAR_LABEL; ?>"
+                                                class="btn btn-lg btn-block btn-secondary pull-right" style="display:none;">Cancelarla</button>
+                                    </div>
+                                    
+                                <?php
+                                }
+                                ?>
 
                                 
-
-                                <div id="cancelarMenuDiv" class="col-xs-6 col-sm-6 col-md-6 col-lg-6 cancelarBtnDiv">
-                                    <input  id ="cancelarMenuBtn" type="button" name="<?php echo Dispatcher::OPTION_PARAM; ?>"
-                                            value="Cancelarla"
-                                            class="btn btn-lg btn-block btn-secondary pull-right" 
-                                            onclick='
-                                                var event = new CustomEvent("cancelarMenuBtnClicked", { "detail": "Example of an event" });
-                                                document.dispatchEvent(event);'>
-                                    <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM; ?>"
-                                            value="<?php echo Dispatcher::CANCELAR_LABEL; ?>"
-                                            class="btn btn-lg btn-block btn-secondary pull-right" style="display:none;">Cancelarla</button>
-                                </div>
 
                             <?php } ?>
                             <?php
                                 $dispatcher = $GLOBALS['dispatcher'];
                                 $Controlador = $dispatcher->getControlador();
                                 if($Controlador->showTechnicanLocation()){
-                                echo 'Puedes consultar la ubicaci&oacute;n del t&eacute;cnico aca';
+                                echo 'Podes consultar la ubicaci&oacute;n del t&eacute;cnico aca';
 
                                 echo '<div class="col-lg-12">';
                                 echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::UBICACION_LABEL . '"';
