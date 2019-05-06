@@ -24,7 +24,7 @@ class Dispatcher {
     const CANCEL_CONFIRM_LABEL = 'cancelConfirm';
     const CANCEL_FROM_CALENDAR_LABEL='cancelFromCalendarAproRec';
     const CANCEL_FROM_CALENDAR_ASEGURAMIENTO_LABEL='cancelFromCalendarAseg';
-    const CANCEL_FROM_MENU_ASEGURAMIENTO_LABEL='cancelFromCalendarAseg';
+    const CANCEL_FROM_MENU_ASEGURAMIENTO_LABEL='cancelFromMenuAseg';
     const SCHEDULE_DATE_LABEL = 'reagendar';
     const UBICACION_LABEL = 'map';
     const CANCEL_MOTIVO_LABEL='motivoCancelacion';
