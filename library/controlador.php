@@ -18,18 +18,11 @@ class Controlador {
     
     const ERROR_GENERIC_MSJ='<div class="row appointment-info"> <p> <span>No fue posible procesar tu </span></p><p><span>solicitud.</span></p><p><span>Por favor intentalo m&aacute;s</span></p><p><span>tarde.</span></p></div>';
     const ERROR_ORDEN_INEXISTENTE='<div class="row appointment-info"><p><span class="text-bold">La orden no existe </span></p></div>';
-    
-    const ERROR_ORDEN_NO_VIGENTE_AVERIAS='<div class="row appointment-info"><p><span>Tu cita no puede ser confirmada</span></p><p><span>o modificada debido a que no se</span></p><p><span>encuentra vigente en este</span></p><p><span>momento.</span></p><p><span>Si ten&eacute;s alguna inquietud pod&eacute;s</span></p><p><span>comunicarte al</span></p><p><span class="contact-number text-underline">0800-222-8114</span><span></span></p></div>';
-    const ERROR_ORDEN_NO_VIGENTE_PROVISION='<div class="row appointment-info"><p><span>Tu cita no puede ser confirmada</span></p><p><span>o modificada debido a que no se</span></p><p><span>encuentra vigente en este</span></p><p><span>momento.</span></p><p><span>Si ten&eacute;s alguna inquietud pod&eacute;s</span></p><p><span>comunicarte al</span></p><p><span class="contact-number text-underline">0800-222-8112</span><span></span></p></div>';
-    
+   
     const MSJ_ORDEN_CONFIRMADA='<div class="row appointment-info"><p><span>Tu cita fue confirmada </span></p><p><span>para el </span></p><p><span class="appointment-date-formatted">@@$dateFormatted@@</span><span> </span></p><p><span>entre las @@$dateStartHours@@ y las @@$dateEndHours@@.</span></p></div><div class="row appointment-remember-ad text-left"><p><span class="text-bold">Record&aacute;:</span><span>&nbsp; tiene que haber alguien mayor de edad en el domicilio y te vamos a avisar por SMS cuando el t&eacute;cnico est&eacute; en camino.</span></p></div>';
     const MSJ_ORDEN_MODIFICADA='<div class="row appointment-info"><p><span>Tu cita fue </span></p><p><span>reagendada para el</span></p><p><span class="appointment-date-formatted">@@$dateFormatted@@</span><span> </span></p><p><span>entre las @@$dateStartHours@@ y las @@$dateEndHours@@.</span></p></div><div class="row appointment-remember-ad text-left"><p><span class="text-bold">Record&aacute;:</span></p><p><span>&#149;Tiene que haber alguien mayor de edad en el domicilio</span></p><p><span>&#149;Te vamos a avisar por SMS cuando el t&eacute;cnico </span></p><p><span>est&eacute; en camino.</span></p></div>';
-    const MSJ_ORDEN_CANCELADA_AVERIAS='<div class="row appointment-info"><p><span>Tu cita fue cancelada.</span></p><p><span>Podrás reagendarla</span></p><p><span>llamando al</span></p><p><span class="contact-number text-underline">0800-222-8114</span></p><p><span>&nbsp;de lunes a viernes de 9 a</span></p><p><span>21hs.</span></p></div>';
-    const MSJ_ORDEN_CANCELADA_PROVISION='<div class="row appointment-info"><p><span>Tu cita fue cancelada.</span></p><p><span>Podrás reagendarla</span></p><p><span>llamando al</span></p><p><span class="contact-number text-underline">0800-222-8112</span></p><p><span>&nbsp;de lunes a viernes de 9 a</span></p><p><span>21hs.</span></p></div>';
-    const MSJ_ORDEN_NO_CANCELADA='<div class="row appointment-info"><p><span>Tu cita no pudo ser cancelada.</span></p><p><span>llamanos al</span></p><p><span class="contact-number text-underline">0800-222-8114 para cancelarla</span></p><p><span>&nbsp;de lunes a viernes de 9 a</span></p><p><span>21hs.</span></p></div>';
-    const MSJ_LIMITE_MODIFICACIONES='<div class="row appointment-info"> <p> <span>Tu cita no puede ser modificada</span></p><p><span>Llegaste al m&aacute;ximo de modificaciones permitidas</span></p></div>';
-    const MSJ_CALLCENTER_CONTACT='<div class="row appointment-info"> <p> <span>Gracias por tu mensaje</span></p><p><span>Un representante se pondr&aacute; en contacto con vos</span></p></div>';
-    
+    const MSJ_ORDEN_CANCELADA='<div class="row appointment-info"><p><span>Tu cita fue cancelada.</span></p><p><span>Podrás reagendarla</span></p><p><span>llamando al</span></p><p><span class="contact-number text-underline">0800-222-8114</span></p><p><span>&nbsp;de lunes a viernes de 9 a</span></p><p><span>21hs.</span></p></div>';
+     
     const SUB_STATUS_SIN_FECHA="SINFECHASELECCIONADA";
     const SUB_STATUS_CANCELA_CLIENTE="CANCELA_CLIENTEWEB";
     const SUB_STATUS_CANCELADA_LABEL="El cliente respondio Cancelada";
@@ -41,11 +34,6 @@ class Controlador {
     const CHANEL_LABEL="WEBREAGENDAMIENTO";
     const CANCEL_REASON="OKCONFIRMACLIENTEWEB";
     const EXTERNAL_ACTION_RESCHEDULE="RESCHEDULE";
-    
-    const WORKTYPE_AVERIAS=array("REP_ADSL","REP_FTTH","REP_FTTN","REP_NO_IMP","REP_MATERIAL","REP_ADSL_INEST","REP_OTT","REP_IPTV","REP_RISK","REP_STB","REP_STB_2","REP_SUPERVISION");
-    const WORKTYPE_PROVISION=array("PRO_CHANGE_EQUIPMENT","PRO_CHANGE_TECHNOLOGY","PRO_MOVE","PRO_CLOSET_FTTN","PRO_CLOSET_FTTN_KIT","PRO_UNINSTALL","PRO_INSTALL","PRO_REVCLOSET_FTTN","PRO_INSTALL_IPTV","PRO_INSTALL_KIT","PRO_INSTALL_2","PRO_SUPERV_FTTH","PRO_FALTA_MAT","PRO_QUALITY_INST");
-    const PROVISION_LABEL="provision";
-    const AVERIA_LABEL="averia";
     
     private $service=NULL;
     private $serviceSoap=NULL;
@@ -208,92 +196,7 @@ class Controlador {
         
         return $dates;
     }
-    //@Deprecated
-    function findAvailability($days) {
-        $activityID=$this->getActivityIdFromContext();
-        $activity=$this->findActivityData($activityID);
-        
-        //Genero los dias para solicitar disponibilidad
-        $queryString='dates=';
-        $date = date("Y-m-d");
-        $queryString=$queryString . $date;
-        
-        for($i=0; $i<$days - 1; $i++){
-            $newDate = strtotime($date."+ 1 days");
-            $date = date("Y-m-d",$newDate);
-            
-            $queryString=$queryString . ',' . $date;
-        }
-        
-        $queryString=$queryString . '&activityType=' . $activity->activityType;
-        $queryString=$queryString . '&XA_WORK_ZONE_KEY=' . $activity->XA_WORK_ZONE_KEY;
-        $queryString=$queryString . '&XA_WORK_TYPE=' . $activity->XA_WORK_TYPE;
-        $queryString=$queryString . '&XA_ACCESS_TECHNOLOGY=' . $activity->XA_ACCESS_TECHNOLOGY;
-        $queryString=$queryString . '&XA_QUADRANT=' . $activity->XA_QUADRANT;
-        $queryString=$queryString . '&XA_NUMBER_DECODERS=0';//No viene en la actividad, segun ejemplo va con 0
-        $queryString=$queryString . '&determineAreaByWorkZone=true';
-        $queryString=$queryString . '&XA_NOT_ACCOMPLISHED=' . $activity->XA_NOT_ACCOMPLISHED;
-        $queryString=$queryString . '&XA_CUSTOMER_SEGMENT=' . $activity->XA_CUSTOMER_SEGMENT;
-        $queryString=$queryString . '&XA_ESTRATO=' . $activity->XA_ESTRATO;
-        $queryString=$queryString . '&XA_VELOCIDAD=' . $activity->XA_VELOCIDAD;
-        $queryString=$queryString . '&XA_NOT_ACCOMPLISHED=' . $activity->XA_NOT_ACCOMPLISHED;
-        
-        Utils::logDebug($queryString);
-        $activityBookingOptions=$this->service->request('/rest/ofscCapacity/v1/activityBookingOptions', 'GET', $queryString);
-        Utils::logDebug(json_encode($activityBookingOptions));
-        $timeSlotsMap=array();
-        if(isset($activityBookingOptions->timeSlotsDictionary)){
-            for($i=0; $i<count($activityBookingOptions->timeSlotsDictionary); $i++){
-                $timeSlotsMap[$activityBookingOptions->timeSlotsDictionary[$i]->label]= $activityBookingOptions->timeSlotsDictionary[$i];
-            }
-        }
-        
-        $dates=array();
-        for($i=0; $i<count($activityBookingOptions->dates); $i++){
-            $timeSlots=array();
-            if(isset($activityBookingOptions->dates[$i]->areas)){
-                for($j=0; $j<count($activityBookingOptions->dates[$i]->areas); $j++){
-                    if(isset($activityBookingOptions->dates[$i]->areas[$j]->timeSlots)){
-                        for($k=0; $k<count($activityBookingOptions->dates[$i]->areas[$j]->timeSlots); $k++){
-                            if(isset($activityBookingOptions->dates[$i]->areas[$j]->timeSlots[$k]->remainingQuota)
-                                && $activityBookingOptions->dates[$i]->areas[$j]->timeSlots[$k]->remainingQuota>0){
-                                    
-                                    array_push($timeSlots, $timeSlotsMap[$activityBookingOptions->dates[$i]->areas[$j]->timeSlots[$k]->label]);
-                            }
-                        }
-                    }
-                }
-            }
-            //Ordenamiento Timeslots
-            $sortedTimeSlots=array();
-            $dateTimeConverter=new DateTime();
-            $minTimeSlotFrom='99:99:99';
-            $minTimeSlot=0;
-            for($l=0; $l<count($timeSlots); $l++){
-                for($m=0; $m<count($timeSlots); $m++){
-                    $dateTimeConverter= $dateTimeConverter->createFromFormat('H:i:s', $timeSlots[$m]->timeFrom);
-                    $currentTimeSlotFrom=$dateTimeConverter->format('H:i:s');
-                    $minTimeSlot=$timeSlots[$m];
-                    if(strcmp($currentTimeSlotFrom, $minTimeSlotFrom)<0){
-                        $minTimeSlotFrom=$currentTimeSlotFrom;
-                        $minTimeSlot=$timeSlots[$m];
-                    }
-                }
-                array_push($sortedTimeSlots, $minTimeSlot);
-            }
-            
-            if(count($sortedTimeSlots)>0){
-                $date=new stdClass();
-                $d=new DateTime();
-                
-                $date->date=$d->createFromFormat("Y-m-d", $activityBookingOptions->dates[$i]->date);
-                $date->timeSlots=$sortedTimeSlots;
-                array_push($dates, $date);
-            }
-        }
-        
-        return $dates;
-    }
+   
     function findActivityData($activityID){
         try {
             //Buscar los datos de la actividad
@@ -380,58 +283,24 @@ class Controlador {
             $activityID=$this->getActivityIdFromContext();
             $activity=$this->findActivityData($activityID);
             
-            if(strcmp(Controlador::AVERIA_LABEL, $this->isAveriaOProvision($activity))==0){
-                $params=array("setDate"=>array("date"=>NULL));
-                $params=json_encode($params);
-                //Se actualiza el dia = null
-                
-                $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId . '/custom-actions/cancel', 'POST', $params);
-                
-                $currentDateTime=date('Y-m-d H:i:s');
-                $histroyReply=$activity->XA_HISTORY_REPLY . " | " . Controlador::SUB_STATUS_CANCELADA_LABEL . ", " . Controlador::CHANEL_LABEL . ", " .  $currentDateTime;
-                $params=array();
-                
-                $params['timeSlot']=NULL;
-                $params['XA_REMINDER_REPLY']= Controlador::SUB_STATUS_CANCELADA;
-                $params['XA_CONFIRMATIONCHANNEL']= Controlador::CHANEL_LABEL;
-                $params['XA_CANCEL_REASON']= Controlador::CANCEL_REASON;
-                $params['XA_DATETIME_REPLY']= $currentDateTime;
-                $params['XA_HISTORY_REPLY']= $histroyReply;
-                
-                $params=json_encode($params);
-                
-                //Se actualiza el timeslot y el estado XA_REMINDER_REPLY
-                $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
-                
-                $this->addMessageError(Controlador::MSJ_ORDEN_CANCELADA_AVERIAS);;
-                
-                return Dispatcher::MESSAGES_URL;
-            }
-            if(strcmp(Controlador::PROVISION_LABEL, $this->isAveriaOProvision($activity))==0){
-                $params=array("setDate"=>array("date"=>NULL));
-                $params=json_encode($params);
-                $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId . '/custom-actions/move', 'POST',$params);
-                
-                $currentDateTime=date('Y-m-d H:i:s');
-                $histroyReply=$activity->XA_HISTORY_REPLY . " | " . Controlador::SUB_STATUS_CANCELADA_LABEL . ", " . Controlador::CHANEL_LABEL . ", " .  $currentDateTime;
-                $params=array();
-                
-                $params=array("setDate"=>array("date"=>NULL));
-                $params['XA_REMINDER_REPLY']= Controlador::SUB_STATUS_CANCELADA;
-                $params['XA_CONFIRMATIONCHANNEL']= Controlador::CHANEL_LABEL;
-                $params['XA_PENDING_EXTERNAL_ACTION']=Controlador::EXTERNAL_ACTION_RESCHEDULE;
-                $params['XA_DATETIME_REPLY']= $currentDateTime;
-                $params['XA_HISTORY_REPLY']= $histroyReply;
-                
-                $params=json_encode($params);
-                
-                $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
-                
-                $this->addMessageError(Controlador::MSJ_ORDEN_CANCELADA_PROVISION);
-                return Dispatcher::MESSAGES_URL;
-            }
+            $params=array("setDate"=>array("date"=>NULL));
+            $params=json_encode($params);
+            //Se actualiza el dia = null
             
-            $this->addMessageError(Controlador::MSJ_ORDEN_NO_CANCELADA);
+            $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId . '/custom-actions/cancel', 'POST', $params);
+            
+            $params=array();
+            
+            $params['timeSlot']=NULL;
+            $params['XA_CONFIRMACITA']= Controlador::SUB_STATUS_CANCELADA;
+            
+            $params=json_encode($params);
+            
+            //Se actualiza el timeslot y el estado XA_REMINDER_REPLY
+            $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
+            
+            $this->addMessageError(Controlador::MSJ_ORDEN_CANCELADA_AVERIAS);
+            
             return Dispatcher::MESSAGES_URL;
         } catch (Exception $e) {
             Utils::logDebug('Hubo un error al cancelar la cita', $e);
@@ -465,89 +334,7 @@ class Controlador {
         }
         return Dispatcher::SCHEDULE_DATE_URL;
     }
-    function excecuteCallCenterContact(){
-        try{
-            $activityID=$this->getActivityIdFromContext();
-            $activity=$this->findActivityData($activityID);
-            
-            $params=array("setDate"=>array("date"=>NULL));
-            $params=json_encode($params);
-            $currentDateTime=date('Y-m-d H:i:s');
-            $histroyReply=$activity->XA_HISTORY_REPLY . " | " . Controlador::SUB_STATUS_SIN_FECHA . ", " . Controlador::CHANEL_LABEL . ", " .  $currentDateTime;
-            //Se actualiza el dia = null
-            $this->service->request('/rest/ofscCore/v1/activities/' . $activityID . '/custom-actions/move', 'POST', $params);
-            
-            $params=array();
-            $params['XA_REMINDER_REPLY']= Controlador::SUB_STATUS_SIN_FECHA;
-            $params['timeSlot']= NULL;
-            $params['XA_PENDING_EXTERNAL_ACTION']=Controlador::EXTERNAL_ACTION_RESCHEDULE;
-            $params['XA_DATETIME_REPLY']= $currentDateTime;
-            $params['XA_HISTORY_REPLY']=$histroyReply;
-            
-            $params=json_encode($params);
-            //Se actualiza el timeslot y el estado XA_REMINDER_REPLY
-            $this->service->request('/rest/ofscCore/v1/activities/' . $activityID, 'PATCH', $params);
-            
-            $this->addMessageError(Controlador::MSJ_CALLCENTER_CONTACT);
-            return Dispatcher::MESSAGES_URL;
-        } catch (Exception $e) {
-            Utils::logDebug('Hubo un error al contactar al callcenter', $e);
-            $this->addMessageError(Controlador::ERROR_GENERIC_MSJ);
-            return Dispatcher::MESSAGES_URL;
-        }
-    }
-    
-    function excecuteScheduleConfirmSOAP(){
-        try{
-            $activityID=$this->getActivityIdFromContext();
-            $activity=$this->findActivityData($activityID);
-            //rawTimeslot Ej: 2018-08-01|AM
-            $rawTimeslot=$_REQUEST[Controlador::SCHUEDULE_DATE_PARAM];
-            $scheduleDate=substr($rawTimeslot, 0, strrpos($rawTimeslot, '|'));
-            $scheduleTimeslot=substr($rawTimeslot, strrpos($rawTimeslot, '|') + 1);
-            //Se actualiza el timeslot, date y el estado XA_REMINDER_REPLY
-            $currentDateTime=date('Y-m-d H:i:s');
-            $params=array();
-            array_push($params, array('activity_id'=>$activityID));
-            array_push($params, array('position_in_route'=>'unchanged'));
-            
-            array_push($params, array('properties'=>array('name'=>'XA_REMINDER_REPLY', 'value'=>Controlador::SUB_STATUS_MODIFICADA)));
-            array_push($params, array('properties'=>array('name'=>'XA_CONFIRMATIONCHANNEL', 'value'=>Controlador::CHANEL_LABEL)));
-            array_push($params, array('properties'=>array('name'=>'XA_DATETIME_REPLY', 'value'=>$currentDateTime)));
-            array_push($params, array('properties'=>array('name'=>'time_slot', 'value'=>$scheduleTimeslot)));
-            array_push($params, array('properties'=>array('name'=>'date', 'value'=>$scheduleDate)));
-            
-            $response=$this->serviceSoap->request('/soap/activity/v3/',"urn:toa:activity", "update_activity", $params);
-            $response=$response['SOAP-ENV:ENVELOPE']['SOAP-ENV:BODY']['NS1:UPDATE_ACTIVITY_RESPONSE'];
-            if($response['RESULT_CODE']!=0){
-                throw new Exception($response['ERROR_MSG']);
-            }
-            
-            $activity=$this->findActivityData($activityID);
-            $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
-            $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
-            $diaCita= $dateStart->format('d') . ' de ' . $GLOBALS['translateMonth'][$dateStart->format('F')] . ' de ' .$dateStart->format('Y') . ', Jornada: ' . $activity->timeSlot . '(' . $dateStart->format('g:i A') . ' - ' . $dateEnd->format('g:i A') . ')';
-            
-            // buscar dateStart y dateEnd de la actividad
-            $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
-            $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
-            
-            $vars = array(
-                '@@$dateFormatted@@'       => $dateStart->format('d-M-Y'),
-                '@@$dateStartHours@@'       => $dateStart->format('H'),
-                '@@$dateEndHours@@'       => $dateEnd->format('H\h\s')
-            );
-            
-            $msj= strtr(Controlador::MSJ_ORDEN_MODIFICADA, $vars);
-            $msj=str_replace("@diaCita@", $diaCita, $msj);
-            $this->addMessageError($msj);
-            return Dispatcher::MESSAGES_URL;
-        }catch(Exception $e){
-            Utils::logDebug('Hubo un error al reagendar la cita', $e);
-            $this->addMessageError(Controlador::ERROR_GENERIC_MSJ);
-            return Dispatcher::MESSAGES_URL;
-        }
-    }
+      
     function excecuteScheduleConfirm(){
         try{
             $activityID=$this->getActivityIdFromContext();
@@ -562,20 +349,10 @@ class Controlador {
             
             
             $scheduleTimeslot=substr($rawTimeslot, strrpos($rawTimeslot, '|') + 1);
-            $currentDateTime=date('Y-m-d H:i:s');
-            $histroyReply=$activity->XA_HISTORY_REPLY . " | " . Controlador::SUB_STATUS_MODIFICADA_LABEL . ", " . Controlador::CHANEL_LABEL . ", " .  $currentDateTime;
-            
             $params=array();
             
             $params["timeSlot"]= $scheduleTimeslot;
-            $params["XA_REMINDER_REPLY"]= Controlador::SUB_STATUS_MODIFICADA;
-            $params["XA_HISTORY_REPLY"]= $histroyReply;
-            $params["XA_CONFIRMATIONCHANNEL"]= Controlador::CHANEL_LABEL;
-            $params["XA_DATETIME_REPLY"]= $currentDateTime;
-            $params["XA_PENDING_EXTERNAL_ACTION"]= Controlador::EXTERNAL_ACTION_RESCHEDULE;
-            $modificacionesHechas = intval($activity->XA_Q_REAGENDAMIENTO);
-            $modificacionesHechas++;
-            $params["XA_Q_REAGENDAMIENTO"] = strval($modificacionesHechas);
+            $params["XA_CONFIRMACITA"]= Controlador::SUB_STATUS_MODIFICADA;
             
             $params=json_encode($params);
             
@@ -612,16 +389,10 @@ class Controlador {
         try{
             $activityID=$this->getActivityIdFromContext();
             $activity=$this->findActivityData($activityID);
-            $currentDateTime=date('Y-m-d H:i:s');
-            $histroyReply=$activity->XA_HISTORY_REPLY . " | " . Controlador::SUB_STATUS_CONFIRMADA_LABEL . ", " . Controlador::CHANEL_LABEL . ", " .  $currentDateTime;
             
             $params=array();
             
-            $params["XA_REMINDER_REPLY"]= Controlador::SUB_STATUS_CONFIRMADA;
-            $params["XA_CONFIRMATIONCHANNEL"]= Controlador::CHANEL_LABEL;
-            $params["XA_DATETIME_REPLY"]= $currentDateTime;
-            $params["XA_HISTORY_REPLY"]= $histroyReply;
-            
+            $params["XA_CONFIRMACITA"]= Controlador::SUB_STATUS_CONFIRMADA;            
             $params=json_encode($params);
             
             //Se actualiza el estado XA_REMINDER_REPLY
@@ -812,20 +583,7 @@ class Controlador {
     function base64url_decode( $data ){
         return base64_decode( strtr( $data, ':_', '+/') . str_repeat('=', 3 - ( 3 + strlen( $data )) % 4 ));
     }
-    function isAveriaOProvision($activity){
-        if(strpos($activity->activityType, 'PRO')===0){
-            return Controlador::PROVISION_LABEL;
-        }else if(strpos($activity->activityType, 'REP')===0){
-            return Controlador::AVERIA_LABEL;
-        }
-        return NULL;
-    }
     
-    function getActivityType(){
-        $activityID=$this->getActivityIdFromContext();
-        $activity=$this->findActivityData($activityID);
-        return $activity->activityType;
-    }
 }
 ?>
 <head>

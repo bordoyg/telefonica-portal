@@ -72,9 +72,6 @@ class Dispatcher {
             if (strcmp(Dispatcher::SCHEDULE_DATE_CONFIRM_LABEL, $action) === 0){
                 return $this->controlador->excecuteScheduleConfirm();
             }
-            if (strcmp(Dispatcher::SCHEDULE_DATE_CALLCENTER_CONTACT, $action) === 0){
-                return $this->controlador->excecuteCallCenterContact();
-            }
             if (strcmp(Dispatcher::CANCELAR_LABEL, $action) === 0){
                 return $this->controlador->excecuteCancelConfirm();
             }

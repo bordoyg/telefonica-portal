@@ -51,34 +51,7 @@
 											    $daysFrom=$GLOBALS['config']['calendar-from'];
 											    $daysTo=$GLOBALS['config']['calendar-to'];
 											    $daysMore=$GLOBALS['config']['calendar-more'];
-											    if(strcmp(Controlador::AVERIA_LABEL, $Controlador->isAveriaOProvision($activity))==0){
-											        $tmpDaysFrom=$GLOBALS['config']['calendar-averias-from-' . $activity->XA_CUSTOMER_TYPE];
-											        if(isset($tmpDaysFrom)&& $tmpDaysFrom>=0){
-											            $daysFrom=$tmpDaysFrom;
-											        }
-											        $tmpDaysTo=$GLOBALS['config']['calendar-averias-to-' . $activity->XA_CUSTOMER_TYPE];
-											        if(isset($tmpDaysTo)&& $tmpDaysTo>0){
-											            $daysTo=$tmpDaysTo;
-											        }
-											        $tmpDaysMore=$GLOBALS['config']['calendar-averias-more-' . $activity->XA_CUSTOMER_TYPE];
-											        if(isset($tmpDaysMore)&& $tmpDaysMore>0){
-											            $daysMore=$tmpDaysMore;
-											        }
-											    }
-											    if(strcmp(Controlador::PROVISION_LABEL, $Controlador->isAveriaOProvision($activity))==0){
-											        $tmpDaysFrom=$GLOBALS['config']['calendar-provision-from'];
-											        if(isset($tmpDaysFrom)&& $tmpDaysFrom>=0){
-											            $daysFrom=$tmpDaysFrom;
-											        }
-											        $tmpDaysTo=$GLOBALS['config']['calendar-provision-to'];
-											        if(isset($tmpDaysTo)&& $tmpDaysTo>0){
-											            $daysTo=$tmpDaysTo;
-											        }
-											        $tmpDaysMore=$GLOBALS['config']['calendar-provision-more'];
-											        if(isset($tmpDaysMore)&& $tmpDaysMore>0){
-											            $daysMore=$tmpDaysMore;
-											        }
-											    }
+											    
 											    
 												$cantSemanas=5;
 											    if (strcmp(Dispatcher::SCHEDULE_MORE_DATES, $action) === 0){
@@ -233,38 +206,10 @@
 			 				<?php } else { 
 								 ?>
 			 					<div class="row action-modify">
-			 						<?php 
-			 						if(strcmp(Controlador::PROVISION_LABEL, $Controlador->isAveriaOProvision($activity))==0){
-			 						    ?>
-			 						    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			 						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 										<button type="submit" id="confirm" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_CONFIRM_LABEL ?>"
 											class="btn btn-lg btn-block btn-primary" onclick="onSubmitButton(this);" disabled>Reagendar Cita</button>
     									</div>
-			 						    <?php
-			 						}else{
-			 						    ?>
-			 						    <div class="col-xs-6 col-sm-6 padding-right-8px">
-										<button type="submit" id="confirm" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_CONFIRM_LABEL ?>"
-											class="btn btn-lg btn-block btn-primary" onclick="onSubmitButton(this);" disabled>Reagendar Cita</button>
-    									</div>
-    				 					<div class="col-xs-6 col-sm-6 padding-left-8px">
-    										<input type="button"
-    				 						 	name="<?php echo Dispatcher::OPTION_PARAM ?>" value="Contactarme"
-    											 class="btn btn-lg btn-block btn-secondary" 
-    											 onclick='
-    											 	var event = new CustomEvent("callCallCenterShown", { "detail": "Example of an event" });
-    												document.dispatchEvent(event);'
-    				 							style="font-size: 14px;padding: 8px 5px;">
-    				 						
-    				 						<?php //Boton oculto que sirve para disparar el evento click del boton OK del popup?>
-    				 						<button type="submit"
-    				 						 	name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_CALLCENTER_CONTACT ?>"
-    				 							class="btn btn-lg btn-block btn-secondary" onclick="onSubmitButton(this);"
-    				 							style="font-size: 14px;padding: 8px 5px;display:none;"></button>
-    				 					</div>
-			 						    <?php
-			 						}
-			 						?>
 								</div>
 			 				<?php } ?>
 						</form>

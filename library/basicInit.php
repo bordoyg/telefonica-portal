@@ -34,12 +34,6 @@ try{
             $htmlFile=$dispatcher->resolveAction();
         }else{
             Utils::logDebug('basicInit actividad no valida');
-            $activityType=$dispatcher->getControlador()->getActivityType();
-            if(strpos($activityType, 'PRO')===0){
-                $dispatcher->getControlador()->addMessageError(Controlador::ERROR_ORDEN_NO_VIGENTE_PROVISION);
-            }elseif(strpos($activityType, 'REP')===0){
-                $dispatcher->getControlador()->addMessageError(Controlador::ERROR_ORDEN_NO_VIGENTE_AVERIAS);
-            }
             $htmlFile= Dispatcher::MESSAGES_URL;
         }
     }else{
