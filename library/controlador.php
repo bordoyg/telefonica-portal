@@ -577,7 +577,7 @@ class Controlador {
     }
     function showCancel(){
         Utils::logDebug("LLEGOACA1");
-        if(strcmp($GLOBALS['config']['habilitarCancelacion'],"1")!=0){
+        if(strcmp($GLOBALS['config']['habilitarCancelacion'],"1")!=0 && strcmp($GLOBALS['config']['habilitarCancelacion'],"true")!=0){
             return false;
         }
         Utils::logDebug("LLEGOACA2");
@@ -599,7 +599,7 @@ class Controlador {
         return ($activity->status == Controlador::STATUS_PENDING) && ($activityDate >= $currentDate) && !$this->showTechnicanLocation();
     }
     function showSchedule(){
-        if(strcmp($GLOBALS['config']['habilitarModificacion'],"1")!=0){
+        if(strcmp($GLOBALS['config']['habilitarModificacion'],"1")!=0 && strcmp($GLOBALS['config']['habilitarModificacion'],"true")!=0){
             return false;
         }
         $activityID=$this->getActivityIdFromContext();
@@ -611,7 +611,7 @@ class Controlador {
         return ($activity->status == Controlador::STATUS_PENDING) && ($activityDate >= $currentDate) && !$this->showTechnicanLocation();
     }
     function showTechnicanLocation(){
-        if(strcmp($GLOBALS['config']['habilitarTecnicoEnCamino'],"1")!=0){
+        if(strcmp($GLOBALS['config']['habilitarTecnicoEnCamino'],"1")!=0 && strcmp($GLOBALS['config']['habilitarTecnicoEnCamino'],"true")!=0){
             return false;
         }
         $activityID=$this->getActivityIdFromContext();
