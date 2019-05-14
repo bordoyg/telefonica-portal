@@ -291,13 +291,21 @@
         <p class="credits">2018 © ETB S.A. ESP. Todos los derechos reservados. Música Autorizada Por Acinpro.</p>
     </footer>
    <script>
+       $("form input[type=submit]").click(function() {
+           $("input[type=submit]", $(this).parents("form")).removeAttr("clicked");
+           $(this).attr("clicked", "true");
+       });
        	$('#scheduleForm').submit(function(event) {
-            if($('#selectTimeslot').val()==null){
+       	 var val = $("input[type=submit][clicked=true]").val();
+       	 if(val=="<?php echo Dispatcher::SCHEDULE_DATE_CONFIRM_LABEL ?>"){
+       		if($('#selectTimeslot').val()==null){
                 event.preventDefault();
                 return false;
             }else{
             	return true;
             }
+       	 }
+            
     	});
     </script>
 </body>

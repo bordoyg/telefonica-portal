@@ -430,16 +430,12 @@ class Controlador {
         try{
             $activityID=$this->getActivityIdFromContext();
             $activity=$this->findActivityData($activityID);
-            
-            $detectedAdctivityType = $this->isAprovisionamientoAseguramientoRecupero($activity);
+ 
             $modificacionesHechas = intval($activity->XA_NUM_MOD_PORTAL);
             $modificacionesPermitidas = intval($GLOBALS['config']['cacelacionesPermitidas']);
-            if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::RECUPERO)==0 ){
-                
-                if( $modificacionesHechas >= $modificacionesPermitidas ){
-                    $this->addMessageError(Controlador::MSJ_LIMITE_MODIFICACIONES);
-                    return Dispatcher::MESSAGES_URL;
-                }
+            if( $modificacionesHechas >= $modificacionesPermitidas ){
+                $this->addMessageError(Controlador::MSJ_LIMITE_MODIFICACIONES);
+                return Dispatcher::MESSAGES_URL;
             }
             //rawTimeslot Ej: 2018-08-01|AM
             $rawTimeslot=$_REQUEST[Controlador::SCHUEDULE_DATE_PARAM]. '|'. $_REQUEST[Controlador::TIMESLOT_PARAM];
@@ -449,11 +445,8 @@ class Controlador {
             //Se actualiza el dia
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId . '/custom-actions/move', 'POST', $params);
             
-            if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::RECUPERO)==0 ){
-                $modificacionesHechas++;
-                $params["XA_NUM_MOD_PORTAL"] = strval($modificacionesHechas);
-                
-            }
+            $modificacionesHechas++;
+            $params["XA_NUM_MOD_PORTAL"] = strval($modificacionesHechas);
             
             $scheduleTimeslot=substr($rawTimeslot, strrpos($rawTimeslot, '|') + 1);
             $params=array("timeSlot"=>$scheduleTimeslot, "XA_CONFIRMACITA"=>Controlador::SUB_STATUS_MODIFICADA, "XA_REAGENDA_PORTAL"=>'S');
@@ -545,7 +538,8 @@ class Controlador {
             }
             
             $isVigente= ($this->showTechnicanLocation() || $this->showCancel()|| $this->showConfirm()|| $this->showSchedule());
-            Utils::logDebug('isVigente: ' . ($isVigente));
+            Utils::logDebug('isVigente: ');
+            Utils::logDebug($isVigente);
             if($isVigente){
                 //Guardamos la url de acceso en el campo XA_PROJECT_CODE
                 $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]?". implode($_SERVER['argv']);
@@ -570,17 +564,15 @@ class Controlador {
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
         
-        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date, new DateTimeZone($activity->timeZoneIANA));
-        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'), new DateTimeZone($activity->timeZoneIANA));
+        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date);
+        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
         
-        return ($activity->status == Controlador::STATUS_PENDING) && ($activityDate >= $currentDate) && !$this->showTechnicanLocation();
+        return ($activity->status == Controlador::STATUS_PENDING) && ($activityDate > $currentDate) && !$this->showTechnicanLocation();
     }
     function showCancel(){
-        Utils::logDebug("LLEGOACA1");
         if(strcmp($GLOBALS['config']['habilitarCancelacion'],"1")!=0 && strcmp($GLOBALS['config']['habilitarCancelacion'],"true")!=0){
             return false;
         }
-        Utils::logDebug("LLEGOACA2");
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
         $detectedAdctivityType = $this->isAprovisionamientoAseguramientoRecupero($activity);
@@ -589,13 +581,11 @@ class Controlador {
             && (strcmp($detectedAdctivityType, Controlador::RECUPERO) ==0
                 || strcmp($detectedAdctivityType, Controlador::APROVISIONAMIENTO)==0) ){
             
-            Utils::logDebug("LLEGOACA3");
             return false;
         }
         
-        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date, new DateTimeZone($activity->timeZoneIANA));
-        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'), new DateTimeZone($activity->timeZoneIANA));
-        Utils::logDebug("LLEGOACA4");
+        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date);
+        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
         return ($activity->status == Controlador::STATUS_PENDING) && ($activityDate >= $currentDate) && !$this->showTechnicanLocation();
     }
     function showSchedule(){
@@ -605,8 +595,8 @@ class Controlador {
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
         
-        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date, new DateTimeZone($activity->timeZoneIANA));
-        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'), new DateTimeZone($activity->timeZoneIANA));
+        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date);
+        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
         
         return ($activity->status == Controlador::STATUS_PENDING) && ($activityDate >= $currentDate) && !$this->showTechnicanLocation();
     }
@@ -617,8 +607,8 @@ class Controlador {
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
         $locationData=$this->findTechnicanLocation($activity);
-        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date, new DateTimeZone($activity->timeZoneIANA));
-        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'), new DateTimeZone($activity->timeZoneIANA));
+        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date);
+        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
         $currentDate=$currentDate->format("Y-m-d");
         $activityDate=$activityDate->format("Y-m-d");
         Utils::logDebug("SHOWTECHNICANLOCATION: " . in_array($locationData->status, Controlador::STATUS_LOCALIZABLE) . " - " . $activityDate == $currentDate);
