@@ -1,5 +1,6 @@
 <?php
 require_once(APPPATH . 'widgets/custom/library/controlador.php');
+use RightNow\Connect\v1_3 as RNCPHP;
 
 class Dispatcher {
     const INDEX_URL='index.php';
