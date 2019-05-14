@@ -41,6 +41,14 @@ class Dispatcher {
         try{
             $config=parse_ini_file (APPPATH. '/models/custom/etb/conf/config.ini', false);
             $GLOBALS['config']=$config;
+            foreach($GLOBALS['config'] as $key=>$val){
+                try{
+                    $GLOBALS['config'][$key] = RNCPHP\MessageBase::fetch( $val )->Value;
+                }catch(\Exception $e){
+                    echo '<div key="logDebug" time="' . time() . '" style="display:none;"><pre>Hubo un error al levantar la configuracion ' . $key . ' </pre></div>';
+                }
+                
+            }
             if(!isset( $GLOBALS['Controlador'])){
                 $GLOBALS['Controlador']=new Controlador();
             }
