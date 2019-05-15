@@ -270,13 +270,13 @@
                         $noMoreDatesBool=strcmp($noMoreDates, Dispatcher::SCHEDULE_MORE_DATES)==0;
                         if($noMoreDatesBool){
                           ?>
-                          <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_CONFIRM_LABEL ?>" class="bigbtn" >Reagendar Cita</button>
+                          <button id="btnReagendar1" type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_CONFIRM_LABEL ?>" class="bigbtn" >Reagendar Cita</button>
                           <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::CONFIRMAR_LABEL ?>" class="smallbtn sl" >Confirmar<br>Cita Original</button>
                           <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo $buttonValue ?>" class="smallbtn sr" style="margin-rigth:20px;">Cancelar<br>Cita Original</button>
                           <?php 
                         }else{
                           ?>
-                          <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_CONFIRM_LABEL ?>" class="smallbtn sl actl" >Reagendar Cita</button>
+                          <button id="btnReagendar2" type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_CONFIRM_LABEL ?>" class="smallbtn sl actl" >Reagendar Cita</button>
                           <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_MORE_DATES ?>" class="smallbtn sr" >M&aacute;s Fechas</button>
                           <?php 
                         }
@@ -291,22 +291,16 @@
         <p class="credits">2018 © ETB S.A. ESP. Todos los derechos reservados. Música Autorizada Por Acinpro.</p>
     </footer>
    <script>
-       $("form input[type=submit]").click(function() {
-           $("input[type=submit]", $(this).parents("form")).removeAttr("clicked");
-           $(this).attr("clicked", "true");
-       });
-       	$('#scheduleForm').submit(function(event) {
-       	 var val = $("input[type=submit][clicked=true]").val();
-       	 if(val=="<?php echo Dispatcher::SCHEDULE_DATE_CONFIRM_LABEL ?>"){
-       		if($('#selectTimeslot').val()==null){
-                event.preventDefault();
-                return false;
-            }else{
-            	return true;
+   		$('#btnReagendar1').attr("disabled",true);
+   		$('#btnReagendar2').attr("disabled",true);
+   		
+       	$('#selectTimeslot').change(function(){ 
+       		if($('#selectTimeslot').val()!=null){
+       			$('#btnReagendar1').removeAttr("disabled");
+       			$('#btnReagendar2').removeAttr("disabled");
             }
-       	 }
-            
     	});
+       	
     </script>
 </body>
 </html>
