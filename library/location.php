@@ -38,7 +38,7 @@
                         
                     ?>
                     <p>
-                        <span>Técnico:</span><?php echo $_REQUEST[Controlador::LOCATION_TECHNICAN]->resourceDetails->name; ?><br>
+                        <span>Técnico:</span><?php echo '  ' . $_REQUEST[Controlador::LOCATION_TECHNICAN]->resourceDetails->name; ?><br>
 <!--                    <span>Número de Contacto:</span> 1167876765 -->
                     </p>
 <!--                <a href="tel:1167876765" class="ccall"><img src="/euf/assets/others/etb/img/tel.png"/></a> -->

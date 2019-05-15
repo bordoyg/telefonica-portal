@@ -26,6 +26,7 @@ class Controlador {
     const MSJ_ORDEN_MODIFICADA="<h1>Cita Reagendada</h1><p>La nueva fecha para tu cita es</p>@diaCita@<p>¡MUCHAS GRACIAS!</p>";
     const MSJ_ORDEN_CANCELADA="<h1>Cita Cancelada</h1><p>Su cita fue Cancelada</p><h2>@diaCita@</h2><p> s&iacute; requiere agendar una nueva cita por favor comun&iacute;quese a nuestra l&iacute;nea de atenci&oacute;n 3777777</p>";
     const MSJ_CANCELACION_RECUPERO="<h1>Cita Cancelada</h1><p>Su cita fue Cancelada</p><h2>@diaCita@</h2><p>Por favor comunicarse con el operador logístico. Línea fija en Bogotá (1)3558170 o al WhatsApp 323-2056558</p>";
+    const MSJ_CANCELACION_APROVISIONAMIENTO="<h1>Cita Cancelada</h1><p>Su cita fue Cancelada</p><h2>@diaCita@</h2><p>Su cita fue cancelada. En el momento que tengamos agenda disponible, lo contactaremos para agendar una nueva cita.</p>";
     const MSJ_LIMITE_CANCELACIONES="<h1>Cita no Cancelada</h1><p>Su cita fue Cancelada</p><h2>@diaCita@</h2><p>Llegó al límite de cancelaciones, y entonces los equipos serán cobrados</p>";
     const MSJ_LIMITE_MODIFICACIONES="<h1>Cita no Reagendada</h1><p>Su cita no fue Reagendada</p><h2>@diaCita@</h2><p>Llegó al límite de reagendamientos, y entonces los equipos serán cobrados</p>";
     const MSJ_LIMITE_MODIFICACIONES_APROV_ASEG="<h1>Cita no Reagendada</h1><p>Su cita no fue Reagendada</p><h2>@diaCita@</h2><p>Llegó al límite de reagendamientos, se conservará su cita original</p>";
@@ -92,21 +93,21 @@ class Controlador {
         
         /*---DummyData---*/
         
-        $dummy = date('s', time());
-        $dummy= $dummy /10;
+//         $dummy = date('s', time());
+//         $dummy= $dummy /10;
         
-        $dummyX=intval($locationData->coordinates->longitude) +intval($dummy);
-        $dummyY=intval($locationData->coordinates->latitude) +intval($dummy);
+//         $dummyX=intval($locationData->coordinates->longitude) +intval($dummy);
+//         $dummyY=intval($locationData->coordinates->latitude) +intval($dummy);
         
-        $dummyX=strval($dummyX);
-        $dummyY=strval($dummyY);
+//         $dummyX=strval($dummyX);
+//         $dummyY=strval($dummyY);
 
-        $coordinates="<coordinates><x>".$dummyX."</x><y>".$dummyY."</y></coordinates>";
+//         $coordinates="<coordinates><x>".$dummyX."</x><y>".$dummyY."</y></coordinates>";
         
         /*---End Dummy---*/
 
         /* RealData */
-        /*
+       
         $longitude = $locationData->coordinates->longitude;
         $latitude = $locationData->coordinates->latitude;
         if( !strcmp($longitude,"")==0 && !strcmp($latitude,"")==0 ){
@@ -114,7 +115,7 @@ class Controlador {
         } else {
             $coordinates='<coordinates><x>null</x><y>null</y></coordinates>';
         }
-        */
+      
 
         /* End of RealData */
         
@@ -340,7 +341,7 @@ class Controlador {
             
             //Se actualiza el dia = null
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId . '/custom-actions/move', 'POST', $params);
-            $params=array("timeSlot"=>NULL, "XA_CONFIRMACITA"=>Controlador::SUB_STATUS_CANCELADA, "XA_DESPR_PORTAL"=>"S", "cancel_reason"=>Controlador::MOTIVO_CANCELACION_NPAV);
+            $params=array("timeSlot"=>NULL, "XA_CONFIRMACITA"=>Controlador::SUB_STATUS_MODIFICADA, "XA_DESPR_PORTAL"=>"S", "cancel_reason"=>Controlador::MOTIVO_CANCELACION_NPAV);
             
             $cancelacionesHechas++;
             $params["XA_NUM_MOD_PORTAL"] = strval($cancelacionesHechas);
@@ -359,7 +360,9 @@ class Controlador {
             if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::ASEGURAMIENTO)==0 ){
                 $msj= Controlador::MSJ_CANCELACION_RECUPERO;
             }
-            
+            if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::APROVISIONAMIENTO)==0 ){
+                $msj= Controlador::MSJ_CANCELACION_APROVISIONAMIENTO;
+            }
             $msj=str_replace("@diaCita@", $diaCita, $msj);
             $this->addMessageError($msj);
             return Dispatcher::MESSAGES_URL;
