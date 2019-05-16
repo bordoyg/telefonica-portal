@@ -45,9 +45,14 @@ class ServiceSoap {
         curl_setopt($this->process, CURLOPT_HTTPGET, FALSE);
         curl_setopt($this->process, CURLOPT_POSTFIELDS, $xmlRequest);
         
-        //Utils::logDebug("Se va a invocar al servicio: " . $url);
-        //Utils::logDebug("XMLRequest: " . $xmlRequest);
+        Utils::logDebug("Se va a invocar al servicio: " . $url);
+        Utils::logDebug("XMLRequest: " . $xmlRequest);
+        
         $return = curl_exec($this->process);
+
+        $return =str_replace("</urn:get_capacity_response>", "\t<time_slot_info><dummy>dummytxt</dummy></time_slot_info>\n</urn:get_capacity_response>", $return);
+        $return =str_replace("</activity_travel_time>", "</activity_travel_time>\n\t<capacity><dummy>dummytxt</dummy></capacity>", $return);
+        
         $error = curl_error($this->process);
         // $log = new RNCPHP\CO\LOG();
         //     $log->LOG = $return;
@@ -56,8 +61,8 @@ class ServiceSoap {
         //     $log->LOG = $error;
         //     $log->save();
         $httpcode = curl_getinfo($this->process, CURLINFO_HTTP_CODE);
-        //Utils::logDebug("La respuesta del servicio fue: " . $httpcode);
-        //Utils::logDebug("XMLResponse: " . $return);
+        Utils::logDebug("La respuesta del servicio fue: " . $httpcode);
+        Utils::logDebug("XMLResponse: " . $return);
         
         curl_close($this->process);
         $content=$this->xmlToArray($return);

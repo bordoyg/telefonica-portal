@@ -137,17 +137,17 @@ class Controlador {
         $response=$this->serviceSoap->request("/soap/capacity/", "urn:toa:capacity", "get_capacity", $params);
         
         $response=$response['SOAP-ENV:ENVELOPE']['SOAP-ENV:BODY']['URN:GET_CAPACITY_RESPONSE'];
-        
         $timeSlotsMap=array();
         if(isset($response['TIME_SLOT_INFO'])){
             for($i=0; $i<count($response['TIME_SLOT_INFO']); $i++){
-                $timeSlot=new stdClass();
-                $timeSlot->timeFrom=$response['TIME_SLOT_INFO'][$i]['TIME_FROM'];
-                $timeSlot->timeTo=$response['TIME_SLOT_INFO'][$i]['TIME_TO'];
-                $timeSlot->label=$response['TIME_SLOT_INFO'][$i]['LABEL'];
-                $timeSlot->name=$response['TIME_SLOT_INFO'][$i]['NAME'];
-                $timeSlotsMap[$response['TIME_SLOT_INFO'][$i]['LABEL']]= $timeSlot;
-                
+                if(!isset($response['TIME_SLOT_INFO'][$i]['DUMMY'])){
+                    $timeSlot=new stdClass();
+                    $timeSlot->timeFrom=$response['TIME_SLOT_INFO'][$i]['TIME_FROM'];
+                    $timeSlot->timeTo=$response['TIME_SLOT_INFO'][$i]['TIME_TO'];
+                    $timeSlot->label=$response['TIME_SLOT_INFO'][$i]['LABEL'];
+                    $timeSlot->name=$response['TIME_SLOT_INFO'][$i]['NAME'];
+                    $timeSlotsMap[$response['TIME_SLOT_INFO'][$i]['LABEL']]= $timeSlot;
+                }
             }
         }
        
@@ -170,7 +170,7 @@ class Controlador {
                 }
             }
         }
-        
+
         foreach ($datesAux as $clave => $valor) {
             if(isset($valor)){
                 $date=new stdClass();
@@ -189,12 +189,17 @@ class Controlador {
                 $minTimeSlot=0;
                 for($l=0; $l<count($timeSlots); $l++){
                     for($m=0; $m<count($timeSlots)-$l; $m++){
-                        $dateTimeConverter= $dateTimeConverter->createFromFormat('H:i:s', $timeSlots[$m]->timeFrom);
-                        $currentTimeSlotFrom=$dateTimeConverter->format('H:i:s');
-                        $minTimeSlot=$timeSlots[$m];
-                        if(strcmp($currentTimeSlotFrom, $minTimeSlotFrom)<0){
-                            $minTimeSlotFrom=$currentTimeSlotFrom;
+                        if(isset($timeSlots[$m])){
+                            $dateTimeConverter= $dateTimeConverter->createFromFormat('H:i:s', $timeSlots[$m]->timeFrom);
+                            Utils::logDebug("timeFrom");
+                            Utils::logDebug($timeSlots[$m]->timeFrom);
+                            
+                            $currentTimeSlotFrom=$dateTimeConverter->format('H:i:s');
                             $minTimeSlot=$timeSlots[$m];
+                            if(strcmp($currentTimeSlotFrom, $minTimeSlotFrom)<0){
+                                $minTimeSlotFrom=$currentTimeSlotFrom;
+                                $minTimeSlot=$timeSlots[$m];
+                            }
                         }
                     }
                     
