@@ -146,8 +146,12 @@
 						var from = $(timeslot).attr("data-timeFrom");
 						var to = $(timeslot).attr("data-timeTo");
 						var name = $(timeslot).attr("data-name");
-						from = from.substring(0, from.lastIndexOf(":"));
-						to = to.substring(0, to.lastIndexOf(":"));
+
+						var dFrom = new Date("1970-01-01T" + from);
+						var dTo = new Date("1970-01-01T" + to);
+						
+						from = dateFormat(dFrom, "h:MM TT");
+						to = dateFormat(dTo, "h:MM TT");
 						if( i == 0 )
 							$(".smallbtnselect").empty();
 						$(".smallbtnselect").append(`<option value="${name}">De ${from} a ${to}</option>`);

@@ -17,6 +17,7 @@
     <script src="/euf/assets/others/etb/js/lib/jquery.svgmagic.js" type="text/javascript"></script>
     <script src='/euf/assets/others/etb/js/jquery-ui.min.js'></script>
     <script src="/euf/assets/others/etb/js/slick.js" type="text/javascript"></script>
+    <script src='/euf/assets/others/etb/js/lib/date.format.js'></script>
 
     <script src="/euf/assets/others/etb/js/site-scripts.js" type="text/javascript"></script>
     <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>

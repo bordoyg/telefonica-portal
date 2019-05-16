@@ -3,6 +3,7 @@
 <head></head>
 <?php 
 require_once(APPPATH . 'widgets/custom/library/header.php'); 
+require_once(APPPATH . 'widgets/custom/library/controlador.php'); 
 
 $dispatcher = $GLOBALS['dispatcher'];
 $Controlador = $dispatcher->getControlador();
@@ -46,7 +47,17 @@ $Controlador = $dispatcher->getControlador();
                 	    echo '</div>';
                 	}
                 	
-                	echo '<p>Tu cita para Instalación/Reparación esta programada para el:</p>';
+                	$detectedActivity=$Controlador->isAprovisionamientoAseguramientoRecupero($activity);
+                	if(strcmp(Controlador::ASEGURAMIENTO, $detectedActivity)){
+                	    echo '<p>Tu cita para Reparación esta programada para el:</p>';
+                	}
+                	if(strcmp(Controlador::APROVISIONAMIENTO, $detectedActivity)){
+                	    echo '<p>Tu cita para Instalación esta programada para el:</p>';
+                	}
+                	if(strcmp(Controlador::RECUPERO, $detectedActivity)){
+                	    echo '<p>Tu cita para Recuperación esta programada para el:</p>';
+                	}
+                	
                 	Utils::logDebug("Fecha de la cita: " . $dateStart->format('d-F-Y g:i A'));
                 	echo '<h2>' . $dateStart->format('d') . '-' . $GLOBALS['translateMonth'][$dateStart->format('F')]  . '-' . $dateStart->format('Y') . '</h2>' ;
                 	echo '<p>entre las ' . $dateStart->format('g:i A') . ' y las ' . $dateEnd->format('g:i A') . ' hrs.</p>';
