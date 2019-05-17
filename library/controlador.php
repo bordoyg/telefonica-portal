@@ -41,7 +41,7 @@ class Controlador {
     const RECUPERO="REC";
     
     const APROVISIONAMIENTO_VALUES=array('INS','COB_INS', 'FTTC_INS');
-    const ASEGURAMIENTO_VALUES=array('MOD','COB_MOD');
+    const ASEGURAMIENTO_VALUES=array('MOD','COB_MOD', 'FTTC_MOD');
     const RECUPERO_VALUES=array('RET','FTTC_RET');
     
     const MOTIVOS_CANCELCION=array('NPAV'=>'No puedo atender la visita.', 'SREST'=>'Servicio restablecido.');

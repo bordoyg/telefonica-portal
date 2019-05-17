@@ -77,7 +77,7 @@ $Controlador = $dispatcher->getControlador();
 					}
 					if($Controlador->showTechnicanLocation()){
 					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::UBICACION_LABEL . '"';
-					    echo 'class="bigbtn" >Ver t&eacute;cnico</button>';
+					    echo 'class="bigbtn" >Ver Ubicaci&oacute;n</button>';
 					}
 				?>
 				</form>
