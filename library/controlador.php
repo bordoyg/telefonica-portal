@@ -69,7 +69,7 @@ class Controlador {
         }
         
         //Obtenemos la posicion del tecnico
-        $locationData=$this->service->request('/rest/ofscCore/v1/whereIsMyTech', 'GET', 'activityId=' . $activity->activityId . '&includeAvatarImageData=true');
+        $locationData=$this->service->request('/rest/ofscCore/v1/whereIsMyTech', 'GET', 'activityId=' . $activity->activityId . '&includeAvatarImageData=true&resourceFields=resourceId');
         $_REQUEST[Controlador::LOCATION_TECHNICAN]=$locationData;
         
         
