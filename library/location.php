@@ -37,7 +37,7 @@
                             </div>
                             <div style="margin-top:20px; float:left;">
                             <p><span style="color:#00CC00;">Técnico:</span><span style="color:#666666;"><?php echo $_REQUEST[Controlador::LOCATION_TECHNICAN]->resourceDetails->name; ?></span></p>
-                            <p><span style="color:#00CC00;">DNI:</span><span style="color:#666666;"><?php echo $_REQUEST[Controlador::LOCATION_TECHNICAN]->resourceDetails->resourceId; ?></span></p>
+                            <p><span style="color:#00CC00;">DNI:</span><span style="color:#666666;"><?php echo str_replace("DNI-", "", $_REQUEST[Controlador::LOCATION_TECHNICAN]->resourceDetails->resourceId); ?></span></p>
                         	</div>
                         </div>
     
