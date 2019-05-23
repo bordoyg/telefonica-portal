@@ -4,16 +4,17 @@ use RightNow\Connect\v1_3 as RNCPHP;
 
 class Dispatcher {
     const INDEX_URL='index.php';
-    const CONFIRM_CONFIRM_URL = 'confirmConfirm.php' ;
-    const CANCEL_CONFIRM_URL = 'cancelConfirm.php';
+    const CONFIRM_OK_URL = 'okConfirm.php' ;
+    const CANCEL_OK_URL = 'okCancel.php' ;
     const SCHEDULE_DATE_URL = 'scheduleDate.php';
-    const SCHEDULE_DATE_CONFIRM_URL = 'scheduleDateConfirm.php';
+    const SCHEDULE_OK_URL = 'okSchedule.php';
     const SCHEDULE_ANY_DATE_URL = 'scheduleAnyDate.php';
     const LOCATION_URL = 'location.php';
     const CUSTOMER_DATA_URL = 'customerData.php';
     const MENU_URL = 'menu.php';
     const ERROR_URL = 'error.php';
     const MESSAGES_URL = 'messages.php';
+    const ERROR_SCHEDULE_URL = 'errorSchedule.php';
     const CANCEL_MOTIVO_URL='motivoCancelacion.php';
     
     const CONFIRMAR_LABEL = 'confirmar';

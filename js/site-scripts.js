@@ -7,7 +7,7 @@ $(document).ready(function () {
     $(window).bind('resize', function () {
         Inicio();
     });
-
+    
     $.datepicker.regional['es'] = {
         closeText: 'Cerrar',
         prevText: '<Ant',
@@ -38,11 +38,6 @@ $(document).ready(function () {
         maxDate: '+3M',*/
         inline: true
     });
-	
-	
-	$('.ui-state-default').click(function () {
-	   $('.mostrar').css('display','block');
-	});
 
 });
 
@@ -51,13 +46,21 @@ function Inicio() {
     tamWidth = $(window).width();
     tamHeight = $(window).height();
 
-    $(".content").css('min-height', tamHeight - 70);
+    $(".content").css('min-height', tamHeight - 74);
 
     if (tamWidth <= 760) {
         $("body").addClass("rps");
     } else {
         $("body").removeClass("rps");
     }
+
+    $('.slider1').not('.slick-initialized').slick({
+        infinite: true,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 4000,
+        arrows: true,
+        dots: false
+    });
 };
-
-

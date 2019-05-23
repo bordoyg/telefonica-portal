@@ -22,14 +22,14 @@ class Controlador {
     const ERROR_ORDEN_NO_VIGENTE="La fecha de tu cita con ETB ha expirado. Para volver agendar tu cita comun&iacute;cate al 3777777";
     const ERROR_REAGENDAR_MSJ="<h1 class=\"resalt\">ERROR</h1> <p>No fue posible procesar tu solicitud, por favor int&eacute;ntalo m&aacute;s tarde.</p> ";
     
-    const MSJ_ORDEN_CONFIRMADA="<h1>Cita Confirmada</h1><p>Tu cita fue confirmada para el dia </p>@diaCita@<p>¡MUCHAS GRACIAS!</p>";
-    const MSJ_ORDEN_MODIFICADA="<h1>Cita Reagendada</h1><p>La nueva fecha para tu cita es</p>@diaCita@<p>¡MUCHAS GRACIAS!</p>";
-    const MSJ_ORDEN_CANCELADA="<h1>Cita Cancelada</h1><p>Su cita fue Cancelada</p><h2>@diaCita@</h2><p> s&iacute; requiere agendar una nueva cita por favor comun&iacute;quese a nuestra l&iacute;nea de atenci&oacute;n 3777777</p>";
-    const MSJ_CANCELACION_RECUPERO="<h1>Cita Cancelada</h1><p>Su cita fue Cancelada</p><h2>@diaCita@</h2><p>Por favor comunicarse con el operador logístico. Línea fija en Bogotá (1)3558170 o al WhatsApp 323-2056558</p>";
-    const MSJ_CANCELACION_APROVISIONAMIENTO="<h1>Cita Cancelada</h1><p>Su cita fue Cancelada</p><h2>@diaCita@</h2><p>Su cita fue cancelada. En el momento que tengamos agenda disponible, lo contactaremos para agendar una nueva cita.</p>";
-    const MSJ_LIMITE_CANCELACIONES="<h1>Cita no Cancelada</h1><p>Su cita fue Cancelada</p><h2>@diaCita@</h2><p>Llegó al límite de cancelaciones, y entonces los equipos serán cobrados</p>";
-    const MSJ_LIMITE_MODIFICACIONES="<h1>Cita no Reagendada</h1><p>Su cita no fue Reagendada</p><h2>@diaCita@</h2><p>Llegó al límite de reagendamientos, y entonces los equipos serán cobrados</p>";
-    const MSJ_LIMITE_MODIFICACIONES_APROV_ASEG="<h1>Cita no Reagendada</h1><p>Su cita no fue Reagendada</p><h2>@diaCita@</h2><p>Llegó al límite de reagendamientos, se conservará su cita original</p>";
+    const MSJ_ORDEN_CONFIRMADA="<h2>@diaCita@</h2><p>@franjaHoraria@</p>";
+    const MSJ_ORDEN_MODIFICADA="<h2>@diaCita@</h2><p>@franjaHoraria@</p>";
+    const MSJ_ORDEN_CANCELADA="<h2>@diaCita@</h2><p>@franjaHoraria@</p><p> s&iacute; requiere agendar una nueva cita por favor comun&iacute;quese a nuestra l&iacute;nea de atenci&oacute;n 3777777</p>";
+    const MSJ_CANCELACION_RECUPERO="<h2>@diaCita@</h2><p>@franjaHoraria@</p><p>Por favor comunicarse con el operador logístico. Línea fija en Bogotá (1)3558170 o al WhatsApp 323-2056558</p>";
+    const MSJ_CANCELACION_APROVISIONAMIENTO="<h2>@diaCita@</h2><p>@franjaHoraria@</p><p>Su cita fue cancelada. En el momento que tengamos agenda disponible, lo contactaremos para agendar una nueva cita.</p>";
+    const MSJ_LIMITE_CANCELACIONES="<h2>@diaCita@</h2><p>Llegó al límite de cancelaciones, y entonces los equipos serán cobrados</p>";
+    const MSJ_LIMITE_MODIFICACIONES="<h2>@diaCita@</h2><p>Llegó al límite de reagendamientos, y entonces los equipos serán cobrados</p>";
+    const MSJ_LIMITE_MODIFICACIONES_APROV_ASEG="<h2>@diaCita@</h2><p>Llegó al límite de reagendamientos, se conservará su cita original</p>";
     
     
     const SUB_STATUS_CANCELADA="CANCELADA";
@@ -244,12 +244,18 @@ class Controlador {
             $params=json_encode($params);
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
             
+            $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
             $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
+            
             $diaCita= $dateStart->format('d') . ' - ' . $GLOBALS['translateMonth'][$dateStart->format('F')] . ' - ' .$dateStart->format('Y');
+            $franjaHoraria='entre las ' . $dateStart->format('g:i A') . ' y las ' . $dateEnd->format('g:i A') . ' hrs.';
+            
             $msj= Controlador::MSJ_ORDEN_CANCELADA;
             $msj=str_replace("@diaCita@", $diaCita, $msj);
+            $msj=str_replace("@franjaHoraria@", $franjaHoraria, $msj);
+            
             $this->addMessageError($msj);
-            return Dispatcher::MESSAGES_URL;
+            return Dispatcher::CANCEL_OK_URL;
         } catch (Exception $e) {
             Utils::logDebug('Hubo un error al cancelar la cita', $e);
             $this->addMessageError(Controlador::ERROR_GENERIC_MSJ);
@@ -270,12 +276,18 @@ class Controlador {
             $params=json_encode($params);
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
             
+            $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
             $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
+            
             $diaCita= $dateStart->format('d') . ' - ' . $GLOBALS['translateMonth'][$dateStart->format('F')] . ' - ' .$dateStart->format('Y');
+            $franjaHoraria='entre las ' . $dateStart->format('g:i A') . ' y las ' . $dateEnd->format('g:i A') . ' hrs.';
+            
             $msj= Controlador::MSJ_ORDEN_CANCELADA;
             $msj=str_replace("@diaCita@", $diaCita, $msj);
+            $msj=str_replace("@franjaHoraria@", $franjaHoraria, $msj);
+            
             $this->addMessageError($msj);
-            return Dispatcher::MESSAGES_URL;
+            return Dispatcher::CANCEL_OK_URL;
         } catch (Exception $e) {
             Utils::logDebug('Hubo un error al cancelar la cita', $e);
             $this->addMessageError(Controlador::ERROR_GENERIC_MSJ);
@@ -308,14 +320,18 @@ class Controlador {
             $params=json_encode($params);
             //Se actualiza el timeslot y el estado XA_CONFIRMACITA
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
-            
+            $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
             $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
+            
             $diaCita= $dateStart->format('d') . ' - ' . $GLOBALS['translateMonth'][$dateStart->format('F')] . ' - ' .$dateStart->format('Y');
+            $franjaHoraria='entre las ' . $dateStart->format('g:i A') . ' y las ' . $dateEnd->format('g:i A') . ' hrs.';
             
             $msj= Controlador::MSJ_ORDEN_CANCELADA;
             $msj=str_replace("@diaCita@", $diaCita, $msj);
+            $msj=str_replace("@franjaHoraria@", $franjaHoraria, $msj);
+            
             $this->addMessageError($msj);
-            return Dispatcher::MESSAGES_URL;
+            return Dispatcher::CANCEL_OK_URL;
             
         } catch (Exception $e) {
             Utils::logDebug('Hubo un error al cancelar la cita', $e);
@@ -363,8 +379,17 @@ class Controlador {
             if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::APROVISIONAMIENTO)==0 ){
                 $msj= Controlador::MSJ_CANCELACION_APROVISIONAMIENTO;
             }
+            $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
+            $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
+            
+            $diaCita= $dateStart->format('d') . ' - ' . $GLOBALS['translateMonth'][$dateStart->format('F')] . ' - ' .$dateStart->format('Y');
+            $franjaHoraria='entre las ' . $dateStart->format('g:i A') . ' y las ' . $dateEnd->format('g:i A') . ' hrs.';
+            
             $msj=str_replace("@diaCita@", $diaCita, $msj);
+            $msj=str_replace("@franjaHoraria@", $franjaHoraria, $msj);
+            
             $this->addMessageError($msj);
+            return Dispatcher::CANCEL_OK_URL;
             return Dispatcher::MESSAGES_URL;
             
         } catch (Exception $e) {
@@ -452,14 +477,18 @@ class Controlador {
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
             
             $activity=$this->findActivityData($activityID);
-            $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
             $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
-            $diaCita= $dateStart->format('d') . ' de ' . $GLOBALS['translateMonth'][$dateStart->format('F')] . ' de ' .$dateStart->format('Y'). ', de ' . $dateStart->format('g:i A') . ' a ' . $dateEnd->format('g:i A');
+            $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
+            
+            $diaCita= $dateStart->format('d') . ' - ' . $GLOBALS['translateMonth'][$dateStart->format('F')] . ' - ' .$dateStart->format('Y');
+            $franjaHoraria='entre las ' . $dateStart->format('g:i A') . ' y las ' . $dateEnd->format('g:i A') . ' hrs.';
             
             $msj= Controlador::MSJ_ORDEN_MODIFICADA;
             $msj=str_replace("@diaCita@", $diaCita, $msj);
+            $msj=str_replace("@franjaHoraria@", $franjaHoraria, $msj);
+            
             $this->addMessageError($msj);
-            return Dispatcher::MESSAGES_URL;
+            return Dispatcher::SCHEDULE_OK_URL;
         }catch(Exception $e){
             Utils::logDebug('Hubo un error al reagendar la cita', $e);
             $this->addMessageError(Controlador::ERROR_REAGENDAR_MSJ);
@@ -476,14 +505,18 @@ class Controlador {
             //Se actualiza el estado XA_CONFIRMACITA
             $this->service->request('/rest/ofscCore/v1/activities/' . $activity->activityId, 'PATCH', $params);
             
-            $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
             $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
-            $diaCita= '<h2>' . $dateStart->format('d') . '-' . $GLOBALS['translateMonth'][$dateStart->format('F')] . '-' .$dateStart->format('Y'). '</h2><p>entre las ' . $dateStart->format('g:i A') . ' y las ' . $dateEnd->format('g:i A') . ' hrs.</p>';
+            $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
+            
+            $diaCita= $dateStart->format('d') . ' - ' . $GLOBALS['translateMonth'][$dateStart->format('F')] . ' - ' .$dateStart->format('Y');
+            $franjaHoraria='entre las ' . $dateStart->format('g:i A') . ' y las ' . $dateEnd->format('g:i A') . ' hrs.';
             
             $msj= Controlador::MSJ_ORDEN_CONFIRMADA;
             $msj=str_replace("@diaCita@", $diaCita, $msj);
+            $msj=str_replace("@franjaHoraria@", $franjaHoraria, $msj);
+            
             $this->addMessageError($msj);
-            return Dispatcher::MESSAGES_URL;
+            return Dispatcher::CONFIRM_OK_URL;
         }catch(Exception $e){
             Utils::logDebug('Hubo un error al confirmar la cita', $e);
             $this->addMessageError(Controlador::ERROR_GENERIC_MSJ);

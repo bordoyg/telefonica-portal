@@ -2,21 +2,16 @@
 <html>
 <?php require_once(APPPATH . 'widgets/custom/library/header.php'); ?>
 <body>
+    <img src="/euf/assets/others/etb/img/bg2r.jpg" class="rpv bgrpv"/>
     <header>
-        <div class="menu-head">
-            <div class="logo-head">
-                <a href="http://etb.com">
-                    <img alt="ETB" src="/euf/assets/others/etb/img/logoetb2.png" /></a>
-            </div>
-        </div>
+        <a href="http://www.etb.com.co"><img src="/euf/assets/others/etb/img/etblogo.png" /></a>
     </header>
-
     <div class="content">
-        <div class="wrap">
-            <section class="type1-cont">
-            	<p>
-                <?php echo $_REQUEST[Controlador::MESSAGE_PARAM]; ?>
-                </p>
+        <div class="cont-left">
+
+            <div class="cont-square">
+                <h2><?php echo $_REQUEST[Controlador::MESSAGE_PARAM]; ?></h2>
+
                 <?php 
 				if(strcmp(Controlador::ERROR_ORDEN_INEXISTENTE, $_REQUEST[Controlador::MESSAGE_PARAM])!=0
 				    && strcmp(Controlador::ERROR_ORDEN_NO_VIGENTE, $_REQUEST[Controlador::MESSAGE_PARAM])!=0){
@@ -29,23 +24,29 @@
 			                && strcmp(Controlador::ERROR_ORDEN_INEXISTENTE, $_REQUEST[Controlador::MESSAGE_PARAM])!=0
 			                && strcmp(Controlador::ERROR_ORDEN_NO_VIGENTE, $_REQUEST[Controlador::MESSAGE_PARAM])!=0){
 			                
-			                echo '<a class="smallbtnfull" href="https://etb.com/">Finalizar</a>';
+			                echo '<a class="bigbtn2" href="https://etb.com/">Finalizar</a>';
 			            }else{
-			                echo '<button type="submit" class="smallbtn sl" >Reintentar</button>';
-			                echo '<a class="smallbtn sl" href="https://etb.com/">Finalizar</a>';
+			                echo '<button type="submit" class="smallbtn sb1" >Reintentar</button>';
+			                echo '<a class="smallbtn" href="https://etb.com/">Finalizar</a>';
 			            }
 			            
 			            echo '</form>';
 			        }
 				}
 				?>
-            </section>
+            </div>
+
+            <img src="/euf/assets/others/etb/img/logofibra.png" class="logofibra" />
+        </div>
+
+        <div class="cont-right">
+            <img src="/euf/assets/others/etb/img/bg2.jpg" class="bg-right" />
         </div>
     </div>
-
     <footer>
-        <p class="credits">2019 © ETB S.A. ESP. Todos los derechos reservados</p>
+        <p>2019 © ETB S.A. ESP. Todos los derechos reservados.</p>
     </footer>
 </body>
+
 
 </html>

@@ -38,8 +38,6 @@ h1 {
 }
 
 body {
-    background: url(../img/bgmain.jpg) top center no-repeat #ffffff;
-    background-size: cover;
     width: 100%;
     overflow-x: hidden;
     display: block;
@@ -77,39 +75,39 @@ strong {
     font-weight: bold;
 }
 
+select:invalid {
+    color: #c3c3c3;
+}
+
 
 /*—————–General————–*/
 
 /*—————–Header————–*/
 
 header {
-    position: fixed;
-    left: 0px;
-    top: 0px;
-    width: 100%;
-    z-index: 10;
-}
-
-.menu-head {
     position: relative;
     float: left;
     width: 100%;
-    height: 70px;
-    background: rgba(255, 255, 255, 0.9);
+    height: 74px;
+    background: #009ccf;
+    z-index: 8;
 }
 
-.logo-head {
-    position: relative;
-    float: left;
-    padding: 15px;
-    margin-left: 10px;
-    height: calc(100% - 30px);
+header::after {
+    position: absolute;
+    content: ' ';
+    width: 95px;
+    height: 30px;
+    bottom: -30px;
+    left: calc(50% - 48px);
+    background: url(../img/orangeslide.png) top center no-repeat;
+    z-index: 8;
 }
 
-.logo-head img {
+header a {
     position: relative;
-    float: left;
-    height: 100%;
+    float: right;
+    margin: 3px 20px 0px 0px;
 }
 
 /*—————–Header————–*/
@@ -121,173 +119,174 @@ header {
     position: relative;
     float: left;
     width: 100%;
-    padding-top: 70px;
+    overflow: hidden;
+    z-index: 4;
 }
 
-.content section {
+.cont-left {
     position: relative;
     float: left;
-    padding: 30px;
-    margin-top: 70px;
-    background: #fff;
-    border-radius: 20px;
-    -webkit-box-shadow: 0px 18px 80px -15px rgba(0, 0, 0, 0.60);
-    -moz-box-shadow: 0px 18px 80px -15px rgba(0, 0, 0, 0.60);
-    box-shadow: 0px 18px 80px -15px rgba(0, 0, 0, 0.60);
-    z-index: 9;
-    margin-bottom: 70px
+    width: calc(50% - 160px);
+    padding: 0px 80px;
+    height: 100%;
 }
 
-.type1-cont {
-    width: 380px;
-}
-
-.logoetb {
+.cont-right {
     position: relative;
-    margin: 0 auto 30px;
+    float: left;
+    width: 50%;
 }
 
-section h1 {
+.bg-right {
     position: relative;
     float: left;
     width: 100%;
-    text-align: center;
+}
+
+.cont-left h1 {
+    position: relative;
+    float: left;
+    width: 100%;
+    font-size: 52px;
     line-height: 100%;
-    font-size: 200%;
     font-weight: 300;
-    margin-bottom: 20px;
     color: #009bcf;
+    text-align: center;
+    margin: 25% 0px 10px;
 }
 
-.resalt {
-    color: #eb6625;
-}
-
-section p {
+.cont-left p {
     position: relative;
     float: left;
     width: 100%;
-    text-align: center;
-    line-height: 110%;
-    font-size: 140%;
-    font-weight: 300;
-    margin-bottom: 20px;
-}
-
-section h2 {
-    position: relative;
-    float: left;
-    width: 100%;
-    text-align: center;
+    font-size: 18px;
     line-height: 100%;
-    font-size: 200%;
+    font-weight: 500;
+    color: #2d2d2d;
+    text-align: center;
+    margin: 0px 0px 10px;
+}
+
+.cont-left h2 {
+    position: relative;
+    float: left;
+    width: 100%;
+    font-size: 34px;
+    line-height: 100%;
     font-weight: 900;
-    margin-bottom: 20px;
-    color: #009bcf;
+    color: #eb6625;
+    text-align: center;
+    margin: 0px 0px 10px;
 }
 
 .bigbtn {
     position: relative;
     float: left;
-    /*width: calc(100% - 26px);*/
-    width: 100%;
-    padding: 10px;
-    text-align: center;
-    line-height: 100%;
-    font-size: 120%;
-    margin-bottom: 20px;
+    width: calc(100% - 2px);
     color: #fff;
+    font-size: 18px;
+    line-height: 40px;
+    height: 40px;
+    border-radius: 12px;
+    text-align: center;
+    margin: 20px 0px;
     background: #009bcf;
-    border: 3px solid #009bcf;
-    border-radius: 30px;
-    display: inline-block; /* Modified */
+    border: 1px solid #009bcf;
 }
 
 .bigbtn:hover,
-.smallbtn:hover,
-.smallbtnfull:hover {
-    background: #fff;
+.bigbtn2:hover,
+.smallbtn:hover {
     color: #eb6625;
-    border: 3px solid #eb6625;
+    background: #fff;
+    border: 1px solid #eb6625;
 }
 
 .smallbtn {
     position: relative;
     float: left;
-    width: 45%;
-    padding: 10px;
-    text-align: center;
-    line-height: 100%;
-    font-size: 100%;
-    margin-bottom: 20px;
+    width: calc(50% - 7px);
     color: #009bcf;
+    font-size: 18px;
+    line-height: 40px;
+    height: 40px;
+    border-radius: 12px;
+    text-align: center;
+    margin: 0px 0px 20px;
     background: #fff;
-    border: 3px solid #009bcf;
-    border-radius: 30px;
-    display: inline-block; /* Modified */
-}
-.smallbtnselect{
-	margin: 0px 50% 10px 29%;
-}
-	.smallbtnselect option{
-		color: #009bcf;
-	}
-.mostrar{
-	display: none;
+    border: 1px solid #009bcf;
 }
 
-.smallbtn.sl {
-    margin-right: 5px;
+.sb1 {
+    margin-right: 10px;
 }
 
-.smallbtn.sr {
-    margin-left: 5px;
-}
-
-.smallbtn.actl {
-    color: #fff;
-    background: #009bcf;
-    border: 3px solid #009bcf;
-}
-
-.smallbtnfull {
+.logofibra {
     position: relative;
     float: left;
-    width: calc(100% - 26px);
-    padding: 10px;
-    text-align: center;
-    line-height: 100%;
-    font-size: 100%;
-    margin-bottom: 20px;
-    color: #009bcf;
-    background: #fff;
-    border: 3px solid #009bcf;
-    border-radius: 30px;
+    width: 84px;
+    left: calc(50% - 42px);
+    margin: 0px 0px 20px;
 }
 
-section h3 {
+.bigbtn2 {
+    position: relative;
+    float: left;
+    width: calc(100% - 2px);
+    color: #009bcf;
+    font-size: 18px;
+    line-height: 40px;
+    height: 40px;
+    border-radius: 12px;
+    text-align: center;
+    margin: 0px 0px 20px;
+    background: #fff;
+    border: 1px solid #009bcf;
+}
+
+.cont-left h3 {
     position: relative;
     float: left;
     width: 100%;
-    text-align: left;
-    line-height: 110%;
-    font-size: 90%;
+    font-size: 32px;
+    line-height: 100%;
     font-weight: 300;
-    font-style: italic;
-    margin-bottom: 20px;
+    color: #2d2d2d;
+    text-align: center;
+    margin: 40px 0px;
 }
 
-.map {
+.cont-square {
     position: relative;
     float: left;
-    width: 100%;
-    margin-bottom: 20px;
+    width: calc(100% - 50px);
+    border-radius: 12px;
+    text-align: center;
+    margin: 25% 0px 20px;
+    background: #fff;
+    border: 1px solid #009bcf;
+    padding: 25px;
 }
 
-.map img {
+.cont-square h2 {
+    font-size: 28px;
+    font-weight: 300;
+    margin: 30px 0px;
+}
+
+.selector {
     position: relative;
     float: left;
-    width: 100%;
+    width: calc(100% - 0px);
+    color: #666;
+    font-size: 18px;
+    line-height: 40px;
+    height: 40px;
+    border-radius: 12px;
+    text-align: center;
+    margin: 30px 0px 20px;
+    background: #fff;
+    border: 1px solid #666;
 }
 
 .data-tec {
@@ -338,8 +337,8 @@ section h3 {
 .tag {
     position: relative;
     float: left;
-    width: 32%;
-    font-size: 90%
+    width: 32% !important;
+    font-size: 90% !important;
 }
 
 .tag span {
@@ -356,31 +355,157 @@ section h3 {
 }
 
 .c2 {
-    background: #009bcf;
+    background: #eb6625;
 }
 
 .c3 {
     background: #455e75;
 }
 
-.multicanc{
+#calendar {
     position: relative;
     float: left;
-    width: calc(100% - 0px);
-    padding: 10px;
-    margin-bottom: 40px;
-    text-align: center;
+    width: 80% !important;
+    margin: 20px 10% !important;
+}
+
+.cont-square .smallbtn {
+    margin-bottom: 0px;
+}
+
+.cont-square h3 {
+    position: relative;
+    float: left;
+    width: 100%;
+    font-size: 32px;
     line-height: 100%;
-    font-size: 100%;
-    color: #666;
+    font-weight: 900;
+    color: #009bcf;
+    text-align: center;
+    margin: 0px 0px 20px;
+}
+
+.cont-square h4 {
+    font-size: 28px;
     font-weight: 300;
-    background: #fff;
-    border: 1px solid #666;
-    border-radius: 25px;
+    line-height: 100%;
+    margin: 00px 0px;
+    color: #009bcf;
+}
+
+.data-tec {
+    position: relative;
+    float: left;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.data-tec .avatar {
+    position: relative;
+    float: left;
+    width: calc(15% - 20px);
+    margin-right: 20px;
+    overflow: hidden;
+    border-radius: 50%
+}
+
+.data-tec p {
+    position: relative;
+    float: left;
+    width: 65%;
+    text-align: left;
+    font-size: 90%;
+    font-weight: 500;
+    margin-bottom: 0px;
+    margin-top: 10px;
+}
+
+.data-tec p span {
+    color: #009bcf;
+}
+
+.imgtec {
+    position: relative;
+    width: 352px;
+    margin: 0px auto 20px;
+}
+
+.cont-full {
+    position: relative;
+    width: 400px;
+    margin: 5% auto 20px;
+}
+
+.cont-full h1 {
+    position: relative;
+    float: left;
+    width: 100%;
+    font-size: 52px;
+    line-height: 100%;
+    font-weight: 300;
+    color: #009bcf;
+    text-align: center;
+    margin: 0px 0px 10px;
+}
+
+.cont-full p {
+    position: relative;
+    float: left;
+    width: 100%;
+    font-size: 18px;
+    line-height: 100%;
+    font-weight: 500;
+    color: #2d2d2d;
+    text-align: center;
+    margin: 0px 0px 10px;
+}
+
+.cont-full p span {
+    color: #009bcf;
+}
+
+.cont-full h2 {
+    position: relative;
+    float: left;
+    width: 100%;
+    font-size: 34px;
+    line-height: 100%;
+    font-weight: 900;
+    color: #eb6625;
+    text-align: center;
+    margin: 0px 0px 10px;
+}
+
+.tinyimg {
+    position: relative;
+    float: left;
+    width: 100px;
+    left: calc(50% - 50px);
+    margin: 20px 0px;
+}
+
+.rpv {
+    display: none;
 }
 
 
-/*—————–Content————–*/
+.titlecam {
+    font-size: 38px;
+}
+
+.map {
+    position: relative;
+    float: left;
+    width: 100%;
+    height: 100%;
+}
+
+.map img {
+    position: relative;
+    float: left;
+    width: 100%;
+    height: 100%;
+}
 
 
 /*—————–Footer————–*/
@@ -388,30 +513,28 @@ section h3 {
 footer {
     position: relative;
     float: left;
-    width: calc(100% - 66px);
-    height: 35px;
+    width: 100%;
+    height: 25px;
     background: #009bcf;
-    padding: 0px 33px;
 }
 
-footer .credits {
+footer p {
     position: relative;
     float: left;
-    width: 100%;
-    text-align: center;
-    font-size: 90%;
+    text-align: left;
+    font-size: 12px;
+    line-height: 25px;
+    font-weight: 500;
     color: #fff;
-    line-height: 35px;
-    font-weight: 300;
+    margin-left: 20px;
 }
-
-/*—————–Footer————–*/
 
 /*------Responsive-------*/
 
 /*mobiles*/
 
 @media only screen and (min-width: 0px) and (max-width: 760px) and (orientation: landscape) {
+
     body,
     p,
     table,
@@ -436,24 +559,117 @@ footer .credits {
         width: 318px;
     }
 
-    .content section {
-        padding: 10px;
-        margin-top: 40px;
-        width: calc(100% - 20px);
+    .bgrpv {
+        display: block;
+        position: relative;
+        float: left;
+        width: 100%;
     }
-    
-    footer {
-        width: calc(100% - 0px);
-        height: auto;
-        padding: 0px 0px;
-    }
-    
-    footer .credits {
-        margin: 10px 0px;
-        line-height: 110%;
-    }
-}
 
+    .cont-right {
+        display: none;
+    }
+
+    .cont-left {
+        width: calc(100% - 60px);
+        padding: 0px 30px;
+    }
+
+    .cont-left h1 {
+        font-size: 40px;
+        margin: 20% 0px 10px;
+    }
+
+    .cont-square h2 {
+        font-size: 24px;
+        margin: 20px 0px;
+    }
+
+    .smallbtn,
+    .bigbtn {
+        font-size: 16px;
+    }
+
+    #calendar {
+        position: relative;
+        float: left;
+        width: 100% !important;
+        margin: initial !important;
+        ;
+    }
+
+    .smb {
+        font-size: 14px;
+        line-height: 100%;
+        padding: 10px 0px;
+        height: initial;
+    }
+
+    .tag {
+        font-size: 65% !important;
+        margin-top: 10px !important;
+    }
+
+    .tag span {
+        width: 10px;
+        height: 10px;
+    }
+
+    .cont-square h4 {
+        font-size: 18px;
+        margin: 00px 0px 20px;
+    }
+
+    .cont-full {
+        width: calc(100% - 60px);
+        padding: 0px 30px;
+        margin: 5% auto 20px;
+    }
+
+    .cont-full h1 {
+        font-size: 38px;
+        margin: 10px 0px 10px;
+    }
+
+    .imgtec {
+        display: none;
+    }
+
+    .imgtec2 {
+        display: block;
+        position: relative;
+        float: left;
+        width: 100px;
+        left: calc(50% - 50px);
+    }
+
+    .avatar {
+        display: none;
+    }
+
+    .data-tec p {
+        width: 100%;
+        text-align: center;
+    }
+
+    .map2 {
+        position: relative;
+        float: left;
+        width: 100%;
+        display: block;
+        margin-bottom: 20px;
+        height: 250px;
+        overflow: hidden;
+    }
+
+    .map2 img {
+        position: relative;
+        float: left;
+        width: 100%;
+    }
+
+
+}
 
 @media only screen and (min-width: 0px) and (max-width: 760px) and (orientation: portrait) {
 
@@ -481,20 +697,113 @@ footer .credits {
         width: 318px;
     }
 
-    .content section {
-        padding: 10px;
-        margin-top: 40px;
-        width: calc(100% - 20px);
+    .bgrpv {
+        display: block;
+        position: relative;
+        float: left;
+        width: 100%;
     }
-    
-    footer {
-        width: calc(100% - 0px);
-        height: auto;
-        padding: 0px 0px;
+
+    .cont-right {
+        display: none;
     }
-    
-    footer .credits {
-        margin: 10px 0px;
-        line-height: 110%;
+
+    .cont-left {
+        width: calc(100% - 60px);
+        padding: 0px 30px;
     }
+
+    .cont-left h1 {
+        font-size: 40px;
+        margin: 20% 0px 10px;
+    }
+
+    .cont-square h2 {
+        font-size: 24px;
+        margin: 20px 0px;
+    }
+
+    .smallbtn,
+    .bigbtn {
+        font-size: 16px;
+    }
+
+    #calendar {
+        position: relative;
+        float: left;
+        width: 100% !important;
+        margin: initial !important;
+        ;
+    }
+
+    .smb {
+        font-size: 14px;
+        line-height: 100%;
+        padding: 10px 0px;
+        height: initial;
+    }
+
+    .tag {
+        font-size: 65% !important;
+        margin-top: 10px !important;
+    }
+
+    .tag span {
+        width: 10px;
+        height: 10px;
+    }
+
+    .cont-square h4 {
+        font-size: 18px;
+        margin: 00px 0px 20px;
+    }
+
+    .cont-full {
+        width: calc(100% - 60px);
+        padding: 0px 30px;
+        margin: 5% auto 20px;
+    }
+
+    .cont-full h1 {
+        font-size: 38px;
+        margin: 10px 0px 10px;
+    }
+
+    .imgtec {
+        display: none;
+    }
+
+    .imgtec2 {
+        display: block;
+        position: relative;
+        float: left;
+        width: 100px;
+        left: calc(50% - 50px);
+    }
+
+    .avatar {
+        display: none;
+    }
+
+    .data-tec p {
+        width: 100%;
+        text-align: center;
+    }
+
+    .map2 {
+        position: relative;
+        float: left;
+        width: 100%;
+        display: block;
+        margin-bottom: 20px;
+        height: 250px;
+        overflow: hidden;
+    }
+
+    .map2 img {
+        position: relative;
+        float: left;
+        width: 100%;
+    }
+
 }
