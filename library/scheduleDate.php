@@ -4,14 +4,10 @@
 <?php require_once(APPPATH . 'widgets/custom/library/header.php'); ?>
 
 <body>
+	<img src="img/bg6r.jpg" class="rpv bgrpv"/>
     <header>
-        <div class="menu-head">
-            <div class="logo-head">
-                <a href="http://etb.com">
-                    <img alt="ETB" src="/euf/assets/others/etb/img/logoetb2.png" /></a>
-            </div>
-        </div>
-	</header>
+        <a href="http://www.etb.com.co"><img src="/euf/assets/others/etb/img/etblogo.png" /></a>
+    </header>
 	<script>
 
 		var datesToPaint = undefined;
@@ -198,9 +194,10 @@
 
 	</script>
 
+
     <div class="content">
-        <div class="wrap">
-            <section class="type1-cont">
+        <div class="cont-left">
+            <div class="cont-square" style="margin-top: 15%;">
                 <form id="scheduleForm" action="" method="post">
             	<?php 
             	$controlador = $GLOBALS['Controlador'];
@@ -246,20 +243,18 @@
             	}
             	
             	?>
-                <h1>Reagendamiento</h1>
-                <p>Selecciona la fecha para agendar tu cita:</p>
+                <h4>Selecciona la fecha<br>
+				para reagendar tu cita:</h4>
                 <div id='calendar'></div>
                 <p class="tag"><span class="c1"></span> Disponible</p>
                 <p class="tag"><span class="c2"></span> Seleccionado</p>
                 <p class="tag"><span class="c3"></span> No Disponible</p>
-				
-				<div>
-					<p>Franja Horaria</p>
-					<select id ="selectTimeslot" name="<?php echo Controlador::TIMESLOT_PARAM ?>" class="smallbtn smallbtnselect">
-						
-					</select>
-				</div>
                 
+				<select id ="selectTimeslot" name="<?php echo Controlador::TIMESLOT_PARAM ?>" class="selector">
+                    
+                </select>
+
+
                 <p>Seleccionaste:</p>
                 <h2 id="selectedDate">31-Ago-2018</h2>
                 <input  id="selectedDateHidden" type="hidden" name="<?php echo Controlador::SCHUEDULE_DATE_PARAM?>"/>
@@ -275,19 +270,19 @@
                         if($noMoreDatesBool){
                           ?>
                           <button id="btnReagendar1" type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_CONFIRM_LABEL ?>" class="bigbtn" >Reagendar Cita</button>
-                          <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::CONFIRMAR_LABEL ?>" class="smallbtn sl" >Confirmar<br>Cita Original</button>
-                          <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo $buttonValue ?>" class="smallbtn sr" style="margin-rigth:20px;">Cancelar<br>Cita Original</button>
+                          <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::CONFIRMAR_LABEL ?>" class="smallbtn sb1" >Confirmar<br>Cita Original</button>
+                          <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo $buttonValue ?>" class="smallbtn" style="margin-rigth:20px;">Cancelar<br>Cita Original</button>
                           <?php 
                         }else{
                           ?>
-                          <button id="btnReagendar2" type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_CONFIRM_LABEL ?>" class="smallbtn sl actl" >Reagendar Cita</button>
-                          <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_MORE_DATES ?>" class="smallbtn sr" >M&aacute;s Fechas</button>
+                          <button id="btnReagendar2" type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_CONFIRM_LABEL ?>" class="smallbtn sb1" >Reagendar Cita</button>
+                          <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_MORE_DATES ?>" class="smallbtn" >M&aacute;s Fechas</button>
                           <?php 
                         }
  				?>
                 
                 </form>
-            </section>
+            </div>
         </div>
     </div>
 

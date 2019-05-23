@@ -12,39 +12,46 @@
       width: 100%;
     }
   </style>
-    <header>
-        <div class="menu-head">
-            <div class="logo-head">
-                <a href="http://etb.com">
-                    <img alt="ETB" src="/euf/assets/others/etb/img/logoetb2.png" /></a>
-            </div>
-        </div>
-    </header>
 
+    <header>
+        <a href="http://www.etb.com.co"><img src="/euf/assets/others/etb/img/etblogo.png" /></a>
+    </header>
     <div class="content">
-        <div class="wrap">
-            <section class="type1-cont">
-                <h1>En Camino</h1>
-                <p>Tu técnico esta en camino</p>
+        <div class="cont-left">
+
+            <div class="cont-square" style="margin-top: 15%;">
+                <h4 class="titlecam">Tu técnico está<br>en camino</h4>
+                
                 <div class="data-tec">
-                    <?php 
+                	<?php 
                         if(isset($_REQUEST[Controlador::LOCATION_TECHNICAN]->resourceDetails->avatar->imageData)){
                             $mediaType=$_REQUEST[Controlador::LOCATION_TECHNICAN]->resourceDetails->avatar->mediaType;
                             $imageData=$_REQUEST[Controlador::LOCATION_TECHNICAN]->resourceDetails->avatar->imageData;
-                            echo '<img src="data: ' . $mediaType . ';base64,' . $imageData . '" height="120" width="120" />';
+                            echo '<img class="rpv imgtec2" src="data: ' . $mediaType . ';base64,' . $imageData . '" />';
                         }else{
-                            echo '<img class="avatar" src="/euf/assets/others/etb/img/avatar.png" />';
+                            echo '<img class="rpv imgtec2" src="/euf/assets/others/etb/img/avatar.png" />';
                         }
                         
                     ?>
+                    
                     <p>
-                        <span>Técnico:</span><?php echo '  ' . $_REQUEST[Controlador::LOCATION_TECHNICAN]->resourceDetails->name; ?><br>
-<!--                    <span>Número de Contacto:</span> 1167876765 -->
+                       	<span>Técnico:</span><?php echo '  ' . $_REQUEST[Controlador::LOCATION_TECHNICAN]->resourceDetails->name; ?><br>
                     </p>
-<!--                <a href="tel:1167876765" class="ccall"><img src="/euf/assets/others/etb/img/tel.png"/></a> -->
                 </div>
-                <script type="text/javascript">
-                  
+                
+                <img src="/euf/assets/others/etb/img/imgtec.jpg" class="imgtec" />
+                <div class="rpv map2">
+                    <img src="/euf/assets/others/etb/img/bg7.jpg"/>
+                </div>
+                <a class="smallbtnfull" href="https://etb.com/">Finalizar</a>
+            </div>
+
+            <img src="/euf/assets/others/etb/img/logofibra.png" class="logofibra" />
+        </div>
+
+        <div class="cont-right">
+            <div class="map">
+            	<script type="text/javascript">
                       	require([
                       	  "esri/Map",
                       	  "esri/views/MapView",
@@ -126,54 +133,49 @@
                       	     console.log("The view's resources failed to load: ", error);
                       	  });
 
-													setInterval(() => {
-														var strSlice="";
-														$.ajax({
-															method: "GET",
-															url: "/app/etb/ajaxCall",
-														
-														}).done(function(data) {
-															// var start;
-															// var end;
-															// var coords;
-															// var x;
-															// var y;
-															// //strSlice=data.slice(29195,29227);
-															// dataSplitted = $(data).find("coordinates");
-															// console.table(dataSplitted); 
-															// start=strSlice.indexOf("{");
-															// end=strSlice.indexOf("}");
-															// strSlice=strSlice.slice(start+1,end);
-															// coords=strSlice.split(',');
+						setInterval(() => {
+							var strSlice="";
+							$.ajax({
+								method: "GET",
+								url: "/app/etb/ajaxCall",
+							
+							}).done(function(data) {
+								// var start;
+								// var end;
+								// var coords;
+								// var x;
+								// var y;
+								// //strSlice=data.slice(29195,29227);
+								// dataSplitted = $(data).find("coordinates");
+								// console.table(dataSplitted); 
+								// start=strSlice.indexOf("{");
+								// end=strSlice.indexOf("}");
+								// strSlice=strSlice.slice(start+1,end);
+								// coords=strSlice.split(',');
 
-															view.graphics.remove(pictureGraphic);
-															
-															var xToPaint = data.slice(data.indexOf('<x>')+3,data.indexOf('</x>'));
-															var yToPaint = data.slice(data.indexOf('<y>')+3,data.indexOf('</y>'));
-
-															if( xToPaint !== "null" && yToPaint !== "null" ){
-																pictureGraphic.geometry={
-																	type: "point",
-																	x:xToPaint ,
-																	y:yToPaint
-																};
-															}
-
-															console.log('x:'+pictureGraphic.geometry.x);
-															console.log('y:'+pictureGraphic.geometry.y);
-                      	   	}).always(console.log('----'));
-													}, 5000);
-													
+								view.graphics.remove(pictureGraphic);
 								
-												});
+								var xToPaint = data.slice(data.indexOf('<x>')+3,data.indexOf('</x>'));
+								var yToPaint = data.slice(data.indexOf('<y>')+3,data.indexOf('</y>'));
+
+								if( xToPaint !== "null" && yToPaint !== "null" ){
+									pictureGraphic.geometry={
+										type: "point",
+										x:xToPaint ,
+										y:yToPaint
+									};
+								}
+
+								console.log('x:'+pictureGraphic.geometry.x);
+								console.log('y:'+pictureGraphic.geometry.y);
+							}).always(console.log('----'));
+						}, 5000);
+					});
                   </script>
                   <div id="viewDiv"></div>
-                 
-                <a class="smallbtnfull" href="https://etb.com/">Finalizar</a>
-            </section>
+            </div>
         </div>
     </div>
-
     <footer>
         <p class="credits">2019 © ETB S.A. ESP. Todos los derechos reservados</p>
     </footer>
