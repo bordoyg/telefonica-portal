@@ -188,7 +188,7 @@ function initMap(){
                 <div id="divMapForMobile" class="rpv map2">
                      <!-- map content for mobile -->
                 </div>
-                <a class="bigbtn" href="https://etb.com/">Finalizar</a>
+                <a class="bigbtn2" href="https://etb.com/">Finalizar</a>
             </div>
 
             <img src="/euf/assets/others/etb/img/logofibra.png" class="logofibra" />

@@ -62,7 +62,12 @@ $Controlador = $dispatcher->getControlador();
 
 				    if($Controlador->showSchedule()){
 					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::SCHEDULE_DATE_LABEL . '"';
-					    echo 'class="smallbtn sb1" >Reagendar</button>';
+					    if($Controlador->showCancel()){
+					        echo 'class="smallbtn sb1" >Reagendar</button>';
+					    }else{
+					        echo 'class="bigbtn2" >Reagendar</button>';
+					    }
+					    
 					}
 					if($Controlador->showCancel()){
 					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CANCEL_MOTIVO_LABEL . '"';
