@@ -618,7 +618,6 @@ class Controlador {
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
         $detectedAdctivityType = $this->isAprovisionamientoAseguramientoRecupero($activity);
-        Utils::logDebug("detectedAdctivityType: " . $detectedAdctivityType);
         if( $detectedAdctivityType != null 
             && (strcmp($detectedAdctivityType, Controlador::RECUPERO) ==0
                 || strcmp($detectedAdctivityType, Controlador::APROVISIONAMIENTO)==0) ){
@@ -653,7 +652,6 @@ class Controlador {
         $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
         $currentDate=$currentDate->format("Y-m-d");
         $activityDate=$activityDate->format("Y-m-d");
-        Utils::logDebug("SHOWTECHNICANLOCATION: " . in_array($locationData->status, Controlador::STATUS_LOCALIZABLE) . " - " . $activityDate == $currentDate);
         return in_array($locationData->status, Controlador::STATUS_LOCALIZABLE) && $activityDate == $currentDate;
     }
     function addMessageError($msj){
