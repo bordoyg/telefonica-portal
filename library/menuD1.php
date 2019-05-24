@@ -7,13 +7,13 @@ require_once(APPPATH . 'widgets/custom/library/controlador.php');
 $dispatcher = $GLOBALS['dispatcher'];
 $Controlador = $dispatcher->getControlador();
 ?>
-
 <body>
+    <img src="/euf/assets/others/etb/img/bg1r.jpg" class="rpv bgrpv"/>
     <header>
         <a href="http://www.etb.com.co"><img src="/euf/assets/others/etb/img/etblogo.png"/></a>
     </header>
     <div class="content">
-        <div class="cont-full">
+        <div class="cont-left">
             <form action="" method="post">
             	<?php 
                 	$activityID=$Controlador->getActivityIdFromContext();
@@ -22,22 +22,6 @@ $Controlador = $dispatcher->getControlador();
                 	$dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
                 	
                 	echo '<h1>Datos de tu cita</h1>';
-                	$activityDate = DateTime::createFromFormat('Y-m-d', $activity->date);
-                	$currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
-                	if($activityDate==$currentDate){
-                	    if(isset($_REQUEST[Controlador::LOCATION_TECHNICAN]->resourceDetails->avatar->imageData)){
-                	        $mediaType=$_REQUEST[Controlador::LOCATION_TECHNICAN]->resourceDetails->avatar->mediaType;
-                	        $imageData=$_REQUEST[Controlador::LOCATION_TECHNICAN]->resourceDetails->avatar->imageData;
-                	        echo '<img src="data: ' . $mediaType . ';base64,' . $imageData . '" class="tinyimg" />';
-                	    }else{
-                	        echo '<img class="tinyimg" src="/euf/assets/others/etb/img/avatar.png" />';
-                	    }
-                	    echo '<p>';
-                	    echo '<span>Técnico:</span>   ' . $_REQUEST[Controlador::LOCATION_TECHNICAN]->resourceDetails->name;
-                	    echo '</p>';
-
-                	}
-                	
                 	$detectedActivity=$Controlador->isAprovisionamientoAseguramientoRecupero($activity);
                 	if(strcmp(Controlador::ASEGURAMIENTO, $detectedActivity)==0){
                 	    echo '<p>Tu cita para Reparación está programada para el:</p>';
@@ -65,7 +49,6 @@ $Controlador = $dispatcher->getControlador();
 					    }else{
 					        echo 'class="bigbtn2" >Reagendar</button>';
 					    }
-					    
 					}
 					if($Controlador->showCancel()){
 					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CANCEL_MOTIVO_LABEL . '"';
@@ -77,12 +60,15 @@ $Controlador = $dispatcher->getControlador();
 					}
 				?>
 			</form>
-			<img src="/euf/assets/others/etb/img/logofibra.png" class="logofibra"/>
-		</div>
+            <img src="/euf/assets/others/etb/img/logofibra.png" class="logofibra"/>
+        </div>
+        
+        <div class="cont-right">
+            <img src="/euf/assets/others/etb/img/bg1.jpg" class="bg-right"/>
+        </div>
     </div>
-
     <footer>
-        <p class="credits">2019 © ETB S.A. ESP. Todos los derechos reservados.</p>
+        <p>2019 © ETB S.A. ESP. Todos los derechos reservados.</p>
     </footer>
 </body>
 

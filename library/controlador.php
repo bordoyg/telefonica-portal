@@ -531,7 +531,16 @@ class Controlador {
         return Dispatcher::LOCATION_URL;
     }
     function excecuteMenu(){
-        return Dispatcher::MENU_URL;
+        $activityID=$this->getActivityIdFromContext();
+        $activity=$this->findActivityData($activityID);
+        
+        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date);
+        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
+        
+        if($activityDate == $currentDate){
+            return Dispatcher::MENU_URL;
+        }
+        return Dispatcher::MENU_D1_URL;
     }
     function existActivity(){
         try{

@@ -12,6 +12,7 @@ class Dispatcher {
     const LOCATION_URL = 'location.php';
     const CUSTOMER_DATA_URL = 'customerData.php';
     const MENU_URL = 'menu.php';
+    const MENU_D1_URL = 'menuD1.php';
     const ERROR_URL = 'error.php';
     const MESSAGES_URL = 'messages.php';
     const ERROR_SCHEDULE_URL = 'errorSchedule.php';
