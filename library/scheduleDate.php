@@ -116,80 +116,84 @@
 
 
 		
-		function selectedDate(date, calendar){
-			
-			setTimeout(() => {
-				$("#calendar").datepicker({
-					dateFormat: "yy-mm-dd",
-					onChangeMonthYear: paintAvaliableDays,
-					onSelect: selectedDate,
-			});
-				paintAvaliableDays();
-				var next=$('.ui-corner-all a')[0];
-        		var prev=$('.ui-corner-all a')[1];
+		function selectedDate(mouseEvent){
+			next_prev_handler();
 
-				next.addEventListener('click',next_prev_handler);
-				prev.addEventListener('click',next_prev_handler);
+			var day=mouseEvent.srcElement.text;
+			var month=parseInt($(mouseEvent.srcElement.parentElement).attr("data-month"));
+			month=month + 1;
+			if(month.toString().length==1){
+				month="0" + month;
+			}
+			var year=$(mouseEvent.srcElement.parentElement).attr("data-year");
+			var date= year+ "-" + month + "-" + day;
+			$("#selectedDateText").text( formatDate(dateToArray(date),"ymd",true) );
+			$("#selectedDateHidden").val(date);
 
-				$("#selectedDate").text( formatDate(dateToArray(date),"ymd",true) );
-				$("#selectedDateHidden").val(date);
+			date = date.replace(/-/g,"");
+			var datesFiltered = $('#' + date);
+		
+			if( datesFiltered.length > 0 ){
+				datesFiltered.each( (i, timeslot) => {
+					var from = $(timeslot).attr("data-timeFrom");
+					var to = $(timeslot).attr("data-timeTo");
+					var name = $(timeslot).attr("data-name");
 
-				date = date.replace(/-/g,"");
-				var datesFiltered = datesToPaint.filter("[id*='" + date + "']");
+					var dFrom = new Date("1970-01-01T" + from);
+					var dTo = new Date("1970-01-01T" + to);
 				
-				if( datesFiltered.length > 0 ){
-					datesFiltered.each( (i, timeslot) => {
-						var from = $(timeslot).attr("data-timeFrom");
-						var to = $(timeslot).attr("data-timeTo");
-						var name = $(timeslot).attr("data-name");
-
-						var dFrom = new Date("1970-01-01T" + from);
-						var dTo = new Date("1970-01-01T" + to);
-						
-						from = dateFormat(dFrom, "h:MM TT");
-						to = dateFormat(dTo, "h:MM TT");
-						if( i == 0 )
-							$(".smallbtnselect").empty();
-						$(".smallbtnselect").append(`<option value="${name}">De ${from} a ${to}</option>`);
-					});
-				} else {
-					$(".smallbtnselect").empty();
-				}
-
-			}, 0);
-
+					from = dateFormat(dFrom, "h:MM TT");
+					to = dateFormat(dTo, "h:MM TT");
+					if( i == 0 ){
+						$("#selectTimeslot").empty();
+					}
+					$("#selectTimeslot").append(`<option value="${name}">De ${from} a ${to}</option>`);
+				});
+			} else {
+				$("#selectTimeslot").empty();
+			}
+			$("#selectTimeslot").trigger('change');
 		}
 
 		function next_prev_handler(){
-			setTimeout(() => {
-				$("#calendar").datepicker({
-				dateFormat: "yy-mm-dd",
-				onChangeMonthYear: paintAvaliableDays,
-				onSelect: selectedDate,
-			});
-			var next=$('.ui-corner-all a')[0];
-			var prev=$('.ui-corner-all a')[1];
+ 			setTimeout(() => {
+     			var next=$('.ui-corner-all a')[1];
+     			var prev=$('.ui-corner-all a')[0];
+    
+     			next.addEventListener('click',next_prev_handler);
+     			prev.addEventListener('click',next_prev_handler);
 
-				next.addEventListener('click',next_prev_handler);
-				prev.addEventListener('click',next_prev_handler);
-				
-			paintAvaliableDays();
-			}, 0);
+     			var btnsDay=$(".ui-state-default");
+    			if(btnsDay.length>0){
+    				btnsDay.each((i, btn) => {
+    					btn.addEventListener('click', selectedDate);
+    				});
+    			}
+    			paintAvaliableDays();
+  			}, 0);
 		}
 
 		$(document).ready(() => {
 			$("#calendar").datepicker({
 				dateFormat: "yy-mm-dd",
-				onChangeMonthYear: paintAvaliableDays,
-				onSelect: selectedDate,
+				onChangeMonthYear: paintAvaliableDays
 			});
-			paintAvaliableDays();
-			$("#selectedDate").text( formatDate(dateToArray(today), "mdy", true) );
-			var next=$('.ui-corner-all a')[0];
-			var prev=$('.ui-corner-all a')[1];
 
-			next.addEventListener('click', next_prev_handler);
-			prev.addEventListener('click', next_prev_handler);
+			$("#selectedDateText").text( formatDate(dateToArray(today),"mdy",true) );
+			$("#selectedDateHidden").val(today);
+			next_prev_handler();
+
+
+
+			$('#btnReagendar1').attr("disabled",true);
+	   		$('#btnReagendar2').attr("disabled",true);
+	   		
+	       	$('#selectTimeslot').change(function(){ 
+	       		if($('#selectTimeslot').val()!=null){
+	       			$('#btnReagendar1').removeAttr("disabled");
+	       			$('#btnReagendar2').removeAttr("disabled");
+	            }
+	    	});
 		});
 
 	</script>
@@ -256,9 +260,9 @@
 
 
                 <p>Seleccionaste:</p>
-                <h2 id="selectedDate">31-Ago-2018</h2>
+                <h2 id="selectedDateText">31-Ago-2018</h2>
                 <input  id="selectedDateHidden" type="hidden" name="<?php echo Controlador::SCHUEDULE_DATE_PARAM?>"/>
-                <p>Recuerda que el horario es en la franja de 9 a 12 y  debe haber alguien disponible para atender la visita.</p>
+                <p>Recuerda que el horario es en la franja de 9AM a 6PM y  debe haber alguien disponible para atender la visita.</p>
                 <?php 
                         $buttonValue=Dispatcher::CANCEL_FROM_CALENDAR_LABEL;
                         if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::ASEGURAMIENTO)==0 ){
@@ -284,22 +288,13 @@
                 </form>
             </div>
         </div>
+        <div class="cont-right">
+            <img src="/euf/assets/others/etb/img/bg6.jpg" class="bg-right" />
+        </div>
     </div>
 
     <footer>
         <p class="credits">2018 © ETB S.A. ESP. Todos los derechos reservados. Música Autorizada Por Acinpro.</p>
     </footer>
-   <script>
-   		$('#btnReagendar1').attr("disabled",true);
-   		$('#btnReagendar2').attr("disabled",true);
-   		
-       	$('#selectTimeslot').change(function(){ 
-       		if($('#selectTimeslot').val()!=null){
-       			$('#btnReagendar1').removeAttr("disabled");
-       			$('#btnReagendar2').removeAttr("disabled");
-            }
-    	});
-       	
-    </script>
 </body>
 </html>

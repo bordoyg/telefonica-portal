@@ -78,6 +78,10 @@ class Controlador {
             $_REQUEST[Controlador::LOCATION_TECHNICAN_LON_PARAM]= $locationData->coordinates->longitude;
             $_REQUEST[Controlador::LOCATION_TECHNICAN_LAT_PARAM]= $locationData->coordinates->latitude;
         }else{
+            if(!isset($locationData->resourceDetails) || !isset($locationData->resourceDetails->resourceId)){
+                $this->addMessageError("No se puedo establecer la ubicacion del t&eacute;cnico, intenta mas tarde");
+                return $locationData;
+            }
             //Obtenemos la posicion del tecnico
             $positionData=$this->service->request('/rest/ofscCore/v1/resources/custom-actions/lastKnownPositions', 'GET', 'resources=' . $locationData->resourceDetails->resourceId);
             
@@ -105,6 +109,10 @@ class Controlador {
             $latitude = $locationData->coordinates->latitude;
         }else{
             //Obtenemos la posicion del tecnico
+            if(!isset($locationData->resourceDetails) || !isset($locationData->resourceDetails->resourceId)){
+                $this->addMessageError("No se puedo establecer la ubicacion del t&eacute;cnico, intenta mas tarde");
+                return $locationData;
+            }
             $positionData=$this->service->request('/rest/ofscCore/v1/resources/custom-actions/lastKnownPositions', 'GET', 'resources=' . $locationData->resourceDetails->resourceId);
             
             if(isset($positionData->items) && count($positionData->items)>0){
