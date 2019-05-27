@@ -4,7 +4,7 @@
 <?php require_once(APPPATH . 'widgets/custom/library/header.php'); ?>
 
 <body>
-	<img src="img/bg6r.jpg" class="rpv bgrpv"/>
+	<img src="/euf/assets/others/etb/img/bg6r.jpg" class="rpv bgrpv"/>
     <header>
         <a href="http://www.etb.com.co"><img src="/euf/assets/others/etb/img/etblogo.png" /></a>
     </header>
@@ -258,7 +258,7 @@
                 <p>Seleccionaste:</p>
                 <h2 id="selectedDate">31-Ago-2018</h2>
                 <input  id="selectedDateHidden" type="hidden" name="<?php echo Controlador::SCHUEDULE_DATE_PARAM?>"/>
-                <h3>Recuerda que el horario es de 9 a 18hr y tiene que haber alguien en el domicilio.</h3>
+                <p>Recuerda que el horario es en la franja de 9 a 12 y  debe haber alguien disponible para atender la visita.</p>
                 <?php 
                         $buttonValue=Dispatcher::CANCEL_FROM_CALENDAR_LABEL;
                         if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::ASEGURAMIENTO)==0 ){

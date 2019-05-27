@@ -46,7 +46,7 @@ $Controlador = $dispatcher->getControlador();
                 	    echo '<p>Tu cita para Instalación está programada para el:</p>';
                 	}
                 	if(strcmp(Controlador::RECUPERO, $detectedActivity)==0){
-                 	    echo '<p>Tu cita para Recupero está programada para el:</p>';
+                 	    echo '<p>Tu cita para Recupero de equipos está programada para el:</p>';
                  	}
                 	
                 	Utils::logDebug("Fecha de la cita: " . $dateStart->format('d-F-Y g:i A'));

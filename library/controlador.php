@@ -13,7 +13,7 @@ class Controlador {
     const TIMESLOT_PARAM = 'timeslotParam';
     const LOCATION_TECHNICAN="technicanLocation";
     const SCHUEDULE_DATE_PARAM='dateSelectedParam';
-    const STATUS_LOCALIZABLE=array("onTheWay", "started");
+    const STATUS_LOCALIZABLE=array("onTheWay", "assigned");
     const STATUS_VIGENTE=array("onTheWay", "started", "pending");
     const STATUS_PENDING="pending";
     
@@ -70,7 +70,7 @@ class Controlador {
         }
         
         //Obtenemos la posicion del tecnico
-        $locationData=$this->service->request('/rest/ofscCore/v1/whereIsMyTech', 'GET', 'activityId=' . $activity->activityId . '&includeAvatarImageData=true');
+        $locationData=$this->service->request('/rest/ofscCore/v1/whereIsMyTech', 'GET', 'activityId=' . $activity->activityId . '&includeAvatarImageData=true&resourceFields=resourceId');
         $_REQUEST[Controlador::LOCATION_TECHNICAN]=$locationData;
         
         
@@ -78,7 +78,15 @@ class Controlador {
             $_REQUEST[Controlador::LOCATION_TECHNICAN_LON_PARAM]= $locationData->coordinates->longitude;
             $_REQUEST[Controlador::LOCATION_TECHNICAN_LAT_PARAM]= $locationData->coordinates->latitude;
         }else{
-            $this->addMessageError("No se puedo establecer la ubicacion del t&eacute;cnico, intenta mas tarde");
+            //Obtenemos la posicion del tecnico
+            $positionData=$this->service->request('/rest/ofscCore/v1/resources/custom-actions/lastKnownPositions', 'GET', 'resources=' . $locationData->resourceDetails->resourceId);
+            
+            if(isset($positionData->items) && count($positionData->items)>0){
+                $_REQUEST[Controlador::LOCATION_TECHNICAN_LON_PARAM]= $positionData->items[0]->lng;
+                $_REQUEST[Controlador::LOCATION_TECHNICAN_LAT_PARAM]= $positionData->items[0]->lat;
+            }else{
+                $this->addMessageError("No se puedo establecer la ubicacion del t&eacute;cnico, intenta mas tarde");
+            }
         }
         
         return $locationData;
@@ -91,6 +99,21 @@ class Controlador {
         $coordinatesJson="";
         $locationData=$this->service->request('/rest/ofscCore/v1/whereIsMyTech', 'GET', 'activityId=' . $activity->activityId . '&includeAvatarImageData=true');
         
+        
+        if(isset($locationData->coordinates) && isset($locationData->coordinates->latitude) && isset($locationData->coordinates->longitude)){
+            $longitude = $locationData->coordinates->longitude;
+            $latitude = $locationData->coordinates->latitude;
+        }else{
+            //Obtenemos la posicion del tecnico
+            $positionData=$this->service->request('/rest/ofscCore/v1/resources/custom-actions/lastKnownPositions', 'GET', 'resources=' . $locationData->resourceDetails->resourceId);
+            
+            if(isset($positionData->items) && count($positionData->items)>0){
+                $longitude = $locationData->coordinates->longitude;
+                $latitude = $locationData->coordinates->latitude;
+            }else{
+                $this->addMessageError("No se puedo establecer la ubicacion del t&eacute;cnico, intenta mas tarde");
+            }
+        }
         /*---DummyData---*/
         
 //         $dummy = date('s', time());
@@ -107,16 +130,11 @@ class Controlador {
         /*---End Dummy---*/
 
         /* RealData */
-       
-        $longitude = $locationData->coordinates->longitude;
-        $latitude = $locationData->coordinates->latitude;
         if( !strcmp($longitude,"")==0 && !strcmp($latitude,"")==0 ){
             $coordinates='<coordinates><x>'.$longitude.'</x><y>'.$latitude.'</y></coordinates>';
         } else {
             $coordinates='<coordinates><x>null</x><y>null</y></coordinates>';
         }
-      
-
         /* End of RealData */
         
         return $coordinates;
@@ -345,13 +363,6 @@ class Controlador {
             $activityID=$this->getActivityIdFromContext();
             $activity=$this->findActivityData($activityID);
             
-            $cancelacionesHechas = intval($activity->XA_NUM_MOD_PORTAL);
-            $cancelacionesPermitidas = intval($GLOBALS['config']['cacelacionesPermitidas']);
-            if( $cancelacionesHechas >= $cancelacionesPermitidas ){
-                $this->addMessageError(Controlador::MSJ_LIMITE_CANCELACIONES);
-                return Dispatcher::MESSAGES_URL;
-            }
-            
             $params=array("setDate"=>array("date"=>NULL));
             $params=json_encode($params);
             
@@ -400,7 +411,14 @@ class Controlador {
     }
     
     function excecuteScheduleCalendar(){
-        
+        $activityID=$this->getActivityIdFromContext();
+        $activity=$this->findActivityData($activityID);
+        $cancelacionesHechas = intval($activity->XA_NUM_MOD_PORTAL);
+        $cancelacionesPermitidas = intval($GLOBALS['config']['cacelacionesPermitidas']);
+        if( $cancelacionesHechas >= $cancelacionesPermitidas ){
+            $this->addMessageError(Controlador::MSJ_LIMITE_CANCELACIONES);
+            return Dispatcher::MESSAGES_URL;
+        }
         return Dispatcher::SCHEDULE_DATE_URL;
     }
     function excecuteScheduleConfirmSOAP(){
