@@ -94,7 +94,7 @@ $Controlador = $dispatcher->getControlador();
                                     }
                                     ?>
 								<?php
-                                if(strcmp(Controlador::PROVISION_LABEL, $Controlador->isAveriaOProvision($activity))!=0){
+                                //if(strcmp(Controlador::PROVISION_LABEL, $Controlador->isAveriaOProvision($activity))!=0){
                                 ?>
                                     <div id="cancelarMenuDiv" class="col-xs-6 col-sm-6 col-md-6 col-lg-6 cancelarBtnDiv">
                                         <input  id ="cancelarMenuBtn" type="button" name="<?php echo Dispatcher::OPTION_PARAM; ?>"
@@ -109,7 +109,7 @@ $Controlador = $dispatcher->getControlador();
                                     </div>
                                     
                                 <?php
-                                }
+                                //}
                                 ?>
 
                                 
