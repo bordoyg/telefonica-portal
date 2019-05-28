@@ -52,11 +52,6 @@ try{
     Utils::logDebug('Hubo un error generico al ingresar a la aplicaicon', e);
 }
 
-header("X-Content-Type-Options: nosniff");
-header("Strict-Transport-Security: max-age=25200");
-header("X-XSS-Protection: 1; mode=block");
-header("X-Frame-Options: DENY");
-
 ?>
 <head>
 </head>
