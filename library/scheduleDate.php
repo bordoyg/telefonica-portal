@@ -119,13 +119,19 @@
 		function selectedDate(mouseEvent){
 			next_prev_handler();
 
-			var day=mouseEvent.srcElement.text;
-			var month=parseInt($(mouseEvent.srcElement.parentElement).attr("data-month"));
+			var btnDay=null;
+			if(mouseEvent.srcElement){
+				btnDay=mouseEvent.srcElement;
+			}else{
+				btnDay=mouseEvent.target;
+			}
+			var day=$(btnDay).text();
+			var month=parseInt($(btnDay).parent().attr("data-month"));
 			month=month + 1;
 			if(month.toString().length==1){
 				month="0" + month;
 			}
-			var year=$(mouseEvent.srcElement.parentElement).attr("data-year");
+			var year=$(btnDay).parent().attr("data-year");
 			var date= year+ "-" + month + "-" + day;
 			$("#selectedDateText").text( formatDate(dateToArray(date),"ymd",true) );
 			$("#selectedDateHidden").val(date);

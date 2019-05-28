@@ -13,9 +13,11 @@ class Controlador {
     const TIMESLOT_PARAM = 'timeslotParam';
     const LOCATION_TECHNICAN="technicanLocation";
     const SCHUEDULE_DATE_PARAM='dateSelectedParam';
-    const STATUS_LOCALIZABLE=array("onTheWay", "assigned");
+    const STATUS_LOCALIZABLE=array("onTheWay");
     const STATUS_VIGENTE=array("onTheWay", "started", "pending");
     const STATUS_PENDING="pending";
+    const STATUS_ASSIGNED="assigned";
+    const FLAG_OTW="Y";
     
     const ERROR_GENERIC_MSJ="<h1 class=\"resalt\">ERROR</h1> <p>No fue posible procesar tu solicitud, por favor int&eacute;ntalo m&aacute;s tarde.</p> ";
     const ERROR_ORDEN_INEXISTENTE="La orden no existe";
@@ -629,7 +631,7 @@ class Controlador {
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
         
-        if(strcmp($activity->XA_CONFIRMACITA, Controlador::SUB_STATUS_CONFIRMADA)!=0){
+        if(!isset($activity->XA_CONFIRMACITA) || strcmp($activity->XA_CONFIRMACITA, Controlador::SUB_STATUS_CONFIRMADA)!=0){
             $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date);
             $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
             
@@ -678,7 +680,12 @@ class Controlador {
         $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
         $currentDate=$currentDate->format("Y-m-d");
         $activityDate=$activityDate->format("Y-m-d");
-        return in_array($locationData->status, Controlador::STATUS_LOCALIZABLE) && $activityDate == $currentDate;
+        Utils::logDebug("OTW: ". $activity->A_OTW);
+        Utils::logDebug("location status: ". $locationData->status);
+        $isFlagOTW=strcmp(Controlador::STATUS_ASSIGNED, $locationData->status)==0 && strcmp($activity->A_OTW, Controlador::FLAG_OTW)==0;
+        Utils::logDebug("isFlagOTW: ". $isFlagOTW);
+        $isLocalizable=in_array($locationData->status, Controlador::STATUS_LOCALIZABLE) || $isFlagOTW;
+        return $isLocalizable && $activityDate == $currentDate;
     }
     function addMessageError($msj){
         $_REQUEST[Controlador::MESSAGE_PARAM]=$msj;
