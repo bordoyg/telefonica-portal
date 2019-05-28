@@ -172,7 +172,11 @@
      			var btnsDay=$(".ui-state-default");
     			if(btnsDay.length>0){
     				btnsDay.each((i, btn) => {
-    					btn.addEventListener('click', selectedDate);
+    					$(btn).on('click', selectedDate);
+    					$(btn).parent().on('click', function(){
+        					var btn={target:$(this).children()};
+        					selectedDate(btn);
+        				});
     				});
     			}
     			paintAvaliableDays();
