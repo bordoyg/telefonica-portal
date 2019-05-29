@@ -27,7 +27,7 @@ $Controlador = $dispatcher->getControlador();
             	    echo '<p>Tu cita para Instalación<br>está programada para el:</p>';
             	}
             	if(strcmp(Controlador::RECUPERO, $detectedActivity)==0){
-             	    echo '<p>Tu cita para Recupero<br>está programada para el:</p>';
+             	    echo '<p>Tu cita para recuperación de equipos<br>está programada para el:</p>';
              	}
    
             
