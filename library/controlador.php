@@ -29,9 +29,9 @@ class Controlador {
     const MSJ_ORDEN_CANCELADA="<h2>@diaCita@</h2><p>@franjaHoraria@</p><p> s&iacute; requiere agendar una nueva cita por favor comun&iacute;quese a nuestra l&iacute;nea de atenci&oacute;n 3777777</p>";
     const MSJ_CANCELACION_RECUPERO="<h2>@diaCita@</h2><p>@franjaHoraria@</p><p>Por favor comunicarse con el operador logístico. Línea fija en Bogotá (1)3558170 o al WhatsApp 323-2056558</p>";
     const MSJ_CANCELACION_APROVISIONAMIENTO="<h2>@diaCita@</h2><p>@franjaHoraria@</p><p>Su cita fue cancelada. En el momento que tengamos agenda disponible, lo contactaremos para agendar una nueva cita.</p>";
-    const MSJ_LIMITE_CANCELACIONES="<h2>@diaCita@</h2><p>Llegó al límite de cancelaciones, y entonces los equipos serán cobrados</p>";
-    const MSJ_LIMITE_MODIFICACIONES="<h2>@diaCita@</h2><p>Llegó al límite de reagendamientos, y entonces los equipos serán cobrados</p>";
-    const MSJ_LIMITE_MODIFICACIONES_APROV_ASEG="<h2>@diaCita@</h2><p>Llegó al límite de reagendamientos, se conservará su cita original</p>";
+    const MSJ_LIMITE_CANCELACIONES="<h2>Tu cita quedó programada para el @diaCita@ de @franjaHoraria@</h2><p>Llegó al límite de cancelaciones, y entonces los equipos serán cobrados</p>";
+    const MSJ_LIMITE_MODIFICACIONES="<h2>Tu cita quedó programada para el @diaCita@ de @franjaHoraria@</h2><p>Llegó al límite de reagendamientos, y entonces los equipos serán cobrados</p>";
+    const MSJ_LIMITE_MODIFICACIONES_APROV_ASEG="<h2>Tu cita quedó programada para el @diaCita@ de @franjaHoraria@</h2><p>Llegó al límite de reagendamientos, se conservará su cita original</p>";
     
     
     const SUB_STATUS_CANCELADA="CANCELADA";
@@ -330,7 +330,13 @@ class Controlador {
             $cancelacionesHechas = intval($activity->XA_NUM_MOD_PORTAL);
             $cancelacionesPermitidas = intval($GLOBALS['config']['cacelacionesPermitidas']);
             if( $cancelacionesHechas >= $cancelacionesPermitidas ){
-                $this->addMessageError(Controlador::MSJ_LIMITE_CANCELACIONES);
+                $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
+                $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
+                $diaCita= $dateStart->format('d') . ' - ' . $GLOBALS['translateMonth'][$dateStart->format('F')] . ' - ' .$dateStart->format('Y');
+                $franjaHoraria= $dateStart->format('g:i A') . ' y las ' . $dateEnd->format('g:i A') . ' hrs.';
+                $msj=str_replace("@diaCita@", $diaCita, Controlador::MSJ_LIMITE_CANCELACIONES);
+                $msj=str_replace("@franjaHoraria@", $franjaHoraria, $msj);
+                $this->addMessageError();
                 return Dispatcher::MESSAGES_URL;
             }
             
@@ -354,7 +360,17 @@ class Controlador {
             $diaCita= $dateStart->format('d') . ' - ' . $GLOBALS['translateMonth'][$dateStart->format('F')] . ' - ' .$dateStart->format('Y');
             $franjaHoraria='entre las ' . $dateStart->format('g:i A') . ' y las ' . $dateEnd->format('g:i A') . ' hrs.';
             
-            $msj= Controlador::MSJ_ORDEN_CANCELADA;
+            $msj="";
+            $detectedAdctivityType = $this->isAprovisionamientoAseguramientoRecupero($activity);
+            if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::RECUPERO)==0 ){
+                $msj= Controlador::MSJ_ORDEN_CANCELADA;
+            }
+            if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::ASEGURAMIENTO)==0 ){
+                $msj= Controlador::MSJ_CANCELACION_RECUPERO;
+            }
+            if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::APROVISIONAMIENTO)==0 ){
+                $msj= Controlador::MSJ_CANCELACION_APROVISIONAMIENTO;
+            }
             $msj=str_replace("@diaCita@", $diaCita, $msj);
             $msj=str_replace("@franjaHoraria@", $franjaHoraria, $msj);
             
@@ -423,10 +439,26 @@ class Controlador {
     function excecuteScheduleCalendar(){
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
-        $cancelacionesHechas = intval($activity->XA_NUM_MOD_PORTAL);
-        $cancelacionesPermitidas = intval($GLOBALS['config']['cacelacionesPermitidas']);
-        if( $cancelacionesHechas >= $cancelacionesPermitidas ){
-            $this->addMessageError(Controlador::MSJ_LIMITE_CANCELACIONES);
+        $modificacionesHechas = intval($activity->XA_NUM_MOD_PORTAL);
+        $modificacionesPermitidas = intval($GLOBALS['config']['cacelacionesPermitidas']);
+        
+        $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
+        $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
+        $diaCita= $dateStart->format('d') . ' - ' . $GLOBALS['translateMonth'][$dateStart->format('F')] . ' - ' .$dateStart->format('Y');
+        $franjaHoraria= $dateStart->format('g:i A') . ' y las ' . $dateEnd->format('g:i A') . ' hrs.';
+        
+        if( $modificacionesHechas >= $modificacionesPermitidas ){
+            $detectedActivity=$this->isAprovisionamientoAseguramientoRecupero($activity);
+            if(strcmp($detectedActivity, Controlador::ASEGURAMIENTO)==0 || strcmp($detectedActivity, Controlador::APROVISIONAMIENTO)==0 ){
+                $msj=str_replace("@diaCita@", $diaCita, Controlador::MSJ_LIMITE_MODIFICACIONES_APROV_ASEG);
+                $msj=str_replace("@franjaHoraria@", $franjaHoraria, $msj);
+                $this->addMessageError($msj);
+            }else{
+                $msj=str_replace("@diaCita@", $diaCita, Controlador::MSJ_LIMITE_MODIFICACIONES);
+                $msj=str_replace("@franjaHoraria@", $franjaHoraria, $msj);
+                $this->addMessageError($msj);
+            }
+            
             return Dispatcher::MESSAGES_URL;
         }
         return Dispatcher::SCHEDULE_DATE_URL;
@@ -477,12 +509,21 @@ class Controlador {
  
             $modificacionesHechas = intval($activity->XA_NUM_MOD_PORTAL);
             $modificacionesPermitidas = intval($GLOBALS['config']['cacelacionesPermitidas']);
+            $dateEnd = new DateTime($activity->date . ' ' . $activity->serviceWindowEnd);
+            $dateStart = new DateTime($activity->date . ' ' . $activity->serviceWindowStart);
+            $diaCita= $dateStart->format('d') . ' - ' . $GLOBALS['translateMonth'][$dateStart->format('F')] . ' - ' .$dateStart->format('Y');
+            $franjaHoraria= $dateStart->format('g:i A') . ' y las ' . $dateEnd->format('g:i A') . ' hrs.';
+            
             if( $modificacionesHechas >= $modificacionesPermitidas ){
                 $detectedActivity=$this->isAprovisionamientoAseguramientoRecupero($activity);
                 if(strcmp($detectedActivity, Controlador::ASEGURAMIENTO)==0 || strcmp($detectedActivity, Controlador::APROVISIONAMIENTO)==0 ){
-                    $this->addMessageError(Controlador::MSJ_LIMITE_MODIFICACIONES_APROV_ASEG);
+                    $msj=str_replace("@diaCita@", $diaCita, Controlador::MSJ_LIMITE_MODIFICACIONES_APROV_ASEG);
+                    $msj=str_replace("@franjaHoraria@", $franjaHoraria, $msj);
+                    $this->addMessageError($msj);
                 }else{
-                    $this->addMessageError(Controlador::MSJ_LIMITE_MODIFICACIONES);
+                    $msj=str_replace("@diaCita@", $diaCita, Controlador::MSJ_LIMITE_MODIFICACIONES);
+                    $msj=str_replace("@franjaHoraria@", $franjaHoraria, $msj);
+                    $this->addMessageError($msj);
                 }
                 
                 return Dispatcher::MESSAGES_URL;

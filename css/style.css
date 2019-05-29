@@ -414,7 +414,7 @@ header a {
     float: left;
     width: 65%;
     text-align: left;
-    font-size: 90%;
+    font-size: 120%;
     font-weight: 500;
     margin-bottom: 0px;
     margin-top: 10px;
@@ -426,7 +426,7 @@ header a {
 
 .imgtec {
     position: relative;
-    width: 352px;
+    width: 170px;
     margin: 0px auto 20px;
 }
 

@@ -272,7 +272,6 @@
                 <p>Seleccionaste:</p>
                 <h2 id="selectedDateText">31-Ago-2018</h2>
                 <input  id="selectedDateHidden" type="hidden" name="<?php echo Controlador::SCHUEDULE_DATE_PARAM?>"/>
-                <p>Recuerda que el horario es en la franja de 9AM a 6PM y  debe haber alguien disponible para atender la visita.</p>
                 <?php 
                         $buttonValue=Dispatcher::CANCEL_FROM_CALENDAR_LABEL;
                         if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::ASEGURAMIENTO)==0 ){
@@ -284,8 +283,18 @@
                         if($noMoreDatesBool){
                           ?>
                           <button id="btnReagendar1" type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::SCHEDULE_DATE_CONFIRM_LABEL ?>" class="bigbtn" >Reagendar Cita</button>
-                          <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::CONFIRMAR_LABEL ?>" class="smallbtn sb1" >Confirmar<br>Cita Original</button>
-                          <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo $buttonValue ?>" class="smallbtn" style="margin-rigth:20px;">Cancelar<br>Cita Original</button>
+                          <?php 
+                            if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::ASEGURAMIENTO)==0 ){
+                          ?>
+                              <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::CONFIRMAR_LABEL ?>" class="smallbtn sb1" >Confirmar<br>Cita Original</button>
+                              <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo $buttonValue ?>" class="smallbtn" style="margin-rigth:20px;">Agenda<br>inconveniente</button>
+                          <?php 
+                            }else{
+                          ?>
+                              <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::CONFIRMAR_LABEL ?>" class="bigbtn" >Confirmar<br>Cita Original</button>
+                          <?php 
+                            }
+                          ?>
                           <?php 
                         }else{
                           ?>
