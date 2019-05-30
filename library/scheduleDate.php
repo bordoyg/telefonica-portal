@@ -126,6 +126,9 @@
 				btnDay=mouseEvent.target;
 			}
 			var day=$(btnDay).text();
+			if(day.length==1){
+				day="0" + day;
+			}
 			var month=parseInt($(btnDay).parent().attr("data-month"));
 			month=month + 1;
 			if(month.toString().length==1){
@@ -137,7 +140,7 @@
 			$("#selectedDateHidden").val(date);
 
 			date = date.replace(/-/g,"");
-			var datesFiltered = $('#' + date);
+			var datesFiltered = $('[id=' + date + ']');
 		
 			if( datesFiltered.length > 0 ){
 				datesFiltered.each( (i, timeslot) => {
@@ -275,7 +278,7 @@
                 <?php 
                         $buttonValue=Dispatcher::CANCEL_FROM_CALENDAR_LABEL;
                         if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::ASEGURAMIENTO)==0 ){
-                            $buttonValue=Dispatcher::CANCEL_FROM_CALENDAR_ASEGURAMIENTO_LABEL;
+                            $buttonValue=Dispatcher::CANCEL_MOTIVO_LABEL;
                         }
                 
                         $noMoreDates=$_REQUEST[Dispatcher::OPTION_PARAM ];
@@ -286,8 +289,8 @@
                           <?php 
                             if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::ASEGURAMIENTO)==0 ){
                           ?>
-                              <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::CONFIRMAR_LABEL ?>" class="smallbtn sb1" >Confirmar<br>Cita Original</button>
-                              <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo $buttonValue ?>" class="smallbtn" style="margin-rigth:20px;">Agenda<br>inconveniente</button>
+                              <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::CONFIRMAR_LABEL ?>" class="smallbtn sb1" >Confirmar<br>Cita</button>
+                              <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo $buttonValue ?>" class="smallbtn" style="margin-rigth:20px;">Cancelar<br>Cita</button>
                           <?php 
                             }else{
                           ?>

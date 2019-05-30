@@ -69,7 +69,7 @@ $Controlador = $dispatcher->getControlador();
 					}
 					if($Controlador->showCancel()){
 					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::CANCEL_MOTIVO_LABEL . '"';
-					    echo 'class="smallbtn">Cancelarla</button>';
+					    echo 'class="smallbtn">Cancelar</button>';
 					}
 					if($Controlador->showTechnicanLocation()){
 					    echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::UBICACION_LABEL . '"';
