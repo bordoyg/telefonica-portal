@@ -723,8 +723,11 @@ footer p {
         font-size: 24px;
         margin: 20px 0px;
     }
-
-    .smallbtn,
+    .smallbtn{
+     	font-size: 16px;
+    	line-height: 20px;
+		height: 60px;
+    }
     .bigbtn {
         font-size: 16px;
     }

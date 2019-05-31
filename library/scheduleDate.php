@@ -147,6 +147,7 @@
 					var from = $(timeslot).attr("data-timeFrom");
 					var to = $(timeslot).attr("data-timeTo");
 					var name = $(timeslot).attr("data-name");
+					var label = $(timeslot).attr("data-label");
 
 					var dFrom = new Date("1970-01-01T" + from);
 					var dTo = new Date("1970-01-01T" + to);
@@ -156,7 +157,7 @@
 					if( i == 0 ){
 						$("#selectTimeslot").empty();
 					}
-					$("#selectTimeslot").append(`<option value="${name}">De ${from} a ${to}</option>`);
+					$("#selectTimeslot").append(`<option value="${label}">De ${from} a ${to}</option>`);
 				});
 			} else {
 				$("#selectTimeslot").empty();
@@ -289,12 +290,12 @@
                           <?php 
                             if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::ASEGURAMIENTO)==0 ){
                           ?>
-                              <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::CONFIRMAR_LABEL ?>" class="smallbtn sb1" >Confirmar<br>Cita</button>
-                              <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo $buttonValue ?>" class="smallbtn" style="margin-rigth:20px;">Cancelar<br>Cita</button>
+                              <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::CONFIRMAR_LABEL ?>" class="smallbtn sb1" >Confirmar Cita</button>
+                              <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo $buttonValue ?>" class="smallbtn" style="margin-rigth:20px;">Cancelar Cita</button>
                           <?php 
                             }else{
                           ?>
-                              <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::CONFIRMAR_LABEL ?>" class="bigbtn" >Confirmar<br>Cita Original</button>
+                              <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::CONFIRMAR_LABEL ?>" class="bigbtn" >Confirmar Cita</button>
                           <?php 
                             }
                           ?>
