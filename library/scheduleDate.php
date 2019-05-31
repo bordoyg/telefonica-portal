@@ -290,7 +290,7 @@
                           <?php 
                             if( $detectedAdctivityType != null && strcmp($detectedAdctivityType, Controlador::ASEGURAMIENTO)==0 ){
                           ?>
-                              <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::CONFIRMAR_LABEL ?>" class="smallbtn sb1" >Confirmar Cita</button>
+                              <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::CONFIRMAR_LABEL ?>" class="smallbtn sb1" >Confirmar Inicial</button>
                               <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo $buttonValue ?>" class="smallbtn" style="margin-rigth:20px;">Cancelar Cita</button>
                           <?php 
                             }else{

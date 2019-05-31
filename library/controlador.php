@@ -29,9 +29,9 @@ class Controlador {
     const MSJ_ORDEN_CANCELADA="<h2>@diaCita@</h2><p>@franjaHoraria@</p><p> S&iacute; requiere agendar una nueva cita por favor comun&iacute;quese a nuestra l&iacute;nea de atenci&oacute;n 3777777</p>";
     const MSJ_CANCELACION_RECUPERO="<h2>@diaCita@</h2><p>@franjaHoraria@</p><p>Por favor comunicarse con el operador logístico. Línea fija en Bogotá (1)3558170 o al WhatsApp 323-2056558</p>";
     const MSJ_CANCELACION_APROVISIONAMIENTO="<h2>@diaCita@</h2><p>@franjaHoraria@</p><p>Su cita fue cancelada. En el momento que tengamos agenda disponible, lo contactaremos para agendar una nueva cita.</p>";
-    const MSJ_LIMITE_CANCELACIONES="<h2>Tu cita quedó programada para el @diaCita@ de @franjaHoraria@</h2><p>Llegó al límite de cancelaciones, y entonces los equipos serán cobrados</p>";
-    const MSJ_LIMITE_MODIFICACIONES="<h2>Tu cita quedó programada para el @diaCita@ de @franjaHoraria@</h2><p>Llegó al límite de reagendamientos, y entonces los equipos serán cobrados</p>";
-    const MSJ_LIMITE_MODIFICACIONES_APROV_ASEG="<h2>Tu cita quedó programada para el @diaCita@ de @franjaHoraria@</h2><p>Llegó al límite de reagendamientos, se conservará su cita original</p>";
+    const MSJ_LIMITE_CANCELACIONES="<h2>Tu cita quedó programada para el @diaCita@ entre las @franjaHoraria@</h2><p>Llegó al límite de cancelaciones, y entonces los equipos serán cobrados</p>";
+    const MSJ_LIMITE_MODIFICACIONES="<h2>Tu cita quedó programada para el @diaCita@ entre las @franjaHoraria@</h2><p>Llegó al límite de reagendamientos, y entonces los equipos serán cobrados</p>";
+    const MSJ_LIMITE_MODIFICACIONES_APROV_ASEG="<h2>Tu cita quedó programada para el @diaCita@ entre las @franjaHoraria@</h2><p>Llegó al límite de reagendamientos, se conservará su cita original</p>";
     
     
     const SUB_STATUS_CANCELADA="CANCELADA";
