@@ -119,7 +119,7 @@ $Controlador = $dispatcher->getControlador();
                                 $dispatcher = $GLOBALS['dispatcher'];
                                 $Controlador = $dispatcher->getControlador();
                                 if($Controlador->showTechnicanLocation()){
-                                echo 'Podes consultar la ubicaci&oacute;n del t&eacute;cnico aca';
+                                echo 'Te informamos que el t&eacute;cnico est&aacute; en camino y debe recibirlo un adulto.';
 
                                 echo '<div class="col-lg-12">';
                                 echo '<button type="submit" name="' . Dispatcher::OPTION_PARAM . '" value="' . Dispatcher::UBICACION_LABEL . '"';

@@ -737,7 +737,7 @@ class Controlador {
         $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date);
         $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
  
-        return ($activity->status == Controlador::STATUS_PENDING) && ($activityDate >= $currentDate);
+        return ($activity->status == Controlador::STATUS_PENDING) && ($activityDate > $currentDate);
     }
     function showSchedule(){
         return $this->showConfirm();
