@@ -295,7 +295,7 @@
                           <?php 
                             }else{
                           ?>
-                              <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::CONFIRMAR_LABEL ?>" class="bigbtn" >Confirmar Cita</button>
+                              <button type="submit" name="<?php echo Dispatcher::OPTION_PARAM ?>" value="<?php echo Dispatcher::CONFIRMAR_LABEL ?>" class="bigbtn" >Confirmar Inicial</button>
                           <?php 
                             }
                           ?>
