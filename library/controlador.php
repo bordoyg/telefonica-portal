@@ -715,8 +715,12 @@ class Controlador {
                     return false;
             }
 
-            $isVigente= ($this->showTechnicanLocation() || $this->showCancel()|| $this->showConfirm()|| $this->showSchedule());
-            Utils::logDebug('isValid: ' . ($isVigente));
+            //$isVigente= ($this->showTechnicanLocation() || $this->showCancel()|| $this->showConfirm()|| $this->showSchedule());}
+            
+            $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date);
+            $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
+            $isVigente=($activity->status == Controlador::STATUS_PENDING) && ($activityDate >= $currentDate);
+            Utils::logDebug('isValid: ' . $isVigente);
             return $isVigente;
         }catch(Exception $e){
             Utils::logDebug('Error en isValidActivity ', $e);
