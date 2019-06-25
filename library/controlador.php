@@ -62,6 +62,60 @@ class Controlador {
 
          return $locationData;
     }
+    function findTechnicanLocationJson(){
+        
+        $activityID=$this->getActivityIdFromContext();
+        $activity=$this->findActivityData($activityID);
+        $coordinatesJson="";
+        
+        /*---DummyData---
+         $dummy = date('s', time());
+         $dummy= $dummy /10;
+
+         $dummyX=7.85 +intval($dummy);
+         $dummyY=47.983333 +intval($dummy);
+
+         $dummyX=strval($dummyX);
+         $dummyY=strval($dummyY);
+
+         $coordinates="<coordinates><x>".$dummyX."</x><y>".$dummyY."</y></coordinates>";
+        
+         return $coordinates;
+         */
+        /*---End Dummy---*/
+        
+        $locationData=$this->service->request('/rest/ofscCore/v1/whereIsMyTech', 'GET', 'activityId=' . $activity->activityId . '&includeAvatarImageData=true');
+        
+        
+        if(isset($locationData->coordinates) && isset($locationData->coordinates->latitude) && isset($locationData->coordinates->longitude)){
+            $longitude = $locationData->coordinates->longitude;
+            $latitude = $locationData->coordinates->latitude;
+        }else{
+            //Obtenemos la posicion del tecnico
+            if(!isset($locationData->resourceDetails) || !isset($locationData->resourceDetails->resourceId)){
+                $this->addMessageError("No se puedo establecer la ubicacion del t&eacute;cnico, intenta mas tarde");
+                return $coordinatesJson;
+            }
+            $positionData=$this->service->request('/rest/ofscCore/v1/resources/custom-actions/lastKnownPositions', 'GET', 'resources=' . $locationData->resourceDetails->resourceId);
+            
+            if(isset($positionData->items) && count($positionData->items)>0){
+                $longitude = $locationData->coordinates->longitude;
+                $latitude = $locationData->coordinates->latitude;
+            }else{
+                $this->addMessageError("No se puedo establecer la ubicacion del t&eacute;cnico, intenta mas tarde");
+            }
+        }
+        
+        /* RealData */
+        if( !strcmp($longitude,"")==0 && !strcmp($latitude,"")==0 ){
+            $coordinates='<coordinates><x>'.$longitude.'</x><y>'.$latitude.'</y></coordinates>';
+        } else {
+            $coordinates='<coordinates><x>null</x><y>null</y></coordinates>';
+        }
+        /* End of RealData */
+        
+        return $coordinates;
+    }
     function findAvailabilitySOAP($days) {
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
@@ -489,21 +543,6 @@ class Controlador {
                 || !isset($activity->XA_ROUTE)){
                     return false;
             }
-//             $dtCurrent= new DateTime("now");
-//             $dtETA=new DateTime();
-//             $dtETA=$dtETA->createFromFormat("Y-m-d H:i:s", $activity->startTime);
-            
-//             Utils::logDebug("Current: " . $dtCurrent->format("Y-m-d H:i:s"));
-//             Utils::logDebug("dtETA: " . $dtETA->format("Y-m-d H:i:s"));
-            
-//             $interval=$dtCurrent->diff($dtETA, false);
-//             $intervalInSeconds = (new DateTime())->setTimeStamp(0)->add($interval)->getTimeStamp();
-//             $intervalInMinutes = $intervalInSeconds/60;
-            
-//             Utils::logDebug("interval en minutos: " . $intervalInMinutes);
-//             Utils::logDebug('Estado localizable: ' . in_array($activity->status, Controlador::STATUS_VIGENTE));
-//             Utils::logDebug('XA_ROUTE: ' . (strcmp($activity->XA_ROUTE,"1")==0));
-//             Utils::logDebug('interval mayor a 20: ' . ($intervalInMinutes>=20));
             
             $isVigente= ($this->showTechnicanLocation() || $this->showCancel()) && (strcmp($activity->XA_ROUTE, "1")==0) /*&& $intervalInMinutes>=0*/;
             Utils::logDebug('isVigente: ' . ($isVigente));
@@ -535,8 +574,8 @@ class Controlador {
     function showCancel(){
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
-        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date, new DateTimeZone($activity->timeZone));
-        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'), new DateTimeZone($activity->timeZone));
+        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date);
+        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
  
         return ($activity->status == Controlador::STATUS_PENDING) && ($activityDate > $currentDate);
     }
@@ -549,8 +588,8 @@ class Controlador {
         $activityID=$this->getActivityIdFromContext();
         $activity=$this->findActivityData($activityID);
         $locationData=$this->findTechnicanLocation($activity);
-        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date, new DateTimeZone($activity->timeZone));
-        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'), new DateTimeZone($activity->timeZone));
+        $activityDate = DateTime::createFromFormat('Y-m-d', $activity->date);
+        $currentDate=DateTime::createFromFormat('Y-m-d', date('Y-m-d'));
         $currentDate=$currentDate->format("Y-m-d");
         $activityDate=$activityDate->format("Y-m-d");
         Utils::logDebug("SHOWTECHNICANLOCATION: " . in_array($activity->status, Controlador::STATUS_LOCALIZABLE) . " - " . $activityDate == $currentDate);

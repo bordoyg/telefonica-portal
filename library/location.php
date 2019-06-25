@@ -39,64 +39,88 @@
             </div>
             </div>
             <div style="height:10px; clear: both;"></div>
-              <div id="map" class="map"></div>
-              <script type="text/javascript">
+            <div id="map" class="map"></div>
+			<script type="text/javascript">
               
-                  function createStyle(src, img) {
-                      return new ol.style.Style({
-                        image: new ol.style.Icon(/** @type {module:ol/style/Icon~Options} */ ({
-                          anchor: [0.5, 0.96],
-                          crossOrigin: 'anonymous',
-                          src: src,
-                          img: img,
-                          imgSize: img ? [img.width, img.height] : undefined
-                        }))
-                      });
-                    }
-                  var titleLayer=new ol.layer.Tile({ source: new ol.source.OSM() });
+               function createStyle(src, img) {
+                  return new ol.style.Style({
+                    image: new ol.style.Icon(/** @type {module:ol/style/Icon~Options} */ ({
+                      anchor: [0.5, 0.96],
+                      crossOrigin: 'anonymous',
+                      src: src,
+                      img: img,
+                      imgSize: img ? [img.width, img.height] : undefined
+                    }))
+                  });
+                }
+                var titleLayer=new ol.layer.Tile({ source: new ol.source.OSM() });
                   
-                <?php 
-                    echo 'var iconTechFeature = new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat([' . $_REQUEST[Controlador::LOCATION_TECHNICAN_PARAM] . '])));';
-                    echo 'iconTechFeature.set(\'style\', createStyle(\'/euf/assets/others/telefonica/images/tech-icon.png\', undefined));';
+                
+                var iconTechFeature = new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat([<?php $_REQUEST[Controlador::LOCATION_TECHNICAN_PARAM] ?>])));
+                iconTechFeature.set('style', createStyle('/euf/assets/others/telefonica/images/tech-icon.png', undefined));
 
-                    echo 'var lonLatAddress = ol.proj.fromLonLat([' . $_REQUEST[Controlador::LOCATION_CUSTOMER_PARAM] . ']);';
-                    echo 'var iconHomeFeature = new ol.Feature(new ol.geom.Point(lonLatAddress));';
-                    echo 'iconHomeFeature.set(\'style\', createStyle(\'/euf/assets/others/telefonica/images/home-icon.png\', undefined));';
-                    
-                    echo 'var vectorLayer = new ol.layer.Vector({';
-                    echo 'style: function(feature) {';
-                    echo '    return feature.get(\'style\');';
-                    echo '}, source: new ol.source.Vector({features: [iconTechFeature, iconHomeFeature]}) });';
-                    if($GLOBALS['config']['show-map'] == "true"){
-                    ?>
+                var lonLatAddress = ol.proj.fromLonLat([<?php  $_REQUEST[Controlador::LOCATION_CUSTOMER_PARAM] ?>]);
+                var iconHomeFeature = new ol.Feature(new ol.geom.Point(lonLatAddress));
+                iconHomeFeature.set('style', createStyle('/euf/assets/others/telefonica/images/home-icon.png', undefined));
+                
+                var vectorLayer = new ol.layer.Vector({
+                style: function(feature) {
+                    return feature.get('style');
+                }, source: new ol.source.Vector({features: [iconTechFeature, iconHomeFeature]}) });
+                vectorLayer.iconTechFeature=iconTechFeature;
+                <?php
+                if ($GLOBALS['config']['show-map'] == "true") {
+                ?>
+
+                  var map = new ol.Map({
+                    target: 'map',
+                    layers: [titleLayer, vectorLayer],
+                    view: new ol.View({
+                      center: lonLatAddress,
+                      zoom: 16
+                    })
+                  });
+                  var extent = vectorLayer.getSource().getExtent();
+                  map.getView().fit(extent);
+
+
+
+                  setInterval((map, vectorLayer) => {
+          			var strSlice="";
+          			$.ajax({
+          				method: "GET",
+          				url: "/app/telefonica/ajaxCall"
+          			
+          			}).done(function(data) {
+						try{
+							var xToPaint = data.slice(data.indexOf('<x>')+3,data.indexOf('</x>'));
+              				var yToPaint = data.slice(data.indexOf('<y>')+3,data.indexOf('</y>'));
     
-                      var map = new ol.Map({
-                        target: 'map',
-                        layers: [titleLayer, vectorLayer],
-                        view: new ol.View({
-                          center: lonLatAddress,
-                          zoom: 16
-                        })
-                      });
-                      var extent = vectorLayer.getSource().getExtent();
-                      map.getView().fit(extent);
-                      <?php } ?>
+              				console.log('x:'+xToPaint);
+              				console.log('y:'+yToPaint);
+              				
+							if( xToPaint == "null" && yToPaint == "null" ){
+              					return;
+              				}
+							xToPaint=parseFloat(xToPaint);
+							yToPaint=parseFloat(yToPaint);
+
+							vectorLayer.iconTechFeature.setGeometry(new ol.geom.Point(ol.proj.fromLonLat([xToPaint,  yToPaint])));
+							var extent = vectorLayer.getSource().getExtent();
+                            
+						}catch(err){
+							console.log(err);
+						}
+          			}).always(console.log('----'));
+          		}, 5000, map, vectorLayer);
+                  
+                <?php
+                }
+                ?>
+
               </script>
 
-            <div style="height:10px; clear: both;"></div>
-            <script src="/euf/assets/others/telefonica/js/easytimer.min.js"></script>
-            <?php
-            if($GLOBALS['config']['show-map'] == "true"){
-            ?>
-            <div style="float:right;" id="basicUsage"></div>
-            <script>
-                var timer = new Timer();
-                timer.start();
-                timer.addEventListener('secondsUpdated', function (e) {
-                    $('#basicUsage').html('&uacute;ltima posici&oacute;n ' + timer.getTimeValues().toString() + 's');
-                });
-            </script>
-            <?php } ?>
+			<div style="height:10px; clear: both;"></div>
     		<?php 
     		if(!isset($_REQUEST[Dispatcher::NO_VOLVER])){
     		    echo '<form action="" method="post">';
