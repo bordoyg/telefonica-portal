@@ -56,10 +56,10 @@
                 var titleLayer=new ol.layer.Tile({ source: new ol.source.OSM() });
                   
                 
-                var iconTechFeature = new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat([<?php $_REQUEST[Controlador::LOCATION_TECHNICAN_PARAM] ?>])));
+                var iconTechFeature = new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat([<?php echo $_REQUEST[Controlador::LOCATION_TECHNICAN_PARAM] ?>])));
                 iconTechFeature.set('style', createStyle('/euf/assets/others/telefonica/images/tech-icon.png', undefined));
 
-                var lonLatAddress = ol.proj.fromLonLat([<?php  $_REQUEST[Controlador::LOCATION_CUSTOMER_PARAM] ?>]);
+                var lonLatAddress = ol.proj.fromLonLat([<?php echo $_REQUEST[Controlador::LOCATION_CUSTOMER_PARAM] ?>]);
                 var iconHomeFeature = new ol.Feature(new ol.geom.Point(lonLatAddress));
                 iconHomeFeature.set('style', createStyle('/euf/assets/others/telefonica/images/home-icon.png', undefined));
                 
